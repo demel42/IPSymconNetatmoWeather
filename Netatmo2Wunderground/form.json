@@ -13,13 +13,13 @@
 				{ "type": "Label", "label": "ID of the \"Personal-Weatherstation\""},
 				{ "type": "ValidationTextBox", "name": "Wunderground_PWSID", "caption": "PWS-ID" },
 				{ "type": "Label", "label": "Password for access to the PWS as selected in the PWS-account"},
-				{ "type": "ValidationTextBox", "name": "Wunderground_Password", "caption": "" },
+				{ "type": "ValidationTextBox", "name": "Wunderground_Password", "caption": "Wunderground Password" },
 				{ "type": "Label", "label": "Transfer weatherdata every X minutes" },
 				{ "type": "IntervalBox", "name": "TransferInterval", "caption": "Minutes" }
             ],
 	"actions":
 			[
-                { "type": "Button", "label": "Trasfer Weatherdata", "onClick": "Netatmo2Wunderground_Transfer($id);" }
+                { "type": "Button", "label": "Transfer Weatherdata", "onClick": "Netatmo2Wunderground_Transfer($id);" }
 			],		
     "status":
             [
