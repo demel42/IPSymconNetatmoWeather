@@ -7,8 +7,15 @@ class Netatmo2Wunderground extends IPSModule
     {
 		//Never delete this line!
         parent::Create();
-
-		$this->RegisterTimer("TransferWeather", $this->ReadPropertyInteger("TransferInterval"), 'Netatmo2Wunderground_Transfer($_IPS[\'TARGET\']);');
+		$this->RegisterPropertyInteger("TransferInterval", 0);
+		$this->RegisterPropertyString("PWSID", "");
+		$this->RegisterPropertyString("Netatmo_User", "");
+		$this->RegisterPropertyString("Netatmo_Password", "");
+		$this->RegisterPropertyString("Netatmo_ClientID", "");
+		$this->RegisterPropertyString("Netatmo_Secret", "");
+		$this->RegisterPropertyString("Wunderground_PWSID", "");
+		$this->RegisterPropertyString("Wunderground_Passwort", "");
+		$this->RegisterTimer("TransferWeather", 0, 'Netatmo2Wunderground_Transfer(' . $this->InstanceID . ');');
     }
 
     public function ApplyChanges()
@@ -26,21 +33,27 @@ class Netatmo2Wunderground extends IPSModule
 		$wunderground_password = $this->ReadPropertyString("Wunderground_Passwort");
 
 		if ($netatmo_user != "" && $netatmo_password != "" && $netatmo_client != "" && $netatmo_secret != "" && $wunderground_pwsid != "" && $wunderground_password != "") {
-			// refresh-timer
-			$min = $this->ReadPropertyInteger("TransferInterval")
-			$msec = $min > 0 ? $min * 1000 * 60 : 0;
-			$this->SetTimerInterval("TransferWeather", $msec);
 
 			// status of transfer
-			$this->MaintainVariable("Status", "Netatmo2Wunderground_Status", 3, "", 10, true);
+			$this->RegisterVariableString ( "Netatmo2Wunderground_Status", "Status",  "", 1 );
+			//$this->MaintainVariable("Status", "Netatmo2Wunderground_Status", 3, "", 10, true);
 
 			// instanz is activ
 			$this->SetStatus(102);
+			$this->SetUpdateInterval();
 		} else {
 			// instance is inactiv
 			$this->SetStatus(104);
 		}
     }
+
+	protected function SetUpdateInterval()
+	{
+		// refresh-timer
+		$min = $this->ReadPropertyInteger("TransferInterval");
+		$msec = $min > 0 ? $min * 1000 * 60 : 0;
+		$this->SetTimerInterval("TransferWeather", $msec);
+	}
 
 	public function Transfer()
 	{
@@ -55,6 +68,3 @@ class Netatmo2Wunderground extends IPSModule
 	}
 }
 
-?>
-
-{ "code": 210, "icon": "error", "caption": "missing access-data" },
