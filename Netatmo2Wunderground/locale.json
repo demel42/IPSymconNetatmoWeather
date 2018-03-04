@@ -1,0 +1,10 @@
+{
+	"translations": {
+		"de": {
+			"Trasfer Weatherdata": "Übertrage Wetter-Daten",
+			"Instance getting created": "Instanz wird erstellt",
+			"Instance is active": "Instanz ist aktiv",
+			"Instance is inactive": "Instanz ist inaktiv"
+		}
+	}
+}

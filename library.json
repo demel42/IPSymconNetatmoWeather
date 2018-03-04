@@ -1,0 +1,13 @@
+{
+	"id": "{0F22B057-3434-680A-E760-596A12F4BD99}",
+	"author": "Ch. Damsky",
+	"name": "Netatmo2Wunderground",
+	"url": "",
+	"compatibility": {
+		"version": "4.2",
+		"date": 1491343200
+	},
+	"version": "0.1",
+	"build": 0,
+	"date": 0
+}
