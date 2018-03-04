@@ -42,7 +42,7 @@ class Netatmo2Wunderground extends IPSModule
 		}
     }
 
-	public function Netatmo2Wunderground_Transfer()
+	public function Transfer()
 	{
 		$netatmo_user = $this->ReadPropertyString("Netatmo_User");
 		$netatmo_password = $this->ReadPropertyString("Netatmo_Password");
@@ -51,7 +51,7 @@ class Netatmo2Wunderground extends IPSModule
 		$wunderground_pwsid = $this->ReadPropertyString("Wunderground_PWSID");
 		$wunderground_password = $this->ReadPropertyString("Wunderground_Passwort");
 
-		$this->SendDebug("N2W", "in Netatmo2Wunderground_Transfer");
+		$this->SendDebug("N2W", "in Netatmo2Wunderground_Transfer", 0);
 	}
 }
 
