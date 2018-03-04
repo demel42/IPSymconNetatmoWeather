@@ -2,10 +2,9 @@
 	"id": "{4FF50B9F-7D92-A2D0-D2B4-447D430BAFB8}",
 	"name": "Netatmo2Wunderground",
 	"type": 3,
-	"vendor": "",
+	"vendor": "Netatmo",
 	"aliases": [
-		"Netatmo",
-		"Wunderground"
+		"Netatmo2Wunderground"
 	],
 	"parentRequirements": [],
 	"childRequirements": [],
