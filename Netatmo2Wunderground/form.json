@@ -3,23 +3,23 @@
             [
                 { "type": "Label", "label": "This module copies Weatherdata from an Netwatmo-Weatherstation to als Wunderground-Personal-Weatherstation" },
                 { "type": "Label", "label": "Netatmo Access-Details" },
-				{ "type": "Label", "label": "Netatmo-Account"}
+				{ "type": "Label", "label": "Netatmo-Account"},
 				{ "type": "ValidationTextBox", "name": "Netatmo_User", "caption": "Username" },
 				{ "type": "ValidationTextBox", "name": "Netatmo_Password", "caption": "Password" },
-				{ "type": "Label", "label": "Netatmo-Client"}
+				{ "type": "Label", "label": "Netatmo-Client"},
 				{ "type": "ValidationTextBox", "name": "Netatmo_ClientID", "caption": "ID" },
 				{ "type": "ValidationTextBox", "name": "Netatmo_Secret", "caption": "Secret" },
                 { "type": "Label", "label": "Wunderground Access-Details from https://www.wunderground.com" },
-				{ "type": "Label", "label": "ID of the \"Personal-Weatherstation\""}
+				{ "type": "Label", "label": "ID of the \"Personal-Weatherstation\""},
 				{ "type": "ValidationTextBox", "name": "Wunderground_PWSID", "caption": "PWS-ID" },
-				{ "type": "Label", "label": "Password for access to the PWS as selected in the PWS-account"}
-				{ "type": "ValidationTextBox", "name": "Wunderground_Password", "caption": "" },
+				{ "type": "Label", "label": "Password for access to the PWS as selected in the PWS-account"},
+				{ "type": "ValidationTextBox", "name": "Wunderground_Password", "caption": "Wunderground Password" },
 				{ "type": "Label", "label": "Transfer weatherdata every X minutes" },
-				{ "type": "IntervalBox", "name": "TransferInterval", "caption": "Minutes" },
+				{ "type": "IntervalBox", "name": "TransferInterval", "caption": "Minutes" }
             ],
 	"actions":
 			[
-                { "type": "Button", "label": "Trasfer Weatherdata", "onClick": "Netatmo2Wunderground_Transfer($id);" }
+                { "type": "Button", "label": "Transfer Weatherdata", "onClick": "Netatmo2Wunderground_Transfer($id);" }
 			],		
     "status":
             [
