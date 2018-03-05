@@ -1,22 +1,27 @@
 {
 	"translations": {
 		"de": {
-			"This module copies Weatherdata from an Netwatmo-Weatherstation to als Wunderground-Personal-Weatherstation": "Diese Modul kopiert Wetterdaten von einer Netatmo Wetterstation zu einer Wunderground-Personal Wetterstation",
+			"This module copies Weatherdata from an Netwatmo-Weatherstation to als Wunderground-Personal-Weatherstation":
+				"Diese Modul kopiert Wetterdaten von einer Netatmo Wetterstation zu einer Wunderground-Personal Wetterstation",
+
 			"Netatmo Access-Details": "Netatmo Zugangsdaten",
-			"Netatmo-Account": "Netatmo Konto",
+
+			"Netatmo-Account from https://my.netatmo.com":
+				"Netatmo Konto-Daten von https://my.netatmo.com",
 			"Username": "Benutzername",
 			"Password": "Passwort",
-			"Netatmo-Client": "Netatmo-Client",
-			"ID": "ID",
-			"Secret": "Secret",
-			"Wunderground Access-Details from https://www.wunderground.com": "Wunderground Zugangsdaten von https://www.wunderground.com",
-			"ID of the \"Personal-Weatherstation\"": "ID der \"Personal-Weatherstation\"",
-			"PWS-ID": "PWS-ID",
-			"Password for access to the PWS as selected in the PWS-account": "Passwort für Zugang zu PWS und dem selketiertem PWS-Account",
-			"Wunderground Password": "Wunderground Passwort",
+
+			"Netatmo-Connect from https://dev.netatmo.com":
+				"Netatmo-Connect-Daten von https://dev.netatmo.com",
+
+			"Wunderground Access-Details from https://www.wunderground.com/personal-weather-station/mypws":
+				"Wunderground Zugangsdaten von https://www.wunderground.com/personal-weather-station/mypws",
+
 			"Transfer weatherdata every X minutes": "Transfer der Wetterdaten alle X Minuten",
 			"Minutes": "Minuten",
+
 			"Transfer Weatherdata": "Übertrage Wetter-Daten",
+
 			"Instance getting created": "Instanz wird erstellt",
 			"Instance is active": "Instanz ist aktiv",
 			"Instance is inactive": "Instanz ist inaktiv"
