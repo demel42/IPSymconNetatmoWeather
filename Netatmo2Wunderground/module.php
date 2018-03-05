@@ -8,6 +8,14 @@ class Netatmo2Wunderground extends IPSModule
 		//Never delete this line!
         parent::Create();
 
+		$this->RegisterPropertyString("Netatmo_User", "");
+		$this->RegisterPropertyString("Netatmo_Password", "");
+		$this->RegisterPropertyString("Netatmo_ClientID", "");
+		$this->RegisterPropertyString("Netatmo_Secret", "");
+		$this->RegisterPropertyString("Wunderground_PWSID", "");
+		$this->RegisterPropertyString("Wunderground_Passwort", "");
+		$this->RegisterPropertyInteger("TransferInterval", "5");
+
 		$this->RegisterTimer("TransferWeather", $this->ReadPropertyInteger("TransferInterval"), 'Netatmo2Wunderground_Transfer($_IPS[\'TARGET\']);');
     }
 
@@ -15,8 +23,6 @@ class Netatmo2Wunderground extends IPSModule
     {
 		//Never delete this line!
         parent::ApplyChanges();
-
-		$pwsid = $this->ReadPropertyString("PWSID");
 
 		$netatmo_user = $this->ReadPropertyString("Netatmo_User");
 		$netatmo_password = $this->ReadPropertyString("Netatmo_Password");
@@ -56,5 +62,3 @@ class Netatmo2Wunderground extends IPSModule
 }
 
 ?>
-
-{ "code": 210, "icon": "error", "caption": "missing access-data" },
