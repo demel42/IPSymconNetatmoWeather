@@ -9,11 +9,32 @@
 				{ "type": "Label", "label": "Netatmo-Connect from https://dev.netatmo.com"},
 				{ "type": "ValidationTextBox", "name": "Netatmo_Client", "caption": "Client ID" },
 				{ "type": "ValidationTextBox", "name": "Netatmo_Secret", "caption": "Client Secret" },
+
+				{ "type": "Label", "label": "Station-Name, only needed if you have more then one" },
+				{ "type": "ValidationTextBox", "name": "station_name", "caption": "Station-Name" },
+				{ "type": "Label", "label": "Name of the ..." },
+				{ "type": "ValidationTextBox", "name": "base_module_name", "caption": "Base-Module" },
+				{ "type": "ValidationTextBox", "name": "outdoor_module_name", "caption": "Outdoor-Module" },
+				{ "type": "ValidationTextBox", "name": "indoor1_module_name", "caption": "1rst Indoor-Module" },
+				{ "type": "ValidationTextBox", "name": "indoor2_module_name", "caption": "2nd Indoor-Module" },
+				{ "type": "ValidationTextBox", "name": "indoor3_module_name", "caption": "3rd Indoor-Module" },
+				{ "type": "ValidationTextBox", "name": "rain_module_name", "caption": "Rain-Gauge" },
+				{ "type": "ValidationTextBox", "name": "wind_module_name", "caption": "Wind-Gauge" },
+
+				{ "type": "Label", "label": "Konfiguration für Update to Wunderground, if filled" },
                 { "type": "Label", "label": "Wunderground Access-Details from https://www.wunderground.com/personal-weather-station/mypws" },
 				{ "type": "ValidationTextBox", "name": "Wunderground_ID", "caption": "Station ID" },
 				{ "type": "ValidationTextBox", "name": "Wunderground_Key", "caption": "Station Key" },
+
 				{ "type": "Label", "label": "Transfer weatherdata every X minutes" },
-				{ "type": "IntervalBox", "name": "TransferInterval", "caption": "Minutes" }
+				{ "type": "IntervalBox", "name": "TransferInterval", "caption": "Minutes" },
+
+				{ "type": "Label", "label": "optional data" },
+				{ "type": "CheckBox", "name": "with_absolute_pressure", "caption": "with absolute Pressure" },
+				{ "type": "CheckBox", "name": "with_absolute_humidity", "caption": "with absolute Humidity" },
+				{ "type": "CheckBox", "name": "with_dewpoint", "caption": "with Dewpoint" },
+				{ "type": "CheckBox", "name": "with_signal", "caption": "with Wifi-/RF-Signal per module" },
+				{ "type": "CheckBox", "name": "with_battery", "caption": "with Battery per module" }
             ],
 	"actions":
 			[

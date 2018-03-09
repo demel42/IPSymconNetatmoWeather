@@ -15,17 +15,27 @@ Modul für IP-Symcon ab Version 4.
 
 ## 1. Funktionsumfang
 
-Beschreibung 
+Es werden die von einer Netatmo-Wetterstatio zur Verfügung gestellten Wetterdaten an eine persöhnliche Wetterstation von Wunderground übertragen.
+
+Es wird übertragen von
+ - Innenmodul: Luftdruck
+ - Aussenmodul: Temperatur, Luftfeuchtigkeit und der daraus berechnete Taupunkt
+ - Regenmodul: 1h und 24h-Wert
+ - Windmesser: Windstärke und -richtung sowie Stärke und Richtung von Böen
+
+Wunderground schreibt, das Daten von Netatmo automatisch übernommen werden, meine Erfahrung ist aber, das das sehr unzuverlässig funktioniert (immer wieder lange Phasen ohne übertragung oder die Station taucht plötzlich unter anderem Namen auf) und zudem erfolgt meiner Beobachtung nach die Übertragung nur einmal am Tag.
 
 ### Funktionen:  
 
- - Funktion 1 
- - funktion 2
+ - zyklische Übertragung der Daten
 
 ## 2. Voraussetzungen
 
  - IPS 4.x
- - weitere Vorraussetzungen.
+ - Netatmo Wetter-Station, sinnvoll mit Regen- und Windmesser und ein entsprechenden Account bei Netatmo
+   hierzu benötigt man sowohl den "normalen" Benutzer-Account, der bei der Anmeldung der Geräte bei Netatmo erzeugt wird (https://my.netatmo.com) als auch einen Account soe eine "App" bei Netatmo Connect, um die Werte abrufen zu können (https://dev.netatmo.com). 
+ - ein Account bei Wunderground für eine "Personal-Weather-Station"
+   hierzu muss man bei Wunderground ein Konto anlegen und eine 
 
 ## 3. Installation
 
@@ -87,4 +97,4 @@ Beschreibung Funktion
 
 #### Überschrift:
 
-GUID: `{4FF50B9F-7D92-A2D0-D2B4-447D430BAFB8}` 
+GUID: `{0F22B057-3434-680A-E760-596A12F4BD99}` 
