@@ -4,30 +4,30 @@ class Netatmo2Wunderground extends IPSModule
 {
     private $scriptName = 'Netatmo2Wunderground';
 
-	// Module
-	private $module2img = [
-			"Basismodul"	=> "module_int.png",
-			"Außenmodul"	=> "module_ext.png",
-			"Windmesser"	=> "module_wind.png",
-			"Regenmesser"	=> "module_rain.png",
-			"Innenmodul"	=> "module_ext.png",
-		];
+    // Module
+    private $module2img = [
+            'Basismodul'	 => 'module_int.png',
+            'Außenmodul'	 => 'module_ext.png',
+            'Windmesser'	 => 'module_wind.png',
+            'Regenmesser'	=> 'module_rain.png',
+            'Innenmodul'	 => 'module_ext.png',
+        ];
 
-	// Wifi-Status
+    // Wifi-Status
     private $wifi_status2text = [
             0 => 'schwach',
             1 => 'mittel',
             2 => 'gut',
             3 => 'hoch',
         ];
-	private $wifi_stautus2img = [
-			0 => "wifi_low.png",
-			1 => "wifi_medium.png",
-			2 => "wifi_high.png",
-			3 => "wifi_full.png",
-		];
+    private $wifi_stautus2img = [
+            0 => 'wifi_low.png',
+            1 => 'wifi_medium.png',
+            2 => 'wifi_high.png',
+            3 => 'wifi_full.png',
+        ];
 
-	// RF-Status
+    // RF-Status
     private $signal_status2text = [
             0 => 'minimal',
             1 => 'schwach',
@@ -35,15 +35,15 @@ class Netatmo2Wunderground extends IPSModule
             3 => 'hoch',
             4 => 'voll',
         ];
-	private $signal_status2img = [
-			0 => "signal_verylow.png",
-			1 => "signal_low.png",
-			2 => "signal_medium.png",
-			3 => "signal_high.png",
-			4 => "signal_full.png",
-		];
+    private $signal_status2img = [
+            0 => 'signal_verylow.png',
+            1 => 'signal_low.png',
+            2 => 'signal_medium.png',
+            3 => 'signal_high.png',
+            4 => 'signal_full.png',
+        ];
 
-	// Battery-Status
+    // Battery-Status
     private $battery_status2text = [
             0 => 'leer',
             1 => 'schwach',
@@ -52,17 +52,14 @@ class Netatmo2Wunderground extends IPSModule
             4 => 'voll',
             5 => 'max',
         ];
-	private $battery_status2img = [
-			0 => "battery_verylow.png",
-			1 => "battery_low.png",
-			2 => "battery_medium.png",
-			3 => "battery_high.png",
-			4 => "battery_full.png",
-			5 => "battery_full.png",
-		];
-
-
-
+    private $battery_status2img = [
+            0 => 'battery_verylow.png',
+            1 => 'battery_low.png',
+            2 => 'battery_medium.png',
+            3 => 'battery_high.png',
+            4 => 'battery_full.png',
+            5 => 'battery_full.png',
+        ];
 
     public function Create()
     {
@@ -758,10 +755,10 @@ class Netatmo2Wunderground extends IPSModule
                 }
 
                 $module_data[] = [
-                        'module_type'		=> $module_type,
-                        'module_name'		=> $module_name,
-                        'last_seen'			=> $last_seen,
-                        'rf_status'			=> $rf_status,
+                        'module_type'		  => $module_type,
+                        'module_name'		  => $module_name,
+                        'last_seen'			   => $last_seen,
+                        'rf_status'			   => $rf_status,
                         'battery_status'	=> $battery_status,
                     ];
 
@@ -852,84 +849,84 @@ class Netatmo2Wunderground extends IPSModule
         }
 
         $station_data = [
-                'now'			=> $now,
-                'status'		=> $netatmo['status'],
+                'now'			       => $now,
+                'status'		     => $netatmo['status'],
                 'last_contact'	=> $last_contact,
                 'station_name'	=> $station_name,
-                'modules'		=> $module_data,
+                'modules'		    => $module_data,
             ];
 
         SetValueBoolean($this->GetIDForIdent('Status'), true);
         SetValueString($this->GetIDForIdent('Data'), json_encode($station_data));
         SetValueBoolean($this->GetIDForIdent('Battery'), $battery_indicator);
 
-		$html = "";
+        $html = '';
 
-		$html .= "<style>\n";
-		$html .= "body { margin: 1; padding: 0; font-family: 'Open Sans', sans-serif; font-size: 14px; }\n";
-		$html .= "table { border-collapse: collapse; border: 0px solid; margin: 0.5em; width: 100%; }\n";
-		$html .= "th, td { padding: 1; }\n";
-		$html .= "tbody th { text-align: left; }\n";
-		$html .= "#spalte_type { width: 25px; }\n";
-		$html .= "#spalte_signal { width: 30px; }\n";
-		$html .= "#spalte_battery { width: 30px; }\n";
-		$html .= "</style>\n";
+        $html .= "<style>\n";
+        $html .= "body { margin: 1; padding: 0; font-family: 'Open Sans', sans-serif; font-size: 14px; }\n";
+        $html .= "table { border-collapse: collapse; border: 0px solid; margin: 0.5em; width: 100%; }\n";
+        $html .= "th, td { padding: 1; }\n";
+        $html .= "tbody th { text-align: left; }\n";
+        $html .= "#spalte_type { width: 25px; }\n";
+        $html .= "#spalte_signal { width: 30px; }\n";
+        $html .= "#spalte_battery { width: 30px; }\n";
+        $html .= "</style>\n";
 
-		$dt = date('d.m. H:i', $now);
-		$s = "<font size=\"-1\">Stand:</font> ";
-		$s .= $dt;
-		$s .= "&emsp;";
-		$s .= "<font size=\"-1\">Status:</font> ";
-		$s .= $station_data['status'];
-		$s .= " <font size=\"-2\">(" . $station_data['last_contact'] . ")</font>";
-		$html .= "<center>$s</center>\n";
+        $dt = date('d.m. H:i', $now);
+        $s = '<font size="-1">Stand:</font> ';
+        $s .= $dt;
+        $s .= '&emsp;';
+        $s .= '<font size="-1">Status:</font> ';
+        $s .= $station_data['status'];
+        $s .= ' <font size="-2">(' . $station_data['last_contact'] . ')</font>';
+        $html .= "<center>$s</center>\n";
 
-		# Tabelle
-		$html .= "<table>\n";
-		# Spaltenbreite
-		$html .= "<colgroup><col id=\"spalte_type\"></colgroup>\n";
-		$html .= "<colgroup><col></colgroup>\n";
-		$html .= "<colgroup><col></colgroup>\n";
-		$html .= "<colgroup><col id=\"spalte_signal\"></colgroup>\n";
-		$html .= "<colgroup><col id=\"spalte_battry\"></colgroup>\n";
-		$html .= "<tdata>\n";
+        // Tabelle
+        $html .= "<table>\n";
+        // Spaltenbreite
+        $html .= "<colgroup><col id=\"spalte_type\"></colgroup>\n";
+        $html .= "<colgroup><col></colgroup>\n";
+        $html .= "<colgroup><col></colgroup>\n";
+        $html .= "<colgroup><col id=\"spalte_signal\"></colgroup>\n";
+        $html .= "<colgroup><col id=\"spalte_battry\"></colgroup>\n";
+        $html .= "<tdata>\n";
 
-		$img_path = "imgs/";
+        $img_path = 'imgs/';
 
-		$modules = $station_data['modules'];
-		foreach ($modules as $module) {
-			$module_type = $module['module_type'];
-			$module_type_img = $img_path . $this->module2img[$module_type];
-			$module_name = $module['module_name'];
-			$last_seen = $module['last_seen'];
+        $modules = $station_data['modules'];
+        foreach ($modules as $module) {
+            $module_type = $module['module_type'];
+            $module_type_img = $img_path . $this->module2img[$module_type];
+            $module_name = $module['module_name'];
+            $last_seen = $module['last_seen'];
 
-			$html .= "<tr>\n";
-			$html .= "<td><img src=$module_type_img width='20' height='20' title='$module_type'</td>\n";
-			$html .= "<td>$module_name</td>\n";
-			$html .= "<td>$last_seen</td>\n";
+            $html .= "<tr>\n";
+            $html .= "<td><img src=$module_type_img width='20' height='20' title='$module_type'</td>\n";
+            $html .= "<td>$module_name</td>\n";
+            $html .= "<td>$last_seen</td>\n";
 
-			if ($module_type == "Basismodul") {
-				$wifi_status = $module['wifi_status'];
-				$wifi_status_text = $this->wifi_status2text[$wifi_status];
-				$wifi_status_img = $img_path . $this->wifi_stautus2img[$wifi_status];
-				$html .= "<td><img src=$wifi_status_img width='30' height='20' title='$wifi_status_text'></td>\n";
-				$html .= "<td>&nbsp;</td>\n";
-			} else {
-				$rf_status = $module['rf_status'];
-				$rf_status_text = $this->signal_status2text[$rf_status];
-				$rf_status_img = $img_path . $this->signal_status2img[$rf_status];
-				$battery_status = $module['battery_status'];
-				$battery_status_text = $this->battery_status2text[$battery_status];
-				$battery_status_img = $img_path . $this->battery_status2img[$battery_status];
-				$html .= "<td><img src=$rf_status_img width='25' height='20' title='$rf_status_text'></td>\n";
-				$html .= "<td><img src=$battery_status_img width='30' height='15' title='$battery_status_text'></td>\n";
-			}
+            if ($module_type == 'Basismodul') {
+                $wifi_status = $module['wifi_status'];
+                $wifi_status_text = $this->wifi_status2text[$wifi_status];
+                $wifi_status_img = $img_path . $this->wifi_stautus2img[$wifi_status];
+                $html .= "<td><img src=$wifi_status_img width='30' height='20' title='$wifi_status_text'></td>\n";
+                $html .= "<td>&nbsp;</td>\n";
+            } else {
+                $rf_status = $module['rf_status'];
+                $rf_status_text = $this->signal_status2text[$rf_status];
+                $rf_status_img = $img_path . $this->signal_status2img[$rf_status];
+                $battery_status = $module['battery_status'];
+                $battery_status_text = $this->battery_status2text[$battery_status];
+                $battery_status_img = $img_path . $this->battery_status2img[$battery_status];
+                $html .= "<td><img src=$rf_status_img width='25' height='20' title='$rf_status_text'></td>\n";
+                $html .= "<td><img src=$battery_status_img width='30' height='15' title='$battery_status_text'></td>\n";
+            }
 
-			$html .= "</tr>\n";
-		}
+            $html .= "</tr>\n";
+        }
 
-		$html .= "</tdata>\n";
-		$html .= "</table>\n";
+        $html .= "</tdata>\n";
+        $html .= "</table>\n";
 
         SetValueString($this->GetIDForIdent('StatusImage'), $html);
 
