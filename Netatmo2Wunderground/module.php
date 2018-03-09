@@ -110,7 +110,7 @@ class Netatmo2Wunderground extends IPSModule
         if (!IPS_VariableProfileExists('Netatmo.Wifi')) {
             IPS_CreateVariableProfile('Netatmo.Wifi', 1);
             IPS_SetVariableProfileText('Netatmo.Wifi', '', '');
-            IPS_SetVariableProfileIcon('Netatmo.Wifi', '', 'Intensity');
+            IPS_SetVariableProfileIcon('Netatmo.Wifi', 'Intensity');
             IPS_SetVariableProfileAssociation('Netatmo.Wifi', 0, $this->wifi_status2text[0], '', 0xEE0000);
             IPS_SetVariableProfileAssociation('Netatmo.Wifi', 1, $this->wifi_status2text[1], '', 0xFFFF00);
             IPS_SetVariableProfileAssociation('Netatmo.Wifi', 2, $this->wifi_status2text[2], '', 0x32CD32);
@@ -119,7 +119,7 @@ class Netatmo2Wunderground extends IPSModule
         if (!IPS_VariableProfileExists('Netatmo.RfSignal')) {
             IPS_CreateVariableProfile('Netatmo.RfSignal', 1);
             IPS_SetVariableProfileText('Netatmo.RfSignal', '', '');
-            IPS_SetVariableProfileIcon('Netatmo.RfSignal', '', 'Intensity');
+            IPS_SetVariableProfileIcon('Netatmo.RfSignal', 'Intensity');
             IPS_SetVariableProfileAssociation('Netatmo.RfSignal', 0, $this->signal_status2text[0], '', 0xEE0000);
             IPS_SetVariableProfileAssociation('Netatmo.RfSignal', 1, $this->signal_status2text[1], '', 0xFFA500);
             IPS_SetVariableProfileAssociation('Netatmo.RfSignal', 2, $this->signal_status2text[2], '', 0xFFFF00);
@@ -129,7 +129,7 @@ class Netatmo2Wunderground extends IPSModule
         if (!IPS_VariableProfileExists('Netatmo.Battery')) {
             IPS_CreateVariableProfile('Netatmo.Battery', 1);
             IPS_SetVariableProfileText('Netatmo.Battery', '', '');
-            IPS_SetVariableProfileIcon('Netatmo.Battery', '', 'Battery');
+            IPS_SetVariableProfileIcon('Netatmo.Battery', 'Battery');
             IPS_SetVariableProfileAssociation('Netatmo.Battery', 0, $this->battery_status2text[0], '', 0xEE0000);
             IPS_SetVariableProfileAssociation('Netatmo.Battery', 1, $this->battery_status2text[1], '', 0xFFA500);
             IPS_SetVariableProfileAssociation('Netatmo.Battery', 2, $this->battery_status2text[2], '', 0xFFFF00);
