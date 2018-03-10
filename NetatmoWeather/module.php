@@ -1,8 +1,8 @@
 <?php
 
-class Netatmo2Wunderground extends IPSModule
+class NetatmoWeather extends IPSModule
 {
-    private $scriptName = 'Netatmo2Wunderground';
+    private $scriptName = 'NetatmoWeather';
 
     public function Create()
     {
@@ -90,7 +90,7 @@ class Netatmo2Wunderground extends IPSModule
             IPS_SetVariableProfileAssociation('Netatmo.Battery', 5, $this->battery_status2text(5), '', 0x228B22);
         }
 
-        $this->RegisterTimer('UpdateDataWeather', 0, 'Netatmo2Wunderground_UpdateData(' . $this->InstanceID . ');');
+        $this->RegisterTimer('UpdateDataWeather', 0, 'NetatmoWeather_UpdateData(' . $this->InstanceID . ');');
     }
 
     public function ApplyChanges()
@@ -318,7 +318,7 @@ class Netatmo2Wunderground extends IPSModule
             }
 
             // Inspired by module SymconTest/HookServe
-            $this->RegisterHook('/hook/Netatmo2Wunderground');
+            $this->RegisterHook('/hook/NetatmoWeather');
 
             // instanz is activ
             $this->SetStatus(102);
@@ -814,7 +814,7 @@ class Netatmo2Wunderground extends IPSModule
         SetValueString($this->GetIDForIdent('Data'), json_encode($station_data));
         SetValueBoolean($this->GetIDForIdent('Battery'), $battery_indicator);
 
-        $img_path = '/hook/Netatmo2Wunderground/imgs/';
+        $img_path = '/hook/NetatmoWeather/imgs/';
 
         $html = '';
 
@@ -1088,7 +1088,7 @@ class Netatmo2Wunderground extends IPSModule
             $html .= "<colgroup><col id=\"spalte_battry\"></colgroup>\n";
             $html .= "<tdata>\n";
 
-            $img_path = '/hook/Netatmo2Wunderground/imgs/';
+            $img_path = '/hook/NetatmoWeather/imgs/';
 
             $modules = $station_data['modules'];
             foreach ($modules as $module) {
@@ -1142,7 +1142,7 @@ class Netatmo2Wunderground extends IPSModule
             http_response_code(404);
             die('File not found!');
         }
-        $basename = substr($uri, strlen('/hook/Netatmo2Wunderground/'));
+        $basename = substr($uri, strlen('/hook/NetatmoWeather/'));
         if ($basename == 'status') {
             $this->ProcessHook_Status();
             return;

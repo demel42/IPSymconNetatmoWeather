@@ -1,13 +1,13 @@
 {
 	"id": "{D7E6A4F8-1B26-4B1A-C577-98F4C5C2235C}",
-	"name": "Netatmo2Wunderground",
+	"name": "NetatmoWeather",
 	"type": 3,
 	"vendor": "Netatmo",
 	"aliases": [
-		"Netatmo2Wunderground"
+		"NetatmoWeather"
 	],
 	"parentRequirements": [],
 	"childRequirements": [],
 	"implemented": [],
-	"prefix": "Netatmo2Wunderground"
+	"prefix": "NetatmoWeather"
 }

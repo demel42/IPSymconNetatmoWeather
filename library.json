@@ -1,13 +1,13 @@
 {
 	"id": "{4E453F9B-DEB9-2071-CF32-C0D0F28D8F06}",
 	"author": "Ch. Damsky",
-	"name": "Netatmo2Wunderground",
+	"name": "NetatmoWeather",
 	"url": "",
 	"compatibility": {
 		"version": "4.2",
 		"date": 1491343200
 	},
-	"version": "0.1",
+	"version": "0.9",
 	"build": 0,
 	"date": 0
 }

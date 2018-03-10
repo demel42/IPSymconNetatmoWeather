@@ -1,4 +1,4 @@
-# Netatmo2Wunderground
+# NetatmoWeather
 
 Modul für IP-Symcon ab Version 4.
 
@@ -48,7 +48,7 @@ In der _Modules_ Instanz rechts oben auf den Button __*Hinzufügen*__ drücken.
 In dem sich öffnenden Fenster folgende URL hinzufügen:
 
 	
-    `https://github.com/Git_Name/IPSymconXXX`  
+    `https://github.com/demel42/NetatmoWeather.git`  
     
 und mit _OK_ bestätigen.    
         

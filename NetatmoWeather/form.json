@@ -42,7 +42,7 @@
 			],
 	"actions":
 			[
-				{ "type": "Button", "label": "Update Weatherdata", "onClick": "Netatmo2Wunderground_UpdateData($id);" }
+				{ "type": "Button", "label": "Update Weatherdata", "onClick": "NetatmoWeather_UpdateData($id);" }
 			],		
 	"status":
 			[
