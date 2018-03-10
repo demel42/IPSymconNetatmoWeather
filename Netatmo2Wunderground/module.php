@@ -140,7 +140,7 @@ class Netatmo2Wunderground extends IPSModule
             }
 
             if ($base_module_name != '') {
-				$vpos = 100;
+                $vpos = 100;
                 $s = $base_module_name . '\\';
                 $this->RegisterVariableInteger('LastMeasure', 'letzte Messung', '~UnixTimestamp', $vpos++);
 
@@ -176,7 +176,7 @@ class Netatmo2Wunderground extends IPSModule
                 $this->UnregisterVariable('BASE_Wifi');
             }
             for ($i = 1; $i <= 3; $i++) {
-				$vpos = 200 + (($i - 1 ) * 100);
+                $vpos = 200 + (($i - 1) * 100);
                 switch ($i) {
                     case 1: $module_name = $indoor1_module_name; break;
                     case 2: $module_name = $indoor2_module_name; break;
@@ -213,47 +213,53 @@ class Netatmo2Wunderground extends IPSModule
                 }
             }
             if ($outdoor_module_name != '') {
-				$vpos = 500;
+                $vpos = 500;
                 $s = $outdoor_module_name . '\\';
                 $this->RegisterVariableFloat('OUT_Temperature', $s . 'Temperatur', 'Netatmo.Temperatur', $vpos++);
                 $this->RegisterVariableFloat('OUT_Humidity', $s . 'Luftfeuchtigkeit', 'Netatmo.Humidity', $vpos++);
-                if ($with_absolute_humidity)
+                if ($with_absolute_humidity) {
                     $this->RegisterVariableFloat('OUT_AbsoluteHumidity', $s . 'absolute Luftfeuchtigkeit', 'Netatmo.absHumidity', $vpos++);
-                else
+                } else {
                     $this->UnregisterVariable('OUT_AbsoluteHumidity');
-                if ($with_dewpoint)
+                }
+                if ($with_dewpoint) {
                     $this->RegisterVariableFloat('OUT_Dewpoint', $s . 'Taupunkt', 'Netatmo.Dewpoint', $vpos++);
-                else
+                } else {
                     $this->UnregisterVariable('OUT_Dewpoint');
-                if ($with_windchill)
+                }
+                if ($with_windchill) {
                     $this->RegisterVariableFloat('OUT_Windchill', $s . 'Windchill', 'Netatmo.Temperatur', $vpos++);
-                else
+                } else {
                     $this->UnregisterVariable('OUT_Windchill');
-                if ($with_heatindex)
+                }
+                if ($with_heatindex) {
                     $this->RegisterVariableFloat('OUT_Heatindex', $s . 'Hitzeindex', 'Netatmo.Heatindex', $vpos++);
-                else
+                } else {
                     $this->UnregisterVariable('OUT_Heatindex');
-                if ($with_signal)
+                }
+                if ($with_signal) {
                     $this->RegisterVariableInteger('OUT_RfSignal', $s . 'Signal-Stärke', 'Netatmo.RfSignal', $vpos++);
-                else
+                } else {
                     $this->UnregisterVariable('OUT_RfSignal');
-                if ($with_battery)
+                }
+                if ($with_battery) {
                     $this->RegisterVariableInteger('OUT_Battery', $s . 'Batterie-Status', 'Netatmo.Battery', $vpos++);
-                else
+                } else {
                     $this->UnregisterVariable('OUT_Battery');
+                }
             } else {
                 $this->UnregisterVariable('OUT_Temperature');
                 $this->UnregisterVariable('OUT_Humidity');
                 $this->UnregisterVariable('OUT_AbsoluteHumidity');
                 $this->UnregisterVariable('OUT_Dewpoint');
-				$this->UnregisterVariable('OUT_Windchill');
-				$this->UnregisterVariable('OUT_Heatindex');
+                $this->UnregisterVariable('OUT_Windchill');
+                $this->UnregisterVariable('OUT_Heatindex');
                 $this->UnregisterVariable('OUT_RfSignal');
                 $this->UnregisterVariable('OUT_Battery');
             }
 
             if ($wind_module_name != '') {
-				$vpos = 600;
+                $vpos = 600;
                 $s = $wind_module_name . '\\';
                 $this->RegisterVariableFloat('WIND_WindSpeed', $s . 'Windgeschwindigkeit', 'Netatmo.WindSpeed', $vpos++);
                 $this->RegisterVariableInteger('WIND_WindAngle', $s . 'Windrichtung', 'Netatmo.WindAngle', $vpos++);
@@ -262,31 +268,33 @@ class Netatmo2Wunderground extends IPSModule
                 if ($with_windstrength) {
                     $this->RegisterVariableInteger('WIND_WindStrength', $s . 'Windstärke', 'Netatmo.WindStrength', $vpos++);
                     $this->RegisterVariableInteger('WIND_GustStrength', $s . 'Stärke der Böen', 'Netatmo.WindStrength', $vpos++);
-				} else {
+                } else {
                     $this->UnregisterVariable('WIND_WindStrength');
                     $this->UnregisterVariable('WIND_GustStrength');
-				}
-                if ($with_signal)
+                }
+                if ($with_signal) {
                     $this->RegisterVariableInteger('WIND_RfSignal', $s . 'Signal-Stärke', 'Netatmo.RfSignal', $vpos++);
-                else
+                } else {
                     $this->UnregisterVariable('WIND_RfSignal');
-                if ($with_battery)
+                }
+                if ($with_battery) {
                     $this->RegisterVariableInteger('WIND_Battery', $s . 'Batterie-Status', 'Netatmo.Battery', $vpos++);
-                else
+                } else {
                     $this->UnregisterVariable('WIND_Battery');
+                }
             } else {
                 $this->UnregisterVariable('WIND_WindSpeed');
                 $this->UnregisterVariable('WIND_WindAngle');
-				$this->UnregisterVariable('WIND_WindStrength');
+                $this->UnregisterVariable('WIND_WindStrength');
                 $this->UnregisterVariable('WIND_GustSpeed');
                 $this->UnregisterVariable('WIND_GustAngle');
-				$this->UnregisterVariable('WIND_GustStrength');
+                $this->UnregisterVariable('WIND_GustStrength');
                 $this->UnregisterVariable('WIND_RfSignal');
                 $this->UnregisterVariable('WIND_Battery');
             }
 
             if ($rain_module_name != '') {
-				$vpos = 700;
+                $vpos = 700;
                 $s = $rain_module_name . '\\';
                 $this->RegisterVariableFloat('RAIN_Rain', $s . 'Regenmenge', 'Netatmo.Rainfall', $vpos++);
                 $this->RegisterVariableFloat('RAIN_Rain_1h', $s . 'Regenmenge der letzten 1h', 'Netatmo.Rainfall', $vpos++);
@@ -308,7 +316,6 @@ class Netatmo2Wunderground extends IPSModule
                 $this->UnregisterVariable('RAIN_RfSignal');
                 $this->UnregisterVariable('RAIN_Battery');
             }
-
 
             // Inspired by module SymconTest/HookServe
             $this->RegisterHook('/hook/Netatmo2Wunderground');
@@ -497,15 +504,15 @@ class Netatmo2Wunderground extends IPSModule
         $now = time();
 
         $place = $device['place'];
-		$altitude = $place['altitude'];
-		$longitude = $place['location'][0];
-		$latitude = $place['location'][1];
+        $altitude = $place['altitude'];
+        $longitude = $place['location'][0];
+        $latitude = $place['location'][1];
 
-		IPS_SetProperty($this->InstanceID, 'station_altitude', $altitude);
-		IPS_SetProperty($this->InstanceID, 'station_longitude', $longitude);
-		IPS_SetProperty($this->InstanceID, 'station_latitude', $latitude);
-		$this->SendDebug($this->scriptName, "station \"$station_name\": altitude=$altitude, longitude=$longitude, latitude=$latitude", 0);
-		IPS_ApplyChanges($this->InstanceID);
+        IPS_SetProperty($this->InstanceID, 'station_altitude', $altitude);
+        IPS_SetProperty($this->InstanceID, 'station_longitude', $longitude);
+        IPS_SetProperty($this->InstanceID, 'station_latitude', $latitude);
+        $this->SendDebug($this->scriptName, "station \"$station_name\": altitude=$altitude, longitude=$longitude, latitude=$latitude", 0);
+        IPS_ApplyChanges($this->InstanceID);
 
         // base module
         $module_type = 'Basismodul';
@@ -724,12 +731,12 @@ class Netatmo2Wunderground extends IPSModule
                         SetValue($this->GetIDForIdent('WIND_WindAngle'), $WindAngle);
                         SetValue($this->GetIDForIdent('WIND_GustSpeed'), $GustSpeed);
                         SetValue($this->GetIDForIdent('WIND_GustAngle'), $GustAngle);
-						if ($with_windstrength) {
-							$windstrength = $this->windspeed2bft($WindSpeed);
-							SetValue($this->GetIDForIdent('WIND_WindStrength'), $windstrength);
-							$guststrength = $this->windspeed2bft($GustSpeed);
-							SetValue($this->GetIDForIdent('WIND_GustStrength'), $guststrength);
-						}
+                        if ($with_windstrength) {
+                            $windstrength = $this->windspeed2bft($WindSpeed);
+                            SetValue($this->GetIDForIdent('WIND_WindStrength'), $windstrength);
+                            $guststrength = $this->windspeed2bft($GustSpeed);
+                            SetValue($this->GetIDForIdent('WIND_GustStrength'), $guststrength);
+                        }
                         if ($with_signal) {
                             SetValue($this->GetIDForIdent('WIND_RfSignal'), $rf_status);
                         }
@@ -787,12 +794,12 @@ class Netatmo2Wunderground extends IPSModule
                 $this->SendDebug($this->scriptName, utf8_decode($msg), 0);
             }
 
-			if ($with_windchill) {
-				$temp = GetValue($this->GetIDForIdent('OUT_Temperature'));
-				$speed = GetValue($this->GetIDForIdent('WIND_WindSpeed'));
-				$windchill = $this->calcWindchill($temp, $speed);
-				SetValue($this->GetIDForIdent('OUT_Windchill'), $windchill);
-			}
+            if ($with_windchill) {
+                $temp = GetValue($this->GetIDForIdent('OUT_Temperature'));
+                $speed = GetValue($this->GetIDForIdent('WIND_WindSpeed'));
+                $windchill = $this->calcWindchill($temp, $speed);
+                SetValue($this->GetIDForIdent('OUT_Windchill'), $windchill);
+            }
         }
 
         $station_data = [
@@ -841,14 +848,14 @@ class Netatmo2Wunderground extends IPSModule
         $html .= "<colgroup><col id=\"spalte_battry\"></colgroup>\n";
         $html .= "<tdata>\n";
 
-		$html .= "<tr>\n";
-		$html .= "<th></td>\n";
-		$html .= "<th>Modultyp</th>\n";
-		$html .= "<th>Name</th>\n";
-		$html .= "<th>letzte Meldung</th>\n";
-		$html .= "<th style='padding: 0; text-align: left'>Signal</th>\n";
-		$html .= "<th style='padding: 0; text-align: left'>Batterie</th>\n";
-		$html .= "</tr>\n";
+        $html .= "<tr>\n";
+        $html .= "<th></td>\n";
+        $html .= "<th>Modultyp</th>\n";
+        $html .= "<th>Name</th>\n";
+        $html .= "<th>letzte Meldung</th>\n";
+        $html .= "<th style='padding: 0; text-align: left'>Signal</th>\n";
+        $html .= "<th style='padding: 0; text-align: left'>Batterie</th>\n";
+        $html .= "</tr>\n";
 
         $modules = $station_data['modules'];
         foreach ($modules as $module) {
@@ -1037,92 +1044,92 @@ class Netatmo2Wunderground extends IPSModule
     }
 
     private function ProcessHook_Status()
-	{
-		$s = GetValueString($this->GetIDForIdent('Data'));
-		$station_data = json_decode($s, true);
+    {
+        $s = GetValueString($this->GetIDForIdent('Data'));
+        $station_data = json_decode($s, true);
 
-		$html = '';
+        $html = '';
 
-		$html .= "<!DOCTYPE html>\n";
-		$html .= "<html>\n";
-		$html .= "<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n";
-		$html .= "<link href=\"https://fonts.googleapis.com/css?family=Open+Sans\" rel=\"stylesheet\">\n";
-		$html .= "<title>Status von Netatmo</title>\n";
-		$html .= "<style>\n";
-		$html .= "html { height: 100%; color: #ffffff; background-color: #303030; overflow: hidden; }\n";
-		$html .= "body { table-cell; text-align: left; vertical-align: top; height: 100%; }\n";
-		$html .= "<style>\n";
-		$html .= "body { margin: 1; padding: 0; font-family: 'Open Sans', sans-serif; font-size: 14px; }\n";
-		$html .= "table { border-collapse: collapse; border: 0px solid; margin: 0.5em; width: 100%; }\n";
-		$html .= "th, td { padding: 1; }\n";
-		$html .= "tbody th { text-align: left; }\n";
-		$html .= "#spalte_type { width: 25px; }\n";
-		$html .= "#spalte_signal { width: 30px; }\n";
-		$html .= "#spalte_battery { width: 30px; }\n";
-		$html .= "</style>\n";
+        $html .= "<!DOCTYPE html>\n";
+        $html .= "<html>\n";
+        $html .= "<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n";
+        $html .= "<link href=\"https://fonts.googleapis.com/css?family=Open+Sans\" rel=\"stylesheet\">\n";
+        $html .= "<title>Status von Netatmo</title>\n";
+        $html .= "<style>\n";
+        $html .= "html { height: 100%; color: #ffffff; background-color: #303030; overflow: hidden; }\n";
+        $html .= "body { table-cell; text-align: left; vertical-align: top; height: 100%; }\n";
+        $html .= "<style>\n";
+        $html .= "body { margin: 1; padding: 0; font-family: 'Open Sans', sans-serif; font-size: 14px; }\n";
+        $html .= "table { border-collapse: collapse; border: 0px solid; margin: 0.5em; width: 100%; }\n";
+        $html .= "th, td { padding: 1; }\n";
+        $html .= "tbody th { text-align: left; }\n";
+        $html .= "#spalte_type { width: 25px; }\n";
+        $html .= "#spalte_signal { width: 30px; }\n";
+        $html .= "#spalte_battery { width: 30px; }\n";
+        $html .= "</style>\n";
 
-		$dt = date('d.m. H:i', $station_data['now']);
-		$s = '<font size="-1">Stand:</font> ';
-		$s .= $dt;
-		$s .= '&emsp;';
-		$s .= '<font size="-1">Status:</font> ';
-		$s .= $station_data['status'];
-		$s .= ' <font size="-2">(' . $station_data['last_contact'] . ')</font>';
-		$html .= "<center>$s</center>\n";
+        $dt = date('d.m. H:i', $station_data['now']);
+        $s = '<font size="-1">Stand:</font> ';
+        $s .= $dt;
+        $s .= '&emsp;';
+        $s .= '<font size="-1">Status:</font> ';
+        $s .= $station_data['status'];
+        $s .= ' <font size="-2">(' . $station_data['last_contact'] . ')</font>';
+        $html .= "<center>$s</center>\n";
 
-		if (isset($station_data['modules'])) {
-			// Tabelle
-			$html .= "<table>\n";
-			// Spaltenbreite
-			$html .= "<colgroup><col id=\"spalte_type\"></colgroup>\n";
-			$html .= "<colgroup><col></colgroup>\n";
-			$html .= "<colgroup><col></colgroup>\n";
-			$html .= "<colgroup><col id=\"spalte_signal\"></colgroup>\n";
-			$html .= "<colgroup><col id=\"spalte_battry\"></colgroup>\n";
-			$html .= "<tdata>\n";
+        if (isset($station_data['modules'])) {
+            // Tabelle
+            $html .= "<table>\n";
+            // Spaltenbreite
+            $html .= "<colgroup><col id=\"spalte_type\"></colgroup>\n";
+            $html .= "<colgroup><col></colgroup>\n";
+            $html .= "<colgroup><col></colgroup>\n";
+            $html .= "<colgroup><col id=\"spalte_signal\"></colgroup>\n";
+            $html .= "<colgroup><col id=\"spalte_battry\"></colgroup>\n";
+            $html .= "<tdata>\n";
 
-			$img_path = '/hook/Netatmo2Wunderground/imgs/';
+            $img_path = '/hook/Netatmo2Wunderground/imgs/';
 
-			$modules = $station_data['modules'];
-			foreach ($modules as $module) {
-				$module_type = $module['module_type'];
-				$module_type_img = $img_path . $this->module2img($module_type);
-				$module_name = $module['module_name'];
-				$last_seen = $module['last_seen'];
+            $modules = $station_data['modules'];
+            foreach ($modules as $module) {
+                $module_type = $module['module_type'];
+                $module_type_img = $img_path . $this->module2img($module_type);
+                $module_name = $module['module_name'];
+                $last_seen = $module['last_seen'];
 
-				$html .= "<tr>\n";
-				$html .= "<td><img src=$module_type_img width='20' height='20' title='$module_type'</td>\n";
-				$html .= "<td>$module_name</td>\n";
-				$html .= "<td>$last_seen</td>\n";
+                $html .= "<tr>\n";
+                $html .= "<td><img src=$module_type_img width='20' height='20' title='$module_type'</td>\n";
+                $html .= "<td>$module_name</td>\n";
+                $html .= "<td>$last_seen</td>\n";
 
-				if ($module_type == 'Basismodul') {
-					$wifi_status = $module['wifi_status'];
-					$wifi_status_text = $this->wifi_status2text($wifi_status);
-					$wifi_status_img = $img_path . $this->wifi_stautus2img($wifi_status);
-					$html .= "<td><img src=$wifi_status_img width='30' height='20' title='$wifi_status_text'></td>\n";
-					$html .= "<td>&nbsp;</td>\n";
-				} else {
-					$rf_status = $module['rf_status'];
-					$rf_status_text = $this->signal_status2text($rf_status);
-					$rf_status_img = $img_path . $this->signal_status2img($rf_status);
-					$battery_status = $module['battery_status'];
-					$battery_status_text = $this->battery_status2text($battery_status);
-					$battery_status_img = $img_path . $this->battery_status2img($battery_status);
-					$html .= "<td><img src=$rf_status_img width='25' height='20' title='$rf_status_text'></td>\n";
-					$html .= "<td><img src=$battery_status_img width='30' height='15' title='$battery_status_text'></td>\n";
-				}
+                if ($module_type == 'Basismodul') {
+                    $wifi_status = $module['wifi_status'];
+                    $wifi_status_text = $this->wifi_status2text($wifi_status);
+                    $wifi_status_img = $img_path . $this->wifi_stautus2img($wifi_status);
+                    $html .= "<td><img src=$wifi_status_img width='30' height='20' title='$wifi_status_text'></td>\n";
+                    $html .= "<td>&nbsp;</td>\n";
+                } else {
+                    $rf_status = $module['rf_status'];
+                    $rf_status_text = $this->signal_status2text($rf_status);
+                    $rf_status_img = $img_path . $this->signal_status2img($rf_status);
+                    $battery_status = $module['battery_status'];
+                    $battery_status_text = $this->battery_status2text($battery_status);
+                    $battery_status_img = $img_path . $this->battery_status2img($battery_status);
+                    $html .= "<td><img src=$rf_status_img width='25' height='20' title='$rf_status_text'></td>\n";
+                    $html .= "<td><img src=$battery_status_img width='30' height='15' title='$battery_status_text'></td>\n";
+                }
 
-				$html .= "</tr>\n";
-			}
+                $html .= "</tr>\n";
+            }
 
-			$html .= "</tdata>\n";
-			$html .= "</table>\n";
-		}
-		$html .= "</body>\n";
-		$html .= "</html>\n";
+            $html .= "</tdata>\n";
+            $html .= "</table>\n";
+        }
+        $html .= "</body>\n";
+        $html .= "</html>\n";
 
-		echo $html;
-	}
+        echo $html;
+    }
 
     // Inspired from module SymconTest/HookServe
     protected function ProcessHookData()
@@ -1130,16 +1137,16 @@ class Netatmo2Wunderground extends IPSModule
         $this->SendDebug('WebHook SERVER', print_r($_SERVER, true), 0);
 
         $root = realpath(__DIR__);
-		$uri = $_SERVER['REQUEST_URI'];
+        $uri = $_SERVER['REQUEST_URI'];
         if (substr($uri, -1) == '/') {
             http_response_code(404);
             die('File not found!');
         }
-		$basename = substr($uri, strlen('/hook/Netatmo2Wunderground/'));
-		if ($basename == "status") {
-			$this->ProcessHook_Status();
-			return;
-		}
+        $basename = substr($uri, strlen('/hook/Netatmo2Wunderground/'));
+        if ($basename == 'status') {
+            $this->ProcessHook_Status();
+            return;
+        }
         $path = realpath($root . '/' . $basename);
         if ($path === false) {
             http_response_code(404);
@@ -1162,8 +1169,9 @@ class Netatmo2Wunderground extends IPSModule
             if (count($type) == 2) {
                 $types = explode(' ', trim($type[1]));
                 foreach ($types as $ext) {
-                    if ($ext == $extension)
+                    if ($ext == $extension) {
                         return $type[0];
+                    }
                 }
             }
         }
@@ -1172,8 +1180,8 @@ class Netatmo2Wunderground extends IPSModule
 
     // Module
     private function module2img($val)
-	{
-		$val2img = [
+    {
+        $val2img = [
             'Basismodul'  => 'module_int.png',
             'Außenmodul'  => 'module_ext.png',
             'Windmesser'  => 'module_wind.png',
@@ -1181,50 +1189,53 @@ class Netatmo2Wunderground extends IPSModule
             'Innenmodul'  => 'module_ext.png',
         ];
 
-		if ($val >= 0 && $val < count($val2img))
-			$img = $val2img[$val];
-		else
-			$img = '';
-		return($img);
-	}
+        if ($val >= 0 && $val < count($val2img)) {
+            $img = $val2img[$val];
+        } else {
+            $img = '';
+        }
+        return $img;
+    }
 
     // Wifi-Status
-    private function wifi_status2text($status) 
-	{
-		$status2txt = [
+    private function wifi_status2text($status)
+    {
+        $status2txt = [
             'schwach',
             'mittel',
             'gut',
             'hoch',
         ];
 
-		if ($status >= 0 && $status < count($status2txt))
-			$txt = $status2txt[$status];
-		else
-			$txt = '';
-		return($txt);
-	}
+        if ($status >= 0 && $status < count($status2txt)) {
+            $txt = $status2txt[$status];
+        } else {
+            $txt = '';
+        }
+        return $txt;
+    }
 
     private function wifi_stautus2img($status)
-	{
-		$status2img = [
+    {
+        $status2img = [
             'wifi_low.png',
             'wifi_medium.png',
             'wifi_high.png',
             'wifi_full.png',
         ];
 
-		if ($status >= 0 && $status < count($status2img))
-			$img = $status2img[$status];
-		else
-			$img = '';
-		return($img);
-	}
+        if ($status >= 0 && $status < count($status2img)) {
+            $img = $status2img[$status];
+        } else {
+            $img = '';
+        }
+        return $img;
+    }
 
     // RF-Status
     private function signal_status2text($status)
-	{
-		$status2txt = [
+    {
+        $status2txt = [
             'minimal',
             'schwach',
             'mittel',
@@ -1232,16 +1243,17 @@ class Netatmo2Wunderground extends IPSModule
             'voll',
         ];
 
-		if ($status >= 0 && $status < count($status2txt))
-			$txt = $status2txt[$status];
-		else
-			$txt = '';
-		return($txt);
-	}
+        if ($status >= 0 && $status < count($status2txt)) {
+            $txt = $status2txt[$status];
+        } else {
+            $txt = '';
+        }
+        return $txt;
+    }
 
     private function signal_status2img($status)
-	{
-		$status2img = [
+    {
+        $status2img = [
             'signal_verylow.png',
             'signal_low.png',
             'signal_medium.png',
@@ -1249,17 +1261,18 @@ class Netatmo2Wunderground extends IPSModule
             'signal_full.png',
         ];
 
-		if ($status >= 0 && $status < count($status2img))
-			$img = $status2img[$status];
-		else
-			$img = '';
-		return($img);
-	}
+        if ($status >= 0 && $status < count($status2img)) {
+            $img = $status2img[$status];
+        } else {
+            $img = '';
+        }
+        return $img;
+    }
 
     // Battery-Status
     private function battery_status2text($status)
-	{
-		$status2txt = [
+    {
+        $status2txt = [
             'leer',
             'schwach',
             'mittel',
@@ -1268,16 +1281,17 @@ class Netatmo2Wunderground extends IPSModule
             'max',
         ];
 
-		if ($status >= 0 && $status < count($status2txt))
-			$txt = $status2txt[$status];
-		else
-			$txt = '';
-		return($txt);
-	}
+        if ($status >= 0 && $status < count($status2txt)) {
+            $txt = $status2txt[$status];
+        } else {
+            $txt = '';
+        }
+        return $txt;
+    }
 
     private function battery_status2img($status)
-	{
-		$status2img = [
+    {
+        $status2img = [
             'battery_verylow.png',
             'battery_low.png',
             'battery_medium.png',
@@ -1286,12 +1300,13 @@ class Netatmo2Wunderground extends IPSModule
             'battery_full.png',
         ];
 
-		if ($status >= 0 && $status < count($status2img))
-			$img = $status2img[$status];
-		else
-			$img = '';
-		return($img);
-	}
+        if ($status >= 0 && $status < count($status2img)) {
+            $img = $status2img[$status];
+        } else {
+            $img = '';
+        }
+        return $img;
+    }
 
     private function km2mile($i)
     {
@@ -1353,8 +1368,8 @@ class Netatmo2Wunderground extends IPSModule
         return $duration;
     }
 
-	// Taupunkt berechnen
-	//   Quelle: https://www.wetterochs.de/wetter/feuchte.html
+    // Taupunkt berechnen
+    //   Quelle: https://www.wetterochs.de/wetter/feuchte.html
     private function calcDewpoint($temp, $humidity)
     {
         if ($temp > 0) {
@@ -1370,8 +1385,8 @@ class Netatmo2Wunderground extends IPSModule
         return $dewpoint;
     }
 
-	// relative Luffeuchtigkeit in absolute Feuchte umrechnen
-	//   Quelle: https://www.wetterochs.de/wetter/feuchte.html
+    // relative Luffeuchtigkeit in absolute Feuchte umrechnen
+    //   Quelle: https://www.wetterochs.de/wetter/feuchte.html
     private function calcAbsoluteHumidity($temp, $humidity)
     {
         if ($temp >= 0) {
@@ -1406,8 +1421,8 @@ class Netatmo2Wunderground extends IPSModule
         return $AF;
     }
 
-	// gemessenen Luftdruck in absoluen Luftdruck (Meereshöhe) umrechnen
-	//   Quelle: https://rechneronline.de/barometer/hoehe.php
+    // gemessenen Luftdruck in absoluen Luftdruck (Meereshöhe) umrechnen
+    //   Quelle: https://rechneronline.de/barometer/hoehe.php
     private function calcAbsolutePressure($pressure, $temp, $altitude)
     {
         // Temperaturgradient (geschätzt)
@@ -1428,114 +1443,118 @@ class Netatmo2Wunderground extends IPSModule
         return $AP;
     }
 
-	// Windrichtung in Grad als Bezeichnung ausgeben
-	//   Quelle: https://www.windfinder.com/wind/windspeed.htm
-	function winddir2text($dir)
-	{
-		$dir2txt = [
-			"N",
-			"NNO",
-			"NO",
-			"ONO",
-			"O",
-			"OSO",
-			"SO",
-			"SSO",
-			"S",
-			"SSW",
-			"SW",
-			"WSW",
-			"W",
-			"WNW",
-			"NW",
-			"NNW",
-		];
+    // Windrichtung in Grad als Bezeichnung ausgeben
+    //   Quelle: https://www.windfinder.com/wind/windspeed.htm
+    public function winddir2text($dir)
+    {
+        $dir2txt = [
+            'N',
+            'NNO',
+            'NO',
+            'ONO',
+            'O',
+            'OSO',
+            'SO',
+            'SSO',
+            'S',
+            'SSW',
+            'SW',
+            'WSW',
+            'W',
+            'WNW',
+            'NW',
+            'NNW',
+        ];
 
-		$idx = int((($dir + 11.25) % 360) / 22.5);
-		if ($idx >= 0 && $idx < count($dir2txt))
-			$txt = $dir2txt[$idx];
-		else
-			$txt = '';
-		return($txt);
-	}
+        $idx = int((($dir + 11.25) % 360) / 22.5);
+        if ($idx >= 0 && $idx < count($dir2txt)) {
+            $txt = $dir2txt[$idx];
+        } else {
+            $txt = '';
+        }
+        return $txt;
+    }
 
-	// Windgeschwindigkeit in Beaufort umrechnen
-	//   Quelle: https://de.wikipedia.org/wiki/Beaufortskala
-	function windspeed2bft($speed)
-	{
-		$kmh2bft = array(0.3, 1.6, 3.4, 5.5, 8.0, 10.8, 13.9, 17.2, 20.8, 24.5, 28.5, 32.7);
+    // Windgeschwindigkeit in Beaufort umrechnen
+    //   Quelle: https://de.wikipedia.org/wiki/Beaufortskala
+    public function windspeed2bft($speed)
+    {
+        $kmh2bft = [0.3, 1.6, 3.4, 5.5, 8.0, 10.8, 13.9, 17.2, 20.8, 24.5, 28.5, 32.7];
 
-		$ms = $speed / 3.6;
-		for ($i = 0; $i < count($kmh2bft); $i++) {
-			if ($ms < $kmh2bft[$i]) break;
-		}
-		return($i);
-	}
+        $ms = $speed / 3.6;
+        for ($i = 0; $i < count($kmh2bft); $i++) {
+            if ($ms < $kmh2bft[$i]) {
+                break;
+            }
+        }
+        return $i;
+    }
 
-	// Windstärke als Text ausgeben
-	//  Quelle: https://de.wikipedia.org/wiki/Beaufortskala
-	function bft2text($bft)
-	{
-		$bft2txt = [
-			"Windstille",
-			"leiser Zug",
-			"leichte Brise",
-			"schwache Brise",
-			"mäßige Brise",
-			"frische Brise",
-			"starker Wind",
-			"steifer Wind",
-			"stürmischer Wind",
-			"Sturm",
-			"schwerer Sturm",
-			"orkanartiger Sturm",
-			"Orkan"
-		];
+    // Windstärke als Text ausgeben
+    //  Quelle: https://de.wikipedia.org/wiki/Beaufortskala
+    public function bft2text($bft)
+    {
+        $bft2txt = [
+            'Windstille',
+            'leiser Zug',
+            'leichte Brise',
+            'schwache Brise',
+            'mäßige Brise',
+            'frische Brise',
+            'starker Wind',
+            'steifer Wind',
+            'stürmischer Wind',
+            'Sturm',
+            'schwerer Sturm',
+            'orkanartiger Sturm',
+            'Orkan'
+        ];
 
-		if ($bft >= 0 && $bft < count($bft2txt))
-			$txt = $bft2txt[$bft];
-		else
-			$txt = '';
-		return($txt);
-	}
+        if ($bft >= 0 && $bft < count($bft2txt)) {
+            $txt = $bft2txt[$bft];
+        } else {
+            $txt = '';
+        }
+        return $txt;
+    }
 
-	// Temperautur in Windchill umrechnen
-	//   Quelle: https://de.wikipedia.org/wiki/Windchill
-	function calcWindchill($temp, $speed)
-	{
-		if ($speed >= 5.0) {
-			$wct = 13.12 + (0.6215 * $temp) - (11.37 * pow($speed, 0.16)) + (0.3965 * $temp * pow($speed, 0.16));
-			$wct = round($wct * 10) / 10; // auf eine NK runden
-		}
-		else
-			$wct = $temp;
-		return($wct);
-	}
+    // Temperautur in Windchill umrechnen
+    //   Quelle: https://de.wikipedia.org/wiki/Windchill
+    public function calcWindchill($temp, $speed)
+    {
+        if ($speed >= 5.0) {
+            $wct = 13.12 + (0.6215 * $temp) - (11.37 * pow($speed, 0.16)) + (0.3965 * $temp * pow($speed, 0.16));
+            $wct = round($wct * 10) / 10; // auf eine NK runden
+        } else {
+            $wct = $temp;
+        }
+        return $wct;
+    }
 
-	// Temperatur als Heatindex umrechnen
-	//   Quelle: https://de.wikipedia.org/wiki/Hitzeindex
-	function calcHeatindex($temp, $hum)
-	{
-		$c1 = -8.784695;
-		$c2	= 1.61139411;
-		$c3	= 2.338549;
-		$c4	= -0.14611605;
-		$c5	= -1.2308094 * pow(10, -2);
-		$c6	= -1.6424828 * pow(10, -2);
-		$c7	= 2.211732 * pow(10, -3);
-		$c8	= 7.2546 * pow(10, -4);
-		$c9	= -3.582 * pow(10, -6);
+    // Temperatur als Heatindex umrechnen
+    //   Quelle: https://de.wikipedia.org/wiki/Hitzeindex
+    public function calcHeatindex($temp, $hum)
+    {
+        $c1 = -8.784695;
+        $c2 = 1.61139411;
+        $c3 = 2.338549;
+        $c4 = -0.14611605;
+        $c5 = -1.2308094 * pow(10, -2);
+        $c6 = -1.6424828 * pow(10, -2);
+        $c7 = 2.211732 * pow(10, -3);
+        $c8 = 7.2546 * pow(10, -4);
+        $c9 = -3.582 * pow(10, -6);
 
-		$hi = $c1
-			+ $c2 * $temp
-			+ $c3 * $hum
-			+ $c4 * $temp * $hum
-			+ $c5 * pow($temp, 2) 
-			+ $c6 * pow($hum, 2)
-			+ $c7 * pow($temp, 2) * $hum
-			+ $c8 * $temp * pow($hum, 2)
-			+ $c9 * pow($temp, 2) * pow($hum, 2);
-		$hi = round($hi); // ohne NK
-		return($hi);
-	}
+        $hi = $c1
+            + $c2 * $temp
+            + $c3 * $hum
+            + $c4 * $temp * $hum
+            + $c5 * pow($temp, 2)
+            + $c6 * pow($hum, 2)
+            + $c7 * pow($temp, 2) * $hum
+            + $c8 * $temp * pow($hum, 2)
+            + $c9 * pow($temp, 2) * pow($hum, 2);
+        $hi = round($hi); // ohne NK
+        return $hi;
+    }
 }

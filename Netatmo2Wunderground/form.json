@@ -1,7 +1,7 @@
 {
-    "elements":
-            [
-                { "type": "Label", "label": "Netatmo Access-Details" },
+	"elements":
+			[
+				{ "type": "Label", "label": "Netatmo Access-Details" },
 				{ "type": "Label", "label": "Netatmo-Account from https://my.netatmo.com"},
 				{ "type": "ValidationTextBox", "name": "Netatmo_User", "caption": "Username" },
 				{ "type": "ValidationTextBox", "name": "Netatmo_Password", "caption": "Password" },
@@ -30,24 +30,24 @@
 				{ "type": "CheckBox", "name": "with_signal", "caption": " ... Wifi-/RF-Signal per module" },
 				{ "type": "CheckBox", "name": "with_battery", "caption": " ... Battery per module (a global battery indicator is always present)" },
 
-                { "type": "Label", "label": "" },
+				{ "type": "Label", "label": "" },
 				{ "type": "Label", "label": "Konfiguration to update Wunderground (only if filled)" },
-                { "type": "Label", "label": "Wunderground Access-Details from https://www.wunderground.com/personal-weather-station/mypws" },
+				{ "type": "Label", "label": "Wunderground Access-Details from https://www.wunderground.com/personal-weather-station/mypws" },
 				{ "type": "ValidationTextBox", "name": "Wunderground_ID", "caption": "Station ID" },
 				{ "type": "ValidationTextBox", "name": "Wunderground_Key", "caption": "Station Key" },
 
-                { "type": "Label", "label": "" },
+				{ "type": "Label", "label": "" },
 				{ "type": "Label", "label": "Update Weatherdata every X minutes" },
 				{ "type": "IntervalBox", "name": "UpdateDataInterval", "caption": "Minutes" }
-            ],
+			],
 	"actions":
 			[
-                { "type": "Button", "label": "Update Weatherdata", "onClick": "Netatmo2Wunderground_UpdateData($id);" }
+				{ "type": "Button", "label": "Update Weatherdata", "onClick": "Netatmo2Wunderground_UpdateData($id);" }
 			],		
-    "status":
-            [
-                { "code": 101, "icon": "inactive", "caption": "Instance getting created" },
+	"status":
+			[
+				{ "code": 101, "icon": "inactive", "caption": "Instance getting created" },
 				{ "code": 102, "icon": "active", "caption": "Instance is active" },
-                { "code": 104, "icon": "inactive", "caption": "Instance is inactive" }
-            ]
+				{ "code": 104, "icon": "inactive", "caption": "Instance is inactive" }
+			]
 }
