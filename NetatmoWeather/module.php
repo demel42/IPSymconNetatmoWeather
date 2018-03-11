@@ -1876,10 +1876,11 @@ class NetatmoWeather extends IPSModule
 
     // gemessenen Luftdruck in absoluen Luftdruck (Meereshöhe) umrechnen
     //   Quelle: https://rechneronline.de/barometer/hoehe.php
-    public function CalcAbsolutePressure($pressure, $temp, $altitude = "")
+    public function CalcAbsolutePressure($pressure, $temp, $altitude = '')
     {
-		if (!isset($altitude) || $altitude === "")
-			$altitude = $this->ReadPropertyInteger('station_altitude');
+        if (!isset($altitude) || $altitude === '') {
+            $altitude = $this->ReadPropertyInteger('station_altitude');
+        }
 
         // Temperaturgradient (geschätzt)
         $TG = 0.0065;

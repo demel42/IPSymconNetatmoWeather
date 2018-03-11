@@ -27,7 +27,7 @@ Weiterhin können optional die relevante Wetterdaten eine persöhnliche Wetterst
  - Innenmodul: Luftdruck
  - Aussenmodul: Temperatur, Luftfeuchtigkeit und der daraus berechnete Taupunkt
  - Regenmodul: 1h und 24h-Wert
- - Windmesser: Windstärke und -richtung sowie Stärke und Richtung von Böen
+ - Windmesser: Windgeschwindigkeit und -richtung sowie Geschwindigkeit und Richtung von Böen
 
 Hinweis: Wunderground gibt an, das Daten von Netatmo automatisch übernommen werden, meine Erfahrung ist aber, das das sehr unzuverlässig funktioniert (immer wieder lange Phasen ohne übertragung oder die Station taucht plötzlich unter anderem Namen auf) und zudem erfolgt meiner Beobachtung nach die Übertragung nur einmal am Tag.
 
@@ -49,7 +49,7 @@ In der _Modules_ Instanz rechts oben auf den Button __*Hinzufügen*__ drücken.
  
 In dem sich öffnenden Fenster folgende URL hinzufügen:
 
-    `https://github.com/demel42/NetatmoWeather.git`
+`https://github.com/demel42/NetatmoWeather.git`
     
 und mit _OK_ bestätigen.    
         
@@ -72,28 +72,36 @@ ruft die Daten der Netatmo-Wetterstation ab und aktualisiert optional dien Wunde
 ### Hilfsfunktionen
 
 `float NetatmoWeather_CalcAbsoluteHumidity(integer $InstanzID, float $Temperatur, float $Humidity)`
+
 berechnet aus der Temperatur (in °C) und der relativen Luftfeuchtigkeit (in %) die absulte Feuchte (in g/m³)
 
 `float NetatmoWeather_CalcAbsolutePressure(integer $InstanzID, float $Pressure, $Temperatur, integer $Altitude)`
+
 berechnet aus dem relativen Luftdruck (in mbar) und der Temperatur (in °C) und Höhe (in m) der absoluten Luftdruck (in mbar)
 ist die Höhe nicht angegeben, wird die Höhe der Netatmo-Wettersttaion verwendet
 
 `float NetatmoWeather_CalcDewpoint(integer $InstanzID, float $Temperatur, float $Humidity)`
+
 berechnet aus der Temperatur (in °C) und der relativen Luftfeuchtigkeit (in %) den Taupunkt (in °C)
 
 `float NetatmoWeather_CalcHeatindex(integer $InstanzID, float $Temperatur, float $Humidity)`
+
 berechnet aus der Temperatur (in °C) und der relativen Luftfeuchtigkeit (in %) den Hitzeindex (in °C)
 
 `float NetatmoWeather_CalcWindchill(integer $InstanzID, float $Temperatur, float $WindSpeed)`
+
 berechnet aus der Temperatur (in °C) und der Windgeschwindigkeit (in km/h) den Windchill (Windkühle) (in °C)
 
 `string NetatmoWeather_ConvertWindDirection2Text(integer $InstanzID, integer $WindDirection)`
+
 ermittelt aus der Windrichtung (in °) die korespondierende Bezeichnung
 
 `integer NetatmoWeather_ConvertWindSpeed2Strength(integer $InstanzID, float $WindSpeed)`
+
 berechnet aus der Windgeschindigkeit (in km/h) die Windstärke (in bft)
 
 `string NetatmoWeather_ConvertWindStrength2Text(integer $InstanzID, integer $WindStrength)`
+
 ermittelt aus der Windstärke (in bft) die korespondierende Bezeichnung
 
 ## 5. Konfiguration:
