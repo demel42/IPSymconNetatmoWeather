@@ -15,7 +15,7 @@ Modul für IP-Symcon ab Version 4.
 
 ## 1. Funktionsumfang
 
-Es werden die Wetter-Daten von einer Netatmo-Wetterstation ausgelesen und gespechert. Zusätzlich
+Es werden die Wetter-Daten von einer Netatmo-Wetterstation ausgelesen und gespeichert. Zusätzlich
 - werden einige Status-Information ermittelt, unter anderen Status der Kommunikation mit Netatmo und Wunderground, Batterie- und Modul-Alarme
 - weitere (im wesentlichen modulbezogene) Daten werden sowohl in einer HTML-Box aufbereitet als auch als JSON-Struktur in einer Variable zur Verfügung gestellt
 - optional einige modulbezogene Daten in Variablen zur Verfügung gestellt
@@ -37,8 +37,10 @@ Hinweis: Wunderground gibt an, das Daten von Netatmo automatisch übernommen wer
 ## 2. Voraussetzungen
 
  - IPS 4.x
- - Netatmo Wetterstation und ein entsprechenden Account bei Netatmo
-   hierzu benötigt man sowohl den "normalen" Benutzer-Account, der bei der Anmeldung der Geräte bei Netatmo erzeugt wird (https://my.netatmo.com) als auch einen Account sowie eine "App" bei Netatmo Connect, um die Werte abrufen zu können (https://dev.netatmo.com). 
+ - Netatmo Wetterstation und ein entsprechenden Account bei Netatmo.
+
+   Es wird sowohl der "normalen" Benutzer-Account, der bei der Anmeldung der Geräte bei Netatmo erzeugt wird (https://my.netatmo.com) als auch einen Account sowie eine "App" bei Netatmo Connect benötigt, um die Werte abrufen zu können (https://dev.netatmo.com). 
+
  - optional ein Account bei Wunderground für eine "Personal-Weather-Station"
    hierzu muss man bei Wunderground ein Konto anlegen und eine eine Wettersttaion einrichten.
 
