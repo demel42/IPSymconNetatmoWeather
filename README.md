@@ -57,7 +57,7 @@ Anschließend erscheint ein Eintrag für das Modul in der Liste der Instanz _Mod
 
 ### b. Einrichtung in IPS
 
-In IP-Symcon nun _Instanz hinzufügen_ (_CTRL+1_) auswählen unter der Kategorie, unter der man die Instanz hinzufügen will, und _xxx_ auswählen.
+In IP-Symcon nun _Instanz hinzufügen_ (_CTRL+1_) auswählen unter der Kategorie, unter der man die Instanz hinzufügen will, und Hersteller _Netatmo_ und als Gerät _NetatmoWeather_ auswählen.
 
 Die modulbezogenen Variablen haben als ID die Prefixe _BASE_ Basismodul), _OUT_ (Aussenmodul), _IN1_, _IN2_, _IN3_ (Innenmodule), _RAIN_ (Regenmesser), _WIND_ (WIndmesser).
 Die Namen der Variablen werden bei der Erstanlage auf den Prefix + die Messgröße gesetzt, nach dem ersten Aufruf von _NetatmoWeather_UpdateData_ (z.B. durch Betätigen von _Aktualisiere Wetterdaten_) werden die Namen einmalig geändert in Modulnamen + Messgröße. Dieser Vorgang kann später durch _Variablen-Namen zurücksetzen_ erneut ausgelöst werden, z.B. wenn man im Netatmo Bezeichungen von Modulen geändert hat.
@@ -67,6 +67,7 @@ Die Namen der Variablen werden bei der Erstanlage auf den Prefix + die Messgrö�
 ### zentrale Funktion
 
 `UpdateData(integer $InstanzID)`
+
 ruft die Daten der Netatmo-Wetterstation ab und aktualisiert optional dien Wundergrund-PWS. Wird automatisch zyklisch durch die Instanz durchgeführt im Abstand wie in der Konfiguration angegeben.
 
 ### Hilfsfunktionen
@@ -75,22 +76,27 @@ ruft die Daten der Netatmo-Wetterstation ab und aktualisiert optional dien Wunde
 
 berechnet aus der Temperatur (in °C) und der relativen Luftfeuchtigkeit (in %) die absulte Feuchte (in g/m³)
 
+
 `float NetatmoWeather_CalcAbsolutePressure(integer $InstanzID, float $Pressure, $Temperatur, integer $Altitude)`
 
 berechnet aus dem relativen Luftdruck (in mbar) und der Temperatur (in °C) und Höhe (in m) der absoluten Luftdruck (in mbar)
 ist die Höhe nicht angegeben, wird die Höhe der Netatmo-Wettersttaion verwendet
 
+
 `float NetatmoWeather_CalcDewpoint(integer $InstanzID, float $Temperatur, float $Humidity)`
 
 berechnet aus der Temperatur (in °C) und der relativen Luftfeuchtigkeit (in %) den Taupunkt (in °C)
+
 
 `float NetatmoWeather_CalcHeatindex(integer $InstanzID, float $Temperatur, float $Humidity)`
 
 berechnet aus der Temperatur (in °C) und der relativen Luftfeuchtigkeit (in %) den Hitzeindex (in °C)
 
+
 `float NetatmoWeather_CalcWindchill(integer $InstanzID, float $Temperatur, float $WindSpeed)`
 
 berechnet aus der Temperatur (in °C) und der Windgeschwindigkeit (in km/h) den Windchill (Windkühle) (in °C)
+
 
 `string NetatmoWeather_ConvertWindDirection2Text(integer $InstanzID, integer $WindDirection)`
 
@@ -100,9 +106,11 @@ ermittelt aus der Windrichtung (in °) die korespondierende Bezeichnung
 
 berechnet aus der Windgeschindigkeit (in km/h) die Windstärke (in bft)
 
+
 `string NetatmoWeather_ConvertWindStrength2Text(integer $InstanzID, integer $WindStrength)`
 
 ermittelt aus der Windstärke (in bft) die korespondierende Bezeichnung
+
 
 ## 5. Konfiguration:
 
