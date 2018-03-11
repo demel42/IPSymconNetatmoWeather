@@ -113,17 +113,17 @@ berechnet aus der Temperatur (in °C) und der Windgeschwindigkeit (in km/h) den 
 
 `string NetatmoWeather_ConvertWindDirection2Text(integer $InstanzID, integer $WindDirection)`
 
-ermittelt aus der Windrichtung (in °) die korespondierende Bezeichnung
+ermittelt aus der Windrichtung (in °) die korespondierende Bezeichnung auf der Windrose
 
 
 `integer NetatmoWeather_ConvertWindSpeed2Strength(integer $InstanzID, float $WindSpeed)`
 
-berechnet aus der Windgeschindigkeit (in km/h) die Windstärke (in bft)
+berechnet aus der Windgeschwindigkeit (in km/h) die Windstärke (in bft)
 
 
 `string NetatmoWeather_ConvertWindStrength2Text(integer $InstanzID, integer $WindStrength)`
 
-ermittelt aus der Windstärke (in bft) die korespondierende Bezeichnung
+ermittelt aus der Windstärke (in bft) die korespondierende Bezeichnung gemäß Beaufortskala
 
 
 ## 5. Konfiguration:
@@ -139,7 +139,7 @@ ermittelt aus der Windstärke (in bft) die korespondierende Bezeichnung
 | Wunderground-Zugangsdaten | string   |              | Station-ID und -Key von https://www.wunderground.com/personal-weather-station/mypws |
 
 Hinweis zum Intervall: die Daten werden nur ca. alle 10m von der Wetterstation an Netatmo übertragen, ein minütliches Intervall ist zulässig, macht aber nur begrenzt Sinn.
-Bei einer Anagbe von 5m hat man spätesten alle 15m aktualisierte Werte.
+Bei einer Angabe von 5m sind die Werte nicht älter als 15m.
 
 ### Schaltflächen
 
