@@ -20,12 +20,13 @@ Es werden die Wetter-Daten von einer Netatmo-Wetterstation ausgelesen und gespec
 - weitere (im wesentlichen modulbezogene) Daten werden sowohl in einer HTML-Box aufbereitet als auch als JSON-Struktur in einer Variable zur Verfügung gestellt
 - optional einige modulbezogene Daten in Variablen zur Verfügung gestellt
 - es können zusätzliche Wetter-Kenndaten berechnet werden: absoluter Luftdruck, Taupunkt, absolute Feuchte, Windchill, Heatindex
-- die geographіsche Position sowie die Höhe aus der Konfiguration der Netatmo-Wetterstation werden automatisch in die Instanz-Konfiguration als Property übernommen
+- die geographіsche Position sowie die Höhe der Wetterstation aus von Netatmo übernommen und in die Instanz-Konfiguration als Property eingetragen
 - steht ein WebHook zur Verfügung, bei dem mit _/hook/NetatmoWeathcer/status_ die Status-Information (analog zur HTML-Box) als Webseite abgerufen werden können.
 
-Die Angabe der 4 Netatmo-Zugangsdaten ist obligatorische, damit die Instanz aktiviert werden kann.
+Die Angabe der Netatmo-Zugangsdaten ist obligatorisch damit die Instanz aktiviert werden kann.
 
-Weiterhin können optional die relevante Wetterdaten eine persöhnliche Wetterstation von Wunderground übertragen. Übertragen wird:
+Weiterhin können die relevanten Wetterdaten in eine persöhnliche Wetterstation von Wunderground übertragen werden.
+Übertragen wird:
  - Innenmodul: Luftdruck
  - Aussenmodul: Temperatur, Luftfeuchtigkeit und der daraus berechnete Taupunkt
  - Regenmodul: 1h und 24h-Wert
@@ -39,7 +40,7 @@ Hinweis: Wunderground gibt an, das Daten von Netatmo automatisch übernommen wer
  - Netatmo Wetterstation und ein entsprechenden Account bei Netatmo
    hierzu benötigt man sowohl den "normalen" Benutzer-Account, der bei der Anmeldung der Geräte bei Netatmo erzeugt wird (https://my.netatmo.com) als auch einen Account sowie eine "App" bei Netatmo Connect, um die Werte abrufen zu können (https://dev.netatmo.com). 
  - optional ein Account bei Wunderground für eine "Personal-Weather-Station"
-   hierzu muss man bei Wunderground ein Konto anlegen und eine eine Wettersttaion einrichten. Die von Wunderground angegebene Verknüpfung mit Netatmo übder den Wunderground-Support ist nicht erforderlich
+   hierzu muss man bei Wunderground ein Konto anlegen und eine eine Wettersttaion einrichten. Die von Wunderground angegebene Verknüpfung mit Netatmo über den Wunderground-Support ist nicht erforderlich
 
 ## 3. Installation
 
@@ -123,16 +124,19 @@ ermittelt aus der Windstärke (in bft) die korespondierende Bezeichnung
 | :-----------------------: | :-----:  | :----------: | :----------------------------------------------------------------------------------------------------------: |
 | Netatmo-Zugangsdaten      | string   |              | Benutzername und Passwort von https://my.netatmo.com sowie Client-ID und -Secret von https://dev.netatmo.com |
 | Stationsname              | string   |              | muss nur angegeben werden, wenn mehr als eine Station angemeldet ist |
-| Aktualiserungsintervall   | integer  | 5            | Angabe in Minuten. Hinweis: die Daten werden nur ca. alle 10m von der Wetterstation an Netatmo übertragen |
+| Aktualiserungsintervall   | integer  | 5            | Angabe in Minuten |
 | <optionale Zusatzdaten>   | boolean  | false        | wie auf der Konfigurationsseite angegeben |
 | Wunderground-Zugangsdaten | string   |              | Station-ID und -Key von https://www.wunderground.com/personal-weather-station/mypws |
+
+Hinweis zum Intervall: die Daten werden nur ca. alle 10m von der Wetterstation an Netatmo übertragen, ein minütliches Intervall ist zulässig, macht aber nur begrenzt Sinn.
+Bei einer Anagbe von 5m hat man spätesten alle 15m aktualisierte Werte.
 
 ### Schaltflächen
 
 | Bezeichnung                  | Beschreibung |
 | :--------------------------: | :------------------------------------------------: |
 | Aktualisiere Wetterdaten     | führt eine sofortige Aktualisierung durch |
-| Variablen-Namen zurücksetzen | setz die Variablen-Name auf den Standarwert zurück |
+| Variablen-Namen zurücksetzen | setzt die Variablen-Name auf den Standarwert zurück |
 
 ## 6. Anhang
 
