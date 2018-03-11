@@ -17,7 +17,7 @@ Modul für IP-Symcon ab Version 4.
 
 Es werden die Wetter-Daten von einer Netatmo-Wetterstation ausgelesen und gespechert. Zusätzlich
 - werden einige Status-Information ermittelt, unter anderen Status der Kommunikation mit Netatmo und Wunderground, Batterie- und Modul-Alarme
-- weitere (im wesentlichen modulbezogene) Daten werden sowohl in einer HTML-Box aufbereitet als JSON-Struktur in einer Variable zur Verfügung gestellt
+- weitere (im wesentlichen modulbezogene) Daten werden sowohl in einer HTML-Box aufbereitet als auch als JSON-Struktur in einer Variable zur Verfügung gestellt
 - optional einige modulbezogene Daten in Variablen zur Verfügung gestellt
 - es können zusätzliche Wetter-Kenndaten berechnet werden: absoluter Luftdruck, Taupunkt, absolute Feuchte, Windchill, Heatindex
 - die geographіsche Position sowie die Höhe aus der Konfiguration der Netatmo-Wetterstation werden automatisch in die Instanz-Konfiguration als Property übernommen
