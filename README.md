@@ -66,7 +66,13 @@ Anschließend erscheint ein Eintrag für das Modul in der Liste der Instanz _Mod
 
 In IP-Symcon nun _Instanz hinzufügen_ (_CTRL+1_) auswählen unter der Kategorie, unter der man die Instanz hinzufügen will, und Hersteller _Netatmo_ und als Gerät _NetatmoWeather_ auswählen.
 
-Die modulbezogenen Variablen haben als ID die Prefixe _BASE_ Basismodul), _OUT_ (Aussenmodul), _IN1_, _IN2_, _IN3_ (Innenmodule), _RAIN_ (Regenmesser), _WIND_ (WIndmesser).
+Die modulbezogenen Variablen haben als ID die Prefixe:
+	- _BASE_ = Basismodul
+	- _OUT_ = Aussenmodul
+	- _IN1_, _IN2_, _IN3_ = Innenmodule
+	- _RAIN_ = Regenmesser
+	- _WIND_ = Windmesser
+
 Die Namen der Variablen werden bei der Erstanlage auf den Prefix + die Messgröße gesetzt, nach dem ersten Aufruf von _NetatmoWeather_UpdateData_ (z.B. durch Betätigen von _Aktualisiere Wetterdaten_) werden die Namen einmalig geändert in Modulnamen + Messgröße. Dieser Vorgang kann später durch _Variablen-Namen zurücksetzen_ erneut ausgelöst werden, z.B. wenn man im Netatmo Bezeichungen von Modulen geändert hat.
 
 ## 4. PHP-Befehlsreferenz
