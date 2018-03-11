@@ -69,6 +69,13 @@ class NetatmoWeather extends IPSModule
         $this->CreateVarProfile('Netatmo.WindStrength', 1, ' bft', 0, 13, 0, 0, 'WindSpeed');
         $this->CreateVarProfile('Netatmo.WindAngle', 1, ' °', 0, 360, 0, 0, 'WindDirection');
         $this->CreateVarProfile('Netatmo.Rainfall', 2, ' mm', 0, 60, 0, 1, 'Rainfall');
+        if (!IPS_VariableProfileExists('Netatmo.Alarm')) {
+            IPS_CreateVariableProfile('Netatmo.Alarm', 0);
+            IPS_SetVariableProfileText('Netatmo.Alarm', '', '');
+            IPS_SetVariableProfileIcon('Netatmo.Alarm', 'Alert');
+            IPS_SetVariableProfileAssociation('Netatmo.Alarm', false, 'OK', '', -1);
+            IPS_SetVariableProfileAssociation('Netatmo.Alarm', true, 'Alarm', '', 0xEE0000);
+        }
         if (!IPS_VariableProfileExists('Netatmo.Wifi')) {
             IPS_CreateVariableProfile('Netatmo.Wifi', 1);
             IPS_SetVariableProfileText('Netatmo.Wifi', '', '');
@@ -138,8 +145,8 @@ class NetatmoWeather extends IPSModule
             // status of connection to netatmo
             $this->RegisterVariableBoolean('Status', 'Status', '~Alert.Reversed', $vpos++);
             $this->RegisterVariableString('LastContact', 'letzte Übertragung', '', $vpos++);
-            $this->RegisterVariableBoolean('BatteryAlarm', 'Batterie-Zustand eines oder mehrere Module ist niedrig oder leer', '~Alert', $vpos++);
-            $this->RegisterVariableBoolean('ModuleAlarm', 'Basisstation oder Modul(e) kommunizieren nicht', '~Alert', $vpos++);
+            $this->RegisterVariableBoolean('BatteryAlarm', 'Batterie-Zustand eines oder mehrere Module ist niedrig oder leer', 'Netatmo.Alarm', $vpos++);
+            $this->RegisterVariableBoolean('ModuleAlarm', 'Basisstation oder Modul(e) kommunizieren nicht', 'Netatmo.Alarm', $vpos++);
             $this->RegisterVariableString('StatusImage', 'Status der Station und der Module', '~HTMLBox', $vpos++);
 
             if ($wunderground_id != '' && $wunderground_key != '') {
