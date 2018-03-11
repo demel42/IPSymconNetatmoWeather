@@ -16,23 +16,31 @@ class NetatmoWeather extends IPSModule
         $this->RegisterPropertyString('Wunderground_ID', '');
         $this->RegisterPropertyString('Wunderground_Key', '');
 
+        $this->RegisterPropertyString('base_module_id', '');
+        $this->RegisterPropertyString('outdoor_module_id', '');
+        $this->RegisterPropertyString('indoor1_module_id', '');
+        $this->RegisterPropertyString('indoor2_module_id', '');
+        $this->RegisterPropertyString('indoor3_module_id', '');
+        $this->RegisterPropertyString('rain_module_id', '');
+        $this->RegisterPropertyString('wind_module_id', '');
+
         $this->RegisterPropertyString('station_name', '');
-        $this->RegisterPropertyString('base_module_name', '');
-        $this->RegisterPropertyString('outdoor_module_name', '');
-        $this->RegisterPropertyString('indoor1_module_name', '');
-        $this->RegisterPropertyString('indoor2_module_name', '');
-        $this->RegisterPropertyString('indoor3_module_name', '');
-        $this->RegisterPropertyString('rain_module_name', '');
-        $this->RegisterPropertyString('wind_module_name', '');
+        $this->RegisterPropertyString('base_module_name', 'BASE');
+        $this->RegisterPropertyString('outdoor_module_name', 'OUT');
+        $this->RegisterPropertyString('indoor1_module_name', 'IN1');
+        $this->RegisterPropertyString('indoor2_module_name', 'IN2');
+        $this->RegisterPropertyString('indoor3_module_name', 'IN3');
+        $this->RegisterPropertyString('rain_module_name', 'RAIN');
+        $this->RegisterPropertyString('wind_module_name', 'WIND');
+
+        $this->RegisterPropertyInteger('station_altitude', 0);
+        $this->RegisterPropertyFloat('station_longitude', 0);
+        $this->RegisterPropertyFloat('station_latitude', 0);
 
         $this->RegisterPropertyInteger('UpdateDataInterval', '5');
 
         $this->RegisterPropertyString('token', '');
         $this->RegisterPropertyInteger('token_expiration', 0);
-
-        $this->RegisterPropertyInteger('station_altitude', 0);
-        $this->RegisterPropertyInteger('station_longitude', 0);
-        $this->RegisterPropertyInteger('station_latitude', 0);
 
         // Anzahl von Minuten, bis die Kommunikation von Netatmo Basis zu Server als gestört erklärt wird
         $this->RegisterPropertyInteger('minutes2fail', 15);
@@ -43,6 +51,8 @@ class NetatmoWeather extends IPSModule
         $this->RegisterPropertyBoolean('with_windchill', false);
         $this->RegisterPropertyBoolean('with_heatindex', false);
         $this->RegisterPropertyBoolean('with_windstrength', false);
+
+        $this->RegisterPropertyBoolean('with_timestamp', false);
         $this->RegisterPropertyBoolean('with_signal', false);
         $this->RegisterPropertyBoolean('with_battery', false);
 
@@ -107,11 +117,11 @@ class NetatmoWeather extends IPSModule
 
         $base_module_name = $this->ReadPropertyString('base_module_name');
         $outdoor_module_name = $this->ReadPropertyString('outdoor_module_name');
-        $wind_module_name = $this->ReadPropertyString('wind_module_name');
-        $rain_module_name = $this->ReadPropertyString('rain_module_name');
         $indoor1_module_name = $this->ReadPropertyString('indoor1_module_name');
         $indoor2_module_name = $this->ReadPropertyString('indoor2_module_name');
         $indoor3_module_name = $this->ReadPropertyString('indoor3_module_name');
+        $rain_module_name = $this->ReadPropertyString('rain_module_name');
+        $wind_module_name = $this->ReadPropertyString('wind_module_name');
 
         $with_absolute_pressure = $this->ReadPropertyBoolean('with_absolute_pressure');
         $with_absolute_humidity = $this->ReadPropertyBoolean('with_absolute_humidity');
@@ -119,6 +129,7 @@ class NetatmoWeather extends IPSModule
         $with_windchill = $this->ReadPropertyBoolean('with_windchill');
         $with_heatindex = $this->ReadPropertyBoolean('with_heatindex');
         $with_windstrength = $this->ReadPropertyBoolean('with_windstrength');
+        $with_timestamp = $this->ReadPropertyBoolean('with_timestamp');
         $with_signal = $this->ReadPropertyBoolean('with_signal');
         $with_battery = $this->ReadPropertyBoolean('with_battery');
 
@@ -126,12 +137,10 @@ class NetatmoWeather extends IPSModule
             $vpos = 1;
             // status of connection to netatmo
             $this->RegisterVariableBoolean('Status', 'Status', '~Alert.Reversed', $vpos++);
-            $id = $this->RegisterVariableString('Data', 'Zusatzdaten', '', $vpos++);
-            IPS_SetHidden($id, true);
-            $this->RegisterVariableBoolean('Battery', 'Batterie-Indikator', '~Battery', $vpos++);
             $this->RegisterVariableString('LastContact', 'letzte Übertragung', '', $vpos++);
-
-            $this->RegisterVariableString('StatusImage', 'Status der Station und Module', '~HTMLBox', $vpos++);
+            $this->RegisterVariableBoolean('BatteryAlarm', 'Batterie-Zustand eines oder mehrere Module ist niedrig oder leer', '~Alert', $vpos++);
+            $this->RegisterVariableBoolean('ModuleAlarm', 'Basisstation oder Modul(e) kommunizieren nicht', '~Alert', $vpos++);
+            $this->RegisterVariableString('StatusImage', 'Status der Station und der Module', '~HTMLBox', $vpos++);
 
             if ($wunderground_id != '' && $wunderground_key != '') {
                 $this->RegisterVariableBoolean('Wunderground', 'Status der Übertragung an Wunderground', '~Alert.Reversed', $vpos++);
@@ -142,28 +151,27 @@ class NetatmoWeather extends IPSModule
             if ($base_module_name != '') {
                 $vpos = 100;
                 $s = $base_module_name . '\\';
-                $this->RegisterVariableInteger('LastMeasure', 'letzte Messung', '~UnixTimestamp', $vpos++);
-
                 $this->RegisterVariableFloat('BASE_Temperature', $s . 'Temperatur', 'Netatmo.Temperatur', $vpos++);
                 $this->RegisterVariableInteger('BASE_CO2', $s . 'CO2', 'Netatmo.CO2', $vpos++);
                 $this->RegisterVariableFloat('BASE_Humidity', $s . 'Luftfeuchtigkeit', 'Netatmo.Humidity', $vpos++);
-                if ($with_absolute_humidity) {
+                if ($with_absolute_humidity)
                     $this->RegisterVariableFloat('BASE_AbsoluteHumidity', $s . 'absolute Luftfeuchtigkeit', 'Netatmo.absHumidity', $vpos++);
-                } else {
+                else
                     $this->UnregisterVariable('BASE_AbsoluteHumidity');
-                }
                 $this->RegisterVariableInteger('BASE_Noise', $s . 'Lärm', 'Netatmo.Noise', $vpos++);
                 $this->RegisterVariableFloat('BASE_Pressure', $s . 'Luftdruck', 'Netatmo.Pressure', $vpos++);
-                if ($with_absolute_pressure) {
+                if ($with_absolute_pressure)
                     $this->RegisterVariableFloat('BASE_AbsolutePressure', $s . 'absoluter Luftdruck', 'Netatmo.Pressure', $vpos++);
-                } else {
+                else
                     $this->UnregisterVariable('BASE_AbsolutePressure');
-                }
-                if ($with_signal) {
+				if ($with_timestamp)
+					$this->RegisterVariableInteger('BASE_LastMeasure', $s . 'letzte Messung', '~UnixTimestamp', $vpos++);
+				else
+					$this->UnregisterVariable('BASE_LastMeasure');
+                if ($with_signal)
                     $this->RegisterVariableInteger('BASE_Wifi', $s . 'Stärke des Wifi-Signals', 'Netatmo.Wifi', $vpos++);
-                } else {
+                else
                     $this->UnregisterVariable('BASE_Wifi');
-                }
             } else {
                 $this->UnregisterVariable('BASE_Temperature');
                 $this->UnregisterVariable('BASE_CO2');
@@ -172,11 +180,54 @@ class NetatmoWeather extends IPSModule
                 $this->UnregisterVariable('BASE_Pressure');
                 $this->UnregisterVariable('BASE_AbsolutePressure');
                 $this->UnregisterVariable('BASE_LastMeasure');
-                $this->UnregisterVariable('BASE_LastContact');
                 $this->UnregisterVariable('BASE_Wifi');
             }
+            if ($outdoor_module_name != '') {
+                $vpos = 200;
+                $s = $outdoor_module_name . '\\';
+                $this->RegisterVariableFloat('OUT_Temperature', $s . 'Temperatur', 'Netatmo.Temperatur', $vpos++);
+                $this->RegisterVariableFloat('OUT_Humidity', $s . 'Luftfeuchtigkeit', 'Netatmo.Humidity', $vpos++);
+                if ($with_absolute_humidity)
+                    $this->RegisterVariableFloat('OUT_AbsoluteHumidity', $s . 'absolute Luftfeuchtigkeit', 'Netatmo.absHumidity', $vpos++);
+                else
+                    $this->UnregisterVariable('OUT_AbsoluteHumidity');
+                if ($with_dewpoint)
+                    $this->RegisterVariableFloat('OUT_Dewpoint', $s . 'Taupunkt', 'Netatmo.Dewpoint', $vpos++);
+                else
+                    $this->UnregisterVariable('OUT_Dewpoint');
+                if ($with_windchill)
+                    $this->RegisterVariableFloat('OUT_Windchill', $s . 'Windchill', 'Netatmo.Temperatur', $vpos++);
+                else
+                    $this->UnregisterVariable('OUT_Windchill');
+                if ($with_heatindex)
+                    $this->RegisterVariableFloat('OUT_Heatindex', $s . 'Hitzeindex', 'Netatmo.Heatindex', $vpos++);
+                else
+                    $this->UnregisterVariable('OUT_Heatindex');
+				if ($with_timestamp)
+					$this->RegisterVariableInteger('OUT_LastMeasure', $s . 'letzte Messung', '~UnixTimestamp', $vpos++);
+				else
+					$this->UnregisterVariable('OUT_LastMeasure');
+                if ($with_signal)
+                    $this->RegisterVariableInteger('OUT_RfSignal', $s . 'Signal-Stärke', 'Netatmo.RfSignal', $vpos++);
+                else
+                    $this->UnregisterVariable('OUT_RfSignal');
+                if ($with_battery)
+                    $this->RegisterVariableInteger('OUT_Battery', $s . 'Batterie-Status', 'Netatmo.Battery', $vpos++);
+                else
+                    $this->UnregisterVariable('OUT_Battery');
+            } else {
+                $this->UnregisterVariable('OUT_Temperature');
+                $this->UnregisterVariable('OUT_Humidity');
+                $this->UnregisterVariable('OUT_AbsoluteHumidity');
+                $this->UnregisterVariable('OUT_Dewpoint');
+                $this->UnregisterVariable('OUT_Windchill');
+                $this->UnregisterVariable('OUT_Heatindex');
+				$this->UnregisterVariable('OUT_LastMeasure');
+                $this->UnregisterVariable('OUT_RfSignal');
+                $this->UnregisterVariable('OUT_Battery');
+            }
             for ($i = 1; $i <= 3; $i++) {
-                $vpos = 200 + (($i - 1) * 100);
+                $vpos = 300 + (($i - 1) * 100);
                 switch ($i) {
                     case 1: $module_name = $indoor1_module_name; break;
                     case 2: $module_name = $indoor2_module_name; break;
@@ -188,78 +239,60 @@ class NetatmoWeather extends IPSModule
                     $this->RegisterVariableFloat($pfx . '_Temperature', $s . 'Temperatur', 'Netatmo.Temperatur', $vpos++);
                     $this->RegisterVariableInteger($pfx . '_CO2', $s . 'CO2', 'Netatmo.CO2', $vpos++);
                     $this->RegisterVariableFloat($pfx . '_Humidity', $s . 'Luftfeuchtigkeit', 'Netatmo.Humidity', $vpos++);
-                    if ($with_absolute_humidity) {
+                    if ($with_absolute_humidity)
                         $this->RegisterVariableFloat($pfx . '_AbsoluteHumidity', $s . 'absolute Luftfeuchtigkeit', 'Netatmo.absHumidity', $vpos++);
-                    } else {
+                    else
                         $this->UnregisterVariable($pfx . '_AbsoluteHumidity');
-                    }
-                    if ($with_signal) {
+					if ($with_timestamp)
+						$this->RegisterVariableInteger($pfx . '_LastMeasure', $s . 'letzte Messung', '~UnixTimestamp', $vpos++);
+					else
+						$this->UnregisterVariable($pfx . '_LastMeasure');
+                    if ($with_signal)
                         $this->RegisterVariableInteger($pfx . '_RfSignal', $s . 'Signal-Stärke', 'Netatmo.RfSignal', $vpos++);
-                    } else {
+                    else
                         $this->UnregisterVariable($pfx . '_RfSignal');
-                    }
-                    if ($with_battery) {
+                    if ($with_battery)
                         $this->RegisterVariableInteger($pfx . '_Battery', $s . 'Batterie-Status', 'Netatmo.Battery', $vpos++);
-                    } else {
+                    else
                         $this->UnregisterVariable($pfx . '_Battery');
-                    }
                 } else {
                     $this->UnregisterVariable($pfx . '_Temperature');
                     $this->UnregisterVariable($pfx . '_CO2');
                     $this->UnregisterVariable($pfx . '_Humidity');
                     $this->UnregisterVariable($pfx . '_AbsoluteHumidity');
+					$this->UnregisterVariable($pfx . '_LastMeasure');
                     $this->UnregisterVariable($pfx . '_RfSignal');
                     $this->UnregisterVariable($pfx . '_Battery');
                 }
             }
-            if ($outdoor_module_name != '') {
-                $vpos = 500;
-                $s = $outdoor_module_name . '\\';
-                $this->RegisterVariableFloat('OUT_Temperature', $s . 'Temperatur', 'Netatmo.Temperatur', $vpos++);
-                $this->RegisterVariableFloat('OUT_Humidity', $s . 'Luftfeuchtigkeit', 'Netatmo.Humidity', $vpos++);
-                if ($with_absolute_humidity) {
-                    $this->RegisterVariableFloat('OUT_AbsoluteHumidity', $s . 'absolute Luftfeuchtigkeit', 'Netatmo.absHumidity', $vpos++);
-                } else {
-                    $this->UnregisterVariable('OUT_AbsoluteHumidity');
-                }
-                if ($with_dewpoint) {
-                    $this->RegisterVariableFloat('OUT_Dewpoint', $s . 'Taupunkt', 'Netatmo.Dewpoint', $vpos++);
-                } else {
-                    $this->UnregisterVariable('OUT_Dewpoint');
-                }
-                if ($with_windchill) {
-                    $this->RegisterVariableFloat('OUT_Windchill', $s . 'Windchill', 'Netatmo.Temperatur', $vpos++);
-                } else {
-                    $this->UnregisterVariable('OUT_Windchill');
-                }
-                if ($with_heatindex) {
-                    $this->RegisterVariableFloat('OUT_Heatindex', $s . 'Hitzeindex', 'Netatmo.Heatindex', $vpos++);
-                } else {
-                    $this->UnregisterVariable('OUT_Heatindex');
-                }
-                if ($with_signal) {
-                    $this->RegisterVariableInteger('OUT_RfSignal', $s . 'Signal-Stärke', 'Netatmo.RfSignal', $vpos++);
-                } else {
-                    $this->UnregisterVariable('OUT_RfSignal');
-                }
-                if ($with_battery) {
-                    $this->RegisterVariableInteger('OUT_Battery', $s . 'Batterie-Status', 'Netatmo.Battery', $vpos++);
-                } else {
-                    $this->UnregisterVariable('OUT_Battery');
-                }
-            } else {
-                $this->UnregisterVariable('OUT_Temperature');
-                $this->UnregisterVariable('OUT_Humidity');
-                $this->UnregisterVariable('OUT_AbsoluteHumidity');
-                $this->UnregisterVariable('OUT_Dewpoint');
-                $this->UnregisterVariable('OUT_Windchill');
-                $this->UnregisterVariable('OUT_Heatindex');
-                $this->UnregisterVariable('OUT_RfSignal');
-                $this->UnregisterVariable('OUT_Battery');
-            }
-
-            if ($wind_module_name != '') {
+            if ($rain_module_name != '') {
                 $vpos = 600;
+                $s = $rain_module_name . '\\';
+                $this->RegisterVariableFloat('RAIN_Rain', $s . 'Regenmenge', 'Netatmo.Rainfall', $vpos++);
+                $this->RegisterVariableFloat('RAIN_Rain_1h', $s . 'Regenmenge der letzten 1h', 'Netatmo.Rainfall', $vpos++);
+                $this->RegisterVariableFloat('RAIN_Rain_24h', $s . 'Regenmenge der letzten 24h', 'Netatmo.Rainfall', $vpos++);
+				if ($with_timestamp)
+					$this->RegisterVariableInteger('RAIN_LastMeasure', $s . 'letzte Messung', '~UnixTimestamp', $vpos++);
+				else
+					$this->UnregisterVariable('RAIN_LastMeasure');
+                if ($with_signal)
+                    $this->RegisterVariableInteger('RAIN_RfSignal', $s . 'Signal-Stärke', 'Netatmo.RfSignal', $vpos++);
+                else
+                    $this->UnregisterVariable('RAIN_RfSignal');
+                if ($with_battery)
+                    $this->RegisterVariableInteger('RAIN_Battery', $s . 'Batterie-Status', 'Netatmo.Battery', $vpos++);
+                else
+                    $this->UnregisterVariable('RAIN_Battery');
+            } else {
+                $this->UnregisterVariable('RAIN_Rain');
+                $this->UnregisterVariable('RAIN_Rain_1h');
+                $this->UnregisterVariable('RAIN_Rain_24h');
+				$this->UnregisterVariable('RAIN_LastMeasure');
+                $this->UnregisterVariable('RAIN_RfSignal');
+                $this->UnregisterVariable('RAIN_Battery');
+            }
+            if ($wind_module_name != '') {
+                $vpos = 700;
                 $s = $wind_module_name . '\\';
                 $this->RegisterVariableFloat('WIND_WindSpeed', $s . 'Windgeschwindigkeit', 'Netatmo.WindSpeed', $vpos++);
                 $this->RegisterVariableInteger('WIND_WindAngle', $s . 'Windrichtung', 'Netatmo.WindAngle', $vpos++);
@@ -272,16 +305,18 @@ class NetatmoWeather extends IPSModule
                     $this->UnregisterVariable('WIND_WindStrength');
                     $this->UnregisterVariable('WIND_GustStrength');
                 }
-                if ($with_signal) {
+				if ($with_timestamp)
+					$this->RegisterVariableInteger('WIND_LastMeasure', $s . 'letzte Messung', '~UnixTimestamp', $vpos++);
+				else
+					$this->UnregisterVariable('WIND_LastMeasure');
+                if ($with_signal)
                     $this->RegisterVariableInteger('WIND_RfSignal', $s . 'Signal-Stärke', 'Netatmo.RfSignal', $vpos++);
-                } else {
+                else
                     $this->UnregisterVariable('WIND_RfSignal');
-                }
-                if ($with_battery) {
+                if ($with_battery)
                     $this->RegisterVariableInteger('WIND_Battery', $s . 'Batterie-Status', 'Netatmo.Battery', $vpos++);
-                } else {
+                else
                     $this->UnregisterVariable('WIND_Battery');
-                }
             } else {
                 $this->UnregisterVariable('WIND_WindSpeed');
                 $this->UnregisterVariable('WIND_WindAngle');
@@ -289,33 +324,14 @@ class NetatmoWeather extends IPSModule
                 $this->UnregisterVariable('WIND_GustSpeed');
                 $this->UnregisterVariable('WIND_GustAngle');
                 $this->UnregisterVariable('WIND_GustStrength');
+				$this->UnregisterVariable('WIND_LastMeasure');
                 $this->UnregisterVariable('WIND_RfSignal');
                 $this->UnregisterVariable('WIND_Battery');
             }
 
-            if ($rain_module_name != '') {
-                $vpos = 700;
-                $s = $rain_module_name . '\\';
-                $this->RegisterVariableFloat('RAIN_Rain', $s . 'Regenmenge', 'Netatmo.Rainfall', $vpos++);
-                $this->RegisterVariableFloat('RAIN_Rain_1h', $s . 'Regenmenge der letzten 1h', 'Netatmo.Rainfall', $vpos++);
-                $this->RegisterVariableFloat('RAIN_Rain_24h', $s . 'Regenmenge der letzten 24h', 'Netatmo.Rainfall', $vpos++);
-                if ($with_signal) {
-                    $this->RegisterVariableInteger('RAIN_RfSignal', $s . 'Signal-Stärke', 'Netatmo.RfSignal', $vpos++);
-                } else {
-                    $this->UnregisterVariable('RAIN_RfSignal');
-                }
-                if ($with_battery) {
-                    $this->RegisterVariableInteger('RAIN_Battery', $s . 'Batterie-Status', 'Netatmo.Battery', $vpos++);
-                } else {
-                    $this->UnregisterVariable('RAIN_Battery');
-                }
-            } else {
-                $this->UnregisterVariable('RAIN_Rain');
-                $this->UnregisterVariable('RAIN_Rain_1h');
-                $this->UnregisterVariable('RAIN_Rain_24h');
-                $this->UnregisterVariable('RAIN_RfSignal');
-                $this->UnregisterVariable('RAIN_Battery');
-            }
+			$vpos = 900;
+            $id = $this->RegisterVariableString('Data', 'Zusatzdaten', '', $vpos++);
+            IPS_SetHidden($id, true);
 
             // Inspired by module SymconTest/HookServe
             $this->RegisterHook('/hook/NetatmoWeather');
@@ -329,13 +345,125 @@ class NetatmoWeather extends IPSModule
         }
     }
 
+    public function ApplyModulNames($base_module_mod, $outdoor_module_mod, $indoor1_module_mod, $indoor2_module_mod, $indoor3_module_mod, $rain_module_mod, $wind_module_mod)
+    {
+        $base_module_name = $this->ReadPropertyString('base_module_name');
+        $outdoor_module_name = $this->ReadPropertyString('outdoor_module_name');
+        $indoor1_module_name = $this->ReadPropertyString('indoor1_module_name');
+        $indoor2_module_name = $this->ReadPropertyString('indoor2_module_name');
+        $indoor3_module_name = $this->ReadPropertyString('indoor3_module_name');
+        $rain_module_name = $this->ReadPropertyString('rain_module_name');
+        $wind_module_name = $this->ReadPropertyString('wind_module_name');
+
+        $with_absolute_pressure = $this->ReadPropertyBoolean('with_absolute_pressure');
+        $with_absolute_humidity = $this->ReadPropertyBoolean('with_absolute_humidity');
+        $with_dewpoint = $this->ReadPropertyBoolean('with_dewpoint');
+        $with_windchill = $this->ReadPropertyBoolean('with_windchill');
+        $with_heatindex = $this->ReadPropertyBoolean('with_heatindex');
+        $with_windstrength = $this->ReadPropertyBoolean('with_windstrength');
+        $with_timestamp = $this->ReadPropertyBoolean('with_timestamp');
+        $with_signal = $this->ReadPropertyBoolean('with_signal');
+        $with_battery = $this->ReadPropertyBoolean('with_battery');
+
+		if ($base_module_mod && $base_module_name != '') {
+			$s = $base_module_name . '\\';
+			IPS_SetName($this->GetIDForIdent('BASE_Temperature'), $s . 'Temperatur');
+			IPS_SetName($this->GetIDForIdent('BASE_CO2'), $s . 'CO2');
+			IPS_SetName($this->GetIDForIdent('BASE_Humidity'), $s . 'Luftfeuchtigkeit');
+			if ($with_absolute_humidity)
+				IPS_SetName($this->GetIDForIdent('BASE_AbsoluteHumidity'), $s . 'absolute Luftfeuchtigkeit');
+			IPS_SetName($this->GetIDForIdent('BASE_Noise'), $s . 'Lärm');
+			IPS_SetName($this->GetIDForIdent('BASE_Pressure'), $s . 'Luftdruck');
+			if ($with_absolute_pressure)
+				IPS_SetName($this->GetIDForIdent('BASE_AbsolutePressure'), $s . 'absoluter Luftdruck');
+			if ($with_signal)
+				IPS_SetName($this->GetIDForIdent('BASE_Wifi'), $s . 'Stärke des Wifi-Signals');
+		}
+		for ($i = 1; $i <= 3; $i++) {
+			switch ($i) {
+				case 1:
+					$module_name = $indoor1_module_name;
+					$module_mod = $indoor1_module_mod;
+					break;
+				case 2:
+					$module_name = $indoor2_module_name;
+					$module_mod = $indoor2_module_mod;
+					break;
+				case 3:
+					$module_name = $indoor3_module_name;
+					$module_mod = $indoor3_module_mod;
+					break;
+			}
+			$pfx = 'IN' . $i;
+			if ($module_mod && $module_name != '') {
+				$s = $module_name . '\\';
+				IPS_SetName($this->GetIDForIdent($pfx . '_Temperature'), $s . 'Temperatur');
+				IPS_SetName($this->GetIDForIdent($pfx . '_CO2'), $s . 'CO2');
+				IPS_SetName($this->GetIDForIdent($pfx . '_Humidity'), $s . 'Luftfeuchtigkeit');
+				if ($with_absolute_humidity)
+					IPS_SetName($this->GetIDForIdent($pfx . '_AbsoluteHumidity'), $s . 'absolute Luftfeuchtigkeit');
+				if ($with_signal)
+					IPS_SetName($this->GetIDForIdent($pfx . '_RfSignal'), $s . 'Signal-Stärke');
+				if ($with_battery)
+					IPS_SetName($this->GetIDForIdent($pfx . '_Battery'), $s . 'Batterie-Status');
+			}
+		}
+		if ($outdoor_module_mod && $outdoor_module_name != '') {
+			$s = $outdoor_module_name . '\\';
+			IPS_SetName($this->GetIDForIdent('OUT_Temperature'), $s . 'Temperatur');
+			IPS_SetName($this->GetIDForIdent('OUT_Humidity'), $s . 'Luftfeuchtigkeit');
+			if ($with_absolute_humidity)
+				IPS_SetName($this->GetIDForIdent('OUT_AbsoluteHumidity'), $s . 'absolute Luftfeuchtigkeit');
+			if ($with_dewpoint)
+				IPS_SetName($this->GetIDForIdent('OUT_Dewpoint'), $s . 'Taupunkt');
+			if ($with_windchill)
+				IPS_SetName($this->GetIDForIdent('OUT_Windchill'), $s . 'Windchill');
+			if ($with_heatindex)
+				IPS_SetName($this->GetIDForIdent('OUT_Heatindex'), $s . 'Hitzeindex');
+			if ($with_signal)
+				IPS_SetName($this->GetIDForIdent('OUT_RfSignal'), $s . 'Signal-Stärke');
+			if ($with_battery)
+				IPS_SetName($this->GetIDForIdent('OUT_Battery'), $s . 'Batterie-Status');
+		}
+		if ($rain_module_mod && $rain_module_name != '') {
+			$s = $rain_module_name . '\\';
+			IPS_SetName($this->GetIDForIdent('RAIN_Rain'), $s . 'Regenmenge');
+			IPS_SetName($this->GetIDForIdent('RAIN_Rain_1h'), $s . 'Regenmenge der letzten 1h');
+			IPS_SetName($this->GetIDForIdent('RAIN_Rain_24h'), $s . 'Regenmenge der letzten 24h');
+			if ($with_signal)
+				IPS_SetName($this->GetIDForIdent('RAIN_RfSignal'), $s . 'Signal-Stärke');
+			if ($with_battery)
+				IPS_SetName($this->GetIDForIdent('RAIN_Battery'), $s . 'Batterie-Status');
+		}
+		if ($wind_module_mod && $wind_module_name != '') {
+			$s = $wind_module_name . '\\';
+			IPS_SetName($this->GetIDForIdent('WIND_WindSpeed'), $s . 'Windgeschwindigkeit');
+			IPS_SetName($this->GetIDForIdent('WIND_WindAngle'), $s . 'Windrichtung');
+			IPS_SetName($this->GetIDForIdent('WIND_GustSpeed'), $s . 'Geschwindigkeit der Böen der letzten 5m');
+			IPS_SetName($this->GetIDForIdent('WIND_GustAngle'), $s . 'Richtung der Böen der letzten 5m');
+			if ($with_windstrength) {
+				IPS_SetName($this->GetIDForIdent('WIND_WindStrength'), $s . 'Windstärke');
+				IPS_SetName($this->GetIDForIdent('WIND_GustStrength'), $s . 'Stärke der Böen');
+			}
+			if ($with_signal)
+				IPS_SetName($this->GetIDForIdent('WIND_RfSignal'), $s . 'Signal-Stärke');
+			if ($with_battery)
+				IPS_SetName($this->GetIDForIdent('WIND_Battery'), $s . 'Batterie-Status');
+		}
+
+	}
+
     protected function SetUpdateInterval()
     {
-        // refresh-timer
         $min = $this->ReadPropertyInteger('UpdateDataInterval');
         $msec = $min > 0 ? $min * 1000 * 60 : 0;
         $this->SetTimerInterval('UpdateDataWeather', $msec);
     }
+
+    public function RefreshVariableNames()
+    {
+		$this->ApplyModulNames(true, true, true, true, true, true, true);
+	}
 
     public function UpdateData()
     {
@@ -351,6 +479,10 @@ class NetatmoWeather extends IPSModule
         $wunderground_key = $this->ReadPropertyString('Wunderground_Key');
 
         $station_name = $this->ReadPropertyString('station_name');
+        $station_altitude = $this->ReadPropertyInteger('station_altitude');
+        $station_longitude = $this->ReadPropertyFloat('station_longitude');
+        $station_latitude = $this->ReadPropertyFloat('station_latitude');
+
         $base_module_name = $this->ReadPropertyString('base_module_name');
         $outdoor_module_name = $this->ReadPropertyString('outdoor_module_name');
         $indoor1_module_name = $this->ReadPropertyString('indoor1_module_name');
@@ -358,6 +490,14 @@ class NetatmoWeather extends IPSModule
         $indoor3_module_name = $this->ReadPropertyString('indoor3_module_name');
         $rain_module_name = $this->ReadPropertyString('rain_module_name');
         $wind_module_name = $this->ReadPropertyString('wind_module_name');
+
+        $base_module_id = $this->ReadPropertyString('base_module_id');
+        $outdoor_module_id = $this->ReadPropertyString('outdoor_module_id');
+        $indoor1_module_id = $this->ReadPropertyString('indoor1_module_id');
+        $indoor2_module_id = $this->ReadPropertyString('indoor2_module_id');
+        $indoor3_module_id = $this->ReadPropertyString('indoor3_module_id');
+        $rain_module_id = $this->ReadPropertyString('rain_module_id');
+        $wind_module_id = $this->ReadPropertyString('wind_module_id');
 
         $token = $this->ReadPropertyString('token');
         $token_expiration = $this->ReadPropertyInteger('token_expiration');
@@ -368,12 +508,14 @@ class NetatmoWeather extends IPSModule
         $with_windchill = $this->ReadPropertyBoolean('with_windchill');
         $with_heatindex = $this->ReadPropertyBoolean('with_heatindex');
         $with_windstrength = $this->ReadPropertyBoolean('with_windstrength');
+        $with_timestamp = $this->ReadPropertyBoolean('with_timestamp');
         $with_signal = $this->ReadPropertyBoolean('with_signal');
         $with_battery = $this->ReadPropertyBoolean('with_battery');
 
         $minutes2fail = $this->ReadPropertyInteger('minutes2fail');
 
-        $battery_indicator = false;
+        $battery_alarm = false;
+        $module_alarm = false;
         $module_data = '';
 
         $err = '';
@@ -431,9 +573,11 @@ class NetatmoWeather extends IPSModule
                 $this->SendDebug($this->scriptName, $err, 0);
                 IPS_LogMessage($this->scriptName, $err);
                 SetValueBoolean($this->GetIDForIdent('Status'), fail);
-                SetValueString($this->GetIDForIdent('Data'), '');
-                SetValueBoolean($this->GetIDForIdent('Battery'), false);
+                SetValueBoolean($this->GetIDForIdent('BatteryAlarm'), true);
+                SetValueBoolean($this->GetIDForIdent('ModuleAlarm'), true);
                 SetValueBoolean($this->GetIDForIdent('Wunderground'), fail);
+                SetValueString($this->GetIDForIdent('StatusImage'), '');
+                SetValueString($this->GetIDForIdent('Data'), '');
                 return -1;
             }
         }
@@ -470,49 +614,238 @@ class NetatmoWeather extends IPSModule
                 $err = "got status \"$status\" from netamo";
             }
         }
+
         if ($err == '') {
-            $station_found = false;
+			$_station_name = $station_name;
             $devices = $netatmo['body']['devices'];
             if ($station_name != '') {
+				$station_found = false;
                 foreach ($devices as $device) {
-                    if ($station_name == $device['station_name']) {
+                    if ($_station_name == $device['station_name']) {
                         $station_found = true;
                         break;
                     }
                 }
+				if (!$station_found) {
+					$err = "station \"$station_name\" don't exists";
+				}
             } else {
                 if (count($devices) > 0) {
                     $device = $devices[0];
-                    $station_name = $device['station_name'];
+                    $_station_name = $device['station_name'];
                     $station_found = true;
-                }
-            }
-            if (!$station_found) {
-                $err = "station \"$station_name\" don't exists";
+                } else {
+					$err = "data contains no station";
+				}
             }
         }
         if ($err != '') {
             $this->SendDebug($this->scriptName, $err, 0);
             IPS_LogMessage($this->scriptName, $err);
             SetValueBoolean($this->GetIDForIdent('Status'), fail);
-            SetValueString($this->GetIDForIdent('Data'), '');
-            SetValueBoolean($this->GetIDForIdent('Battery'), false);
+            SetValueBoolean($this->GetIDForIdent('BatteryAlarm'), true);
+			SetValueBoolean($this->GetIDForIdent('ModuleAlarm'), true);
             SetValueBoolean($this->GetIDForIdent('Wunderground'), fail);
+			SetValueString($this->GetIDForIdent('StatusImage'), '');
+            SetValueString($this->GetIDForIdent('Data'), '');
             return -1;
         }
 
         $now = time();
 
         $place = $device['place'];
-        $altitude = $place['altitude'];
-        $longitude = $place['location'][0];
-        $latitude = $place['location'][1];
+        $_station_altitude = $place['altitude'];
+        $_station_longitude = $place['location'][0];
+        $_station_latitude = $place['location'][1];
 
-        IPS_SetProperty($this->InstanceID, 'station_altitude', $altitude);
-        IPS_SetProperty($this->InstanceID, 'station_longitude', $longitude);
-        IPS_SetProperty($this->InstanceID, 'station_latitude', $latitude);
-        $this->SendDebug($this->scriptName, "station \"$station_name\": altitude=$altitude, longitude=$longitude, latitude=$latitude", 0);
-        IPS_ApplyChanges($this->InstanceID);
+        $_base_module_id = $device['_id'];
+        $_base_module_name = $device['module_name'];
+
+        $_outdoor_module_id = "";
+        $_outdoor_module_name = "";
+        $_indoor1_module_id = "";
+        $_indoor1_module_name = "";
+        $_indoor2_module_id = "";
+        $_indoor2_module_name = "";
+        $_indoor3_module_id = "";
+        $_indoor3_module_name = "";
+        $_rain_module_id = "";
+        $_rain_module_name = "";
+        $_wind_module_id = "";
+        $_wind_module_name = "";
+
+        $modules = $netatmo['body']['modules'];
+		foreach ($modules as $module) {
+			switch ($module['type']) {
+				case 'NAModule1':
+					$_outdoor_module_id = $module['_id'];
+					$_outdoor_module_name = $module['module_name'];
+					break;
+				case 'NAModule2':
+					$_wind_module_id = $module['_id'];
+					$_wind_module_name = $module['module_name'];
+					break;
+				case 'NAModule3':
+					$_rain_module_id = $module['_id'];
+					$_rain_module_name = $module['module_name'];
+					break;
+				case 'NAModule4':
+					$_id = $module['_id'];
+					$_name = $module['module_name'];
+
+					$_idx = 0;
+					if ($_id == $indoor1_module_id)
+						$_idx = 1;
+					else if ($_id == $indoor2_module_id)
+						$_idx = 2;
+					else if ($_id == $indoor3_module_id)
+						$_idx = 3;
+					if (!$_idx) {
+						if ($_indoor1_module_id == '')
+							$_idx = 1;
+						else if ($_indoor2_module_id == '')
+							$_idx = 2;
+						else if ($_indoor3_module_id == '')
+							$_idx = 3;
+					}
+
+					switch ($_idx) {
+						case 1:
+							$_indoor1_module_id = $_id;
+							$_indoor1_module_name = $_name;
+							break;
+						case 2:
+							$_indoor2_module_id = $_id;
+							$_indoor2_module_name = $_name;
+							break;
+						case 3:
+							$_indoor3_module_id = $_id;
+							$_indoor3_module_name = $_name;
+							break;
+					}
+					break;
+			}
+		}
+
+		$base_module_mod = false;
+		$outdoor_module_mod = false;
+		$indoor1_module_mod = false;
+		$indoor2_module_mod = false;
+		$indoor3_module_mod = false;
+		$rain_module_mod = false;
+		$wind_module_mod = false;
+
+		if ($_station_name != $station_name) {
+			$this->SendDebug($this->scriptName, "changed configuration: station_name=$station_name -> $_station_name", 0);
+			$station_name = $_station_name;
+			IPS_SetProperty($this->InstanceID, 'station_name', $station_name);
+		}
+		if ($_station_altitude != $station_altitude) {
+			$this->SendDebug($this->scriptName, "changed configuration: station_altitude=$station_altitude -> $_station_altitude", 0);
+			$station_altitude = $_station_altitude;
+			IPS_SetProperty($this->InstanceID, 'station_altitude', $station_altitude);
+		}
+		if ($_station_longitude != $station_longitude) {
+			$this->SendDebug($this->scriptName, "changed configuration: station_longitude=$station_longitude -> $_station_longitude", 0);
+			$station_longitude = $_station_longitude;
+			IPS_SetProperty($this->InstanceID, 'station_longitude', $station_longitude);
+		}
+		if ($_station_latitude != $station_latitude) {
+			$this->SendDebug($this->scriptName, "changed configuration: station_latitude=$station_latitude -> $_station_latitude", 0);
+			$station_latitude = $_station_latitude;
+			IPS_SetProperty($this->InstanceID, 'station_latitude', $station_latitude);
+		}
+		if ($_base_module_id != $base_module_id) {
+			if ($base_module_id == '')
+				$base_module_mod = true;
+			$this->SendDebug($this->scriptName, "changed configuration: base_module_id=$base_module_id -> $_base_module_id", 0);
+			$base_module_id = $_base_module_id;
+			IPS_SetProperty($this->InstanceID, 'base_module_id', $base_module_id);
+		}
+		if ($_base_module_name != $base_module_name) {
+			$this->SendDebug($this->scriptName, "changed configuration: base_module_name=$base_module_name -> $_base_module_name", 0);
+			$base_module_name = $_base_module_name;
+			IPS_SetProperty($this->InstanceID, 'base_module_name', $base_module_name);
+		}
+		if ($_outdoor_module_id != $outdoor_module_id) {
+			if ($outdoor_module_id == '')
+				$outdoor_module_mod = true;
+			$this->SendDebug($this->scriptName, "changed configuration: outdoor_module_id=$outdoor_module_id -> $_outdoor_module_id", 0);
+			$outdoor_module_id = $_outdoor_module_id;
+			IPS_SetProperty($this->InstanceID, 'outdoor_module_id', $outdoor_module_id);
+		}
+		if ($_outdoor_module_name != $outdoor_module_name) {
+			$this->SendDebug($this->scriptName, "changed configuration: outdoor_module_name=$outdoor_module_name -> $_outdoor_module_name", 0);
+			$outdoor_module_name = $_outdoor_module_name;
+			IPS_SetProperty($this->InstanceID, 'outdoor_module_name', $outdoor_module_name);
+		}
+		if ($_indoor1_module_id != $indoor1_module_id) {
+			if ($indoor1_module_id == '')
+				$indoor1_module_mod = true;
+			$this->SendDebug($this->scriptName, "changed configuration: indoor1_module_id=$indoor1_module_id -> $_indoor1_module_id", 0);
+			$indoor1_module_id = $_indoor1_module_id;
+			IPS_SetProperty($this->InstanceID, 'indoor1_module_id', $indoor1_module_id);
+		}
+		if ($_indoor1_module_name != $indoor1_module_name) {
+			$this->SendDebug($this->scriptName, "changed configuration: indoor1_module_name=$indoor1_module_name -> $_indoor1_module_name", 0);
+			$indoor1_module_name = $_indoor1_module_name;
+			IPS_SetProperty($this->InstanceID, 'indoor1_module_name', $indoor1_module_name);
+		}
+		if ($_indoor2_module_id != $indoor2_module_id) {
+			if ($indoor2_module_id == '')
+				$indoor2_module_mod = true;
+			$this->SendDebug($this->scriptName, "changed configuration: indoor2_module_id=$indoor2_module_id -> $_indoor2_module_id", 0);
+			$indoor2_module_id = $_indoor2_module_id;
+			IPS_SetProperty($this->InstanceID, 'indoor2_module_id', $indoor2_module_id);
+		}
+		if ($_indoor2_module_name != $indoor2_module_name) {
+			$this->SendDebug($this->scriptName, "changed configuration: indoor2_module_name=$indoor2_module_name -> $_indoor2_module_name", 0);
+			$indoor2_module_name = $_indoor2_module_name;
+			IPS_SetProperty($this->InstanceID, 'indoor2_module_name', $indoor2_module_name);
+		}
+		if ($_indoor3_module_id != $indoor3_module_id) {
+			if ($indoor3_module_id == '')
+				$indoor3_module_mod = true;
+			$this->SendDebug($this->scriptName, "changed configuration: indoor3_module_id=$indoor3_module_id -> $_indoor3_module_id", 0);
+			$indoor3_module_id = $_indoor3_module_id;
+			IPS_SetProperty($this->InstanceID, 'indoor3_module_id', $indoor3_module_id);
+		}
+		if ($_indoor3_module_name != $indoor3_module_name) {
+			$this->SendDebug($this->scriptName, "changed configuration: indoor3_module_name=$indoor3_module_name -> $_indoor3_module_name", 0);
+			$indoor3_module_name = $_indoor3_module_name;
+			IPS_SetProperty($this->InstanceID, 'indoor3_module_name', $indoor3_module_name);
+		}
+		if ($_rain_module_id != $rain_module_id) {
+			if ($rain_module_id == '')
+				$rain_module_mod = true;
+			$this->SendDebug($this->scriptName, "changed configuration: rain_module_id=$rain_module_id -> $_rain_module_id", 0);
+			$rain_module_id = $_rain_module_id;
+			IPS_SetProperty($this->InstanceID, 'rain_module_id', $rain_module_id);
+		}
+		if ($_rain_module_name != $rain_module_name) {
+			$this->SendDebug($this->scriptName, "changed configuration: rain_module_name=$rain_module_name -> $_rain_module_name", 0);
+			$rain_module_name = $_rain_module_name;
+			IPS_SetProperty($this->InstanceID, 'rain_module_name', $rain_module_name);
+		}
+		if ($_wind_module_id != $wind_module_id) {
+			if ($wind_module_id == '')
+				$wind_module_mod = true;
+			$this->SendDebug($this->scriptName, "changed configuration: wind_module_id=$wind_module_id -> $_wind_module_id", 0);
+			$wind_module_id = $_wind_module_id;
+			IPS_SetProperty($this->InstanceID, 'wind_module_id', $wind_module_id);
+		}
+		if ($_wind_module_name != $wind_module_name) {
+			$this->SendDebug($this->scriptName, "changed configuration: wind_module_name=$wind_module_name -> $_wind_module_name", 0);
+			$wind_module_name = $_wind_module_name;
+			IPS_SetProperty($this->InstanceID, 'wind_module_name', $wind_module_name);
+		}
+
+		if (IPS_HasChanges($this->InstanceID)) {
+			IPS_ApplyChanges($this->InstanceID);
+			$cfg = IPS_GetConfiguration($this->InstanceID);
+			$this->SendDebug($this->scriptName, "station \"$station_name\": updated configuration = " . $cfg, 0);
+			$this->ApplyModulNames($base_module_mod, $outdoor_module_mod, $indoor1_module_mod, $indoor2_module_mod, $indoor3_module_mod, $rain_module_mod, $wind_module_mod);
+		}
 
         // base module
         $module_type = 'Basismodul';
@@ -526,17 +859,17 @@ class NetatmoWeather extends IPSModule
 
         $time_utc = $device['dashboard_data']['time_utc'];
         $s = $this->seconds2duration($now - $time_utc);
-        $last_seen = $s != '' ? "vor $s" : '';
+        $last_measure = $s != '' ? "vor $s" : '';
 
         // letzte Kommunikation der Station mit Netatmo
         $last_status_store = $device['last_status_store'];
         if (is_int($last_status_store)) {
             $sec = $now - $last_status_store;
-            $last_contact = $this->seconds2duration($sec);
+            $s = $this->seconds2duration($sec);
+			$last_contact = $s != '' ? "vor $s" : '';
             $min = floor($sec / 60);
-            if ($min > $minutes2fail) {
-                $status = 'fail';
-            }
+            if ($min > $minutes2fail)
+                $status = fail;
         } else {
             $last_contact = $last_status_store;
         }
@@ -556,35 +889,34 @@ class NetatmoWeather extends IPSModule
         } // "bad";
 
         $module_data[] = [
-                'module_type'       => $module_type,
-                'module_name'       => $module_name,
-                'last_seen'         => $last_seen,
-                'wifi_status'       => $wifi_status,
+                'module_type'  => $module_type,
+                'module_name'  => $module_name,
+                'last_measure' => $last_measure,
+                'wifi_status'  => $wifi_status,
             ];
 
         $msg = "base-module \"$module_name\": Temperature=$Temperature, CO2=$CO2, Humidity=$Humidity, Noise=$Noise, Pressure=$Pressure, AbsolutePressure=$AbsolutePressure";
         $this->SendDebug($this->scriptName, utf8_decode($msg), 0);
-        $msg = "        module_type=$module_type, module_name=$module_name, last_seen=$last_seen, wifi_status=$wifi_status, last_contact=$last_contact";
+        $msg = "        module_type=$module_type, module_name=$module_name, last_measure=$last_measure, wifi_status=$wifi_status, last_contact=$last_contact";
         $this->SendDebug($this->scriptName, utf8_decode($msg), 0);
 
-        SetValue($this->GetIDForIdent('LastMeasure'), $time_utc);
-        SetValue($this->GetIDForIdent('LastContact'), $last_contact);
+		SetValue($this->GetIDForIdent('LastContact'), $last_contact);
 
         SetValue($this->GetIDForIdent('BASE_Temperature'), $Temperature);
         SetValue($this->GetIDForIdent('BASE_CO2'), $CO2);
         SetValue($this->GetIDForIdent('BASE_Humidity'), $Humidity);
         SetValue($this->GetIDForIdent('BASE_Noise'), $Noise);
         SetValue($this->GetIDForIdent('BASE_Pressure'), $Pressure);
-        if ($with_absolute_pressure) {
+        if ($with_absolute_pressure)
             SetValue($this->GetIDForIdent('BASE_AbsolutePressure'), $AbsolutePressure);
-        }
-        if ($with_signal) {
-            SetValue($this->GetIDForIdent('BASE_Wifi'), $wifi_status);
-        }
         if ($with_absolute_humidity) {
             $abs_humidity = $this->calcAbsoluteHumidity($Temperature, $Humidity);
             SetValue($this->GetIDForIdent('BASE_AbsoluteHumidity'), $abs_humidity);
         }
+        if ($with_timestamp)
+			SetValue($this->GetIDForIdent('BASE_LastMeasure'), $time_utc);
+        if ($with_signal)
+            SetValue($this->GetIDForIdent('BASE_Wifi'), $wifi_status);
 
         $modules = $netatmo['body']['modules'];
         foreach (['NAModule4', 'NAModule1', 'NAModule3', 'NAModule2'] as $types) {
@@ -592,6 +924,7 @@ class NetatmoWeather extends IPSModule
                 if ($module['type'] != $types) {
                     continue;
                 }
+                $module_id = $module['_id'];
                 $module_name = $module['module_name'];
                 switch ($module['type']) {
                     case 'NAModule1':
@@ -645,7 +978,15 @@ class NetatmoWeather extends IPSModule
                 }
 
                 $s = $this->seconds2duration($now - $time_utc);
-                $last_seen = $s != '' ? "vor $s" : '';
+                $last_measure = $s != '' ? "vor $s" : '';
+
+				$last_message  = $module['last_message'];
+				if (is_int($last_message)) {
+					$sec = $now - $last_message;
+					$min = floor($sec / 60);
+					if ($min > $minutes2fail)
+						$module_alarm = true;
+				}
 
                 $rf_status = $module['rf_status'];
                 if ($rf_status <= 60) {
@@ -683,28 +1024,26 @@ class NetatmoWeather extends IPSModule
                 else {
                     $battery_status = 5;
                 } // "max";
-                if ($battery_status < 2) {
-                    $battery_indicator = true;
-                }
+                if ($battery_status < 2)
+                    $battery_alarm = true;
 
                 $module_data[] = [
-                        'module_type'		  => $module_type,
-                        'module_name'		  => $module_name,
-                        'last_seen'			   => $last_seen,
-                        'rf_status'			   => $rf_status,
-                        'battery_status'	=> $battery_status,
+                        'module_type'     => $module_type,
+                        'module_name'     => $module_name,
+                        'last_measure'    => $last_measure,
+                        'rf_status'       => $rf_status,
+                        'battery_status'  => $battery_status,
                     ];
 
                 switch ($module['type']) {
                     case 'NAModule1':
+                        if ($module_id != $outdoor_module_id) {
+							$msg = "indoor module \"$module_name\" (id=$module_id): not found in configuragtion";
+							$this->SendDebug($this->scriptName, utf8_decode($msg), 0);
+							break;
+						}
                         SetValue($this->GetIDForIdent('OUT_Temperature'), $Temperature);
                         SetValue($this->GetIDForIdent('OUT_Humidity'), $Humidity);
-                        if ($with_signal) {
-                            SetValue($this->GetIDForIdent('OUT_RfSignal'), $rf_status);
-                        }
-                        if ($with_battery) {
-                            SetValue($this->GetIDForIdent('OUT_Battery'), $battery_status);
-                        }
                         if ($with_absolute_humidity) {
                             $abs_humidity = $this->calcAbsoluteHumidity($Temperature, $Humidity);
                             SetValue($this->GetIDForIdent('OUT_AbsoluteHumidity'), $abs_humidity);
@@ -721,12 +1060,23 @@ class NetatmoWeather extends IPSModule
                             $dewpoint = $this->calcDewpoint($Temperature, $Humidity);
                             SetValue($this->GetIDForIdent('OUT_Dewpoint'), $dewpoint);
                         }
+						if ($with_timestamp)
+							SetValue($this->GetIDForIdent('OUT_LastMeasure'), $time_utc);
+                        if ($with_signal)
+                            SetValue($this->GetIDForIdent('OUT_RfSignal'), $rf_status);
+                        if ($with_battery)
+                            SetValue($this->GetIDForIdent('OUT_Battery'), $battery_status);
 
                         $msg = "outdoor module \"$module_name\": Temperature=$Temperature, Humidity=$Humidity";
                         $this->SendDebug($this->scriptName, utf8_decode($msg), 0);
 
                         break;
                     case 'NAModule2':
+                        if ($module_id != $wind_module_id) {
+							$msg = "indoor module \"$module_name\" (id=$module_id): not found in configuragtion";
+							$this->SendDebug($this->scriptName, utf8_decode($msg), 0);
+							break;
+						}
                         SetValue($this->GetIDForIdent('WIND_WindSpeed'), $WindSpeed);
                         SetValue($this->GetIDForIdent('WIND_WindAngle'), $WindAngle);
                         SetValue($this->GetIDForIdent('WIND_GustSpeed'), $GustSpeed);
@@ -737,60 +1087,70 @@ class NetatmoWeather extends IPSModule
                             $guststrength = $this->windspeed2bft($GustSpeed);
                             SetValue($this->GetIDForIdent('WIND_GustStrength'), $guststrength);
                         }
-                        if ($with_signal) {
+						if ($with_timestamp)
+							SetValue($this->GetIDForIdent('WIND_LastMeasure'), $time_utc);
+                        if ($with_signal)
                             SetValue($this->GetIDForIdent('WIND_RfSignal'), $rf_status);
-                        }
-                        if ($with_battery) {
+                        if ($with_battery)
                             SetValue($this->GetIDForIdent('WIND_Battery'), $battery_status);
-                        }
 
                         $msg = "wind gauge \"$module_name\": WindSpeed=$WindSpeed, WindAngle=$WindAngle, GustSpeed=$GustSpeed, GustAngle=$GustAngle";
                         $this->SendDebug($this->scriptName, utf8_decode($msg), 0);
 
                         break;
                     case 'NAModule3':
+                        if ($module_id != $rain_module_id) {
+							$msg = "indoor module \"$module_name\" (id=$module_id): not found in configuragtion";
+							$this->SendDebug($this->scriptName, utf8_decode($msg), 0);
+							break;
+						}
                         SetValue($this->GetIDForIdent('RAIN_Rain'), $Rain);
                         SetValue($this->GetIDForIdent('RAIN_Rain_1h'), $sum_rain_1);
                         SetValue($this->GetIDForIdent('RAIN_Rain_24h'), $sum_rain_24);
-                        if ($with_signal) {
+						if ($with_timestamp)
+							SetValue($this->GetIDForIdent('RAIN_LastMeasure'), $time_utc);
+                        if ($with_signal)
                             SetValue($this->GetIDForIdent('RAIN_RfSignal'), $rf_status);
-                        }
-                        if ($with_battery) {
+                        if ($with_battery)
                             SetValue($this->GetIDForIdent('RAIN_Battery'), $battery_status);
-                        }
 
                         $msg = "rain gauge \"$module_name\": Rain=$Rain, sum_rain_1=$sum_rain_1, sum_rain_24=$sum_rain_24";
                         $this->SendDebug($this->scriptName, utf8_decode($msg), 0);
 
                         break;
                     case 'NAModule4':
-                        if ($module_name == $indoor1_module_name) {
+                        if ($module_id == $indoor1_module_id) {
                             $pfx = 'IN1';
-                        } elseif ($module_name == $indoor2_module_name) {
+                        } elseif ($module_id == $indoor2_module_id) {
                             $pfx = 'IN2';
-                        } elseif ($module_name == $indoor3_module_name) {
+                        } elseif ($module_id == $indoor3_module_id) {
                             $pfx = 'IN3';
-                        }
+                        } else {
+							$msg = "indoor module \"$module_name\" (id=$module_id): not found in configuragtion";
+							$this->SendDebug($this->scriptName, utf8_decode($msg), 0);
+							break;
+						}
+
                         SetValue($this->GetIDForIdent($pfx . '_Temperature'), $Temperature);
                         SetValue($this->GetIDForIdent($pfx . '_CO2'), $CO2);
                         SetValue($this->GetIDForIdent($pfx . '_Humidity'), $Humidity);
-                        if ($with_signal) {
-                            SetValue($this->GetIDForIdent($pfx . '_RfSignal'), $rf_status);
-                        }
-                        if ($with_battery) {
-                            SetValue($this->GetIDForIdent($pfx . '_Battery'), $battery_status);
-                        }
                         if ($with_absolute_humidity) {
                             $abs_humidity = $this->calcAbsoluteHumidity($Temperature, $Humidity);
                             SetValue($this->GetIDForIdent($pfx . '_AbsoluteHumidity'), $abs_humidity);
                         }
+						if ($with_timestamp)
+							SetValue($this->GetIDForIdent($pfx . '_LastMeasure'), $time_utc);
+                        if ($with_signal)
+                            SetValue($this->GetIDForIdent($pfx . '_RfSignal'), $rf_status);
+                        if ($with_battery)
+                            SetValue($this->GetIDForIdent($pfx . '_Battery'), $battery_status);
 
                         $msg = "indoor module \"$module_name\": Temperature=$Temperature, Humidity=$Humidity, CO2=$CO2";
                         $this->SendDebug($this->scriptName, utf8_decode($msg), 0);
 
                         break;
                 }
-                $msg = "        module_type=$module_type, module_name=$module_name, last_seen=$last_seen, rf_status=$rf_status, battery_status=$battery_status";
+                $msg = "        module_type=$module_type, module_name=$module_name, last_measure=$last_measure, rf_status=$rf_status, battery_status=$battery_status";
                 $this->SendDebug($this->scriptName, utf8_decode($msg), 0);
             }
 
@@ -803,16 +1163,17 @@ class NetatmoWeather extends IPSModule
         }
 
         $station_data = [
-                'now'			       => $now,
-                'status'		     => $netatmo['status'],
+                'now'			=> $now,
+                'status'		=> $netatmo['status'],
                 'last_contact'	=> $last_contact,
                 'station_name'	=> $station_name,
-                'modules'		    => $module_data,
+                'modules'		=> $module_data,
             ];
 
         SetValueBoolean($this->GetIDForIdent('Status'), true);
+        SetValueBoolean($this->GetIDForIdent('BatteryAlarm'), $battery_alarm);
+        SetValueBoolean($this->GetIDForIdent('ModuleAlarm'), $module_alarm);
         SetValueString($this->GetIDForIdent('Data'), json_encode($station_data));
-        SetValueBoolean($this->GetIDForIdent('Battery'), $battery_indicator);
 
         $img_path = '/hook/NetatmoWeather/imgs/';
 
@@ -823,33 +1184,56 @@ class NetatmoWeather extends IPSModule
         $html .= "table { border-collapse: collapse; border: 0px solid; margin: 0.5em; width: 100%; }\n";
         $html .= "th, td { padding: 1; }\n";
         $html .= "tbody th { text-align: left; }\n";
+        $html .= "#spalte_caption { width: 200px; }\n";
         $html .= "#spalte_type { width: 25px; }\n";
         $html .= "#spalte_signal { width: 50px; }\n";
         $html .= "#spalte_battery { width: 50px; }\n";
         $html .= "</style>\n";
 
-        $dt = date('d.m. H:i', $now);
-        $s = '<font size="-1">Stand:</font> ';
-        $s .= $dt;
-        $s .= '&emsp;';
-        $s .= '<font size="-1">Status:</font> ';
-        $s .= $station_data['status'];
-        $s .= ' <font size="-2">(' . $station_data['last_contact'] . ')</font>';
-        $html .= "<center>$s</center>\n";
+        $dt = date('d.m.Y H:i:s', $now);
+		$status = $station_data['status'];
 
-        // Tabelle
         $html .= "<table>\n";
-        // Spaltenbreite
+        $html .= "<colgroup><col id=\"spalte_caption\"></colgroup>\n";
+        $html .= "<tdata>\n";
+
+        $html .= "<tr>\n";
+        $html .= "<td>Stationsname:</td>\n";
+        $html .= "<th>$station_name</th>\n";
+        $html .= "</tr>\n";
+
+        $html .= "<tr>\n";
+        $html .= "<td>Status:</td>\n";
+        $html .= "<th>$status</th>\n";
+        $html .= "</tr>\n";
+
+        $html .= "<tr>\n";
+        $html .= "<td>&nbsp;&nbsp;... aktualisiert:</td>\n";
+        $html .= "<th>$dt</th>\n";
+        $html .= "</tr>\n";
+
+        $html .= "<tr>\n";
+        $html .= "<td>letzte Kommunikation:</td>\n";
+        $html .= "<th>$last_contact</th>\n";
+        $html .= "</tr>\n";
+
+        $html .= "</tdata>\n";
+        $html .= "</table>\n";
+        $html .= "<table>\n";
+
+        $html .= "<br>\n";
+
         $html .= "<colgroup><col id=\"spalte_type\"></colgroup>\n";
         $html .= "<colgroup><col></colgroup>\n";
         $html .= "<colgroup><col></colgroup>\n";
         $html .= "<colgroup><col></colgroup>\n";
         $html .= "<colgroup><col id=\"spalte_signal\"></colgroup>\n";
         $html .= "<colgroup><col id=\"spalte_battry\"></colgroup>\n";
+
         $html .= "<tdata>\n";
 
         $html .= "<tr>\n";
-        $html .= "<th></td>\n";
+        $html .= "<th></th>\n";
         $html .= "<th>Modultyp</th>\n";
         $html .= "<th>Name</th>\n";
         $html .= "<th>letzte Meldung</th>\n";
@@ -863,13 +1247,13 @@ class NetatmoWeather extends IPSModule
             $module_type_img = $img_path . $this->module2img($module_type);
             $module_name = $module['module_name'];
             $module_type = $module['module_type'];
-            $last_seen = $module['last_seen'];
+            $last_measure = $module['last_measure'];
 
             $html .= "<tr>\n";
             $html .= "<td><img src=$module_type_img width='20' height='20' title='$module_type'</td>\n";
             $html .= "<td>$module_type</td>\n";
             $html .= "<td>$module_name</td>\n";
-            $html .= "<td>$last_seen</td>\n";
+            $html .= "<td>$last_measure</td>\n";
 
             if ($module_type == 'Basismodul') {
                 $wifi_status = $module['wifi_status'];
@@ -1022,7 +1406,6 @@ class NetatmoWeather extends IPSModule
     private function RegisterHook($WebHook)
     {
         $ids = IPS_GetInstanceListByModuleID('{015A6EB8-D6E5-4B93-B496-0D3F77AE9FE1}');
-        IPS_LogMessage('RegisterHook', print_r($ids, true));
         if (count($ids) > 0) {
             $hooks = json_decode(IPS_GetProperty($ids[0], 'Hooks'), true);
             $found = false;
@@ -1095,12 +1478,12 @@ class NetatmoWeather extends IPSModule
                 $module_type = $module['module_type'];
                 $module_type_img = $img_path . $this->module2img($module_type);
                 $module_name = $module['module_name'];
-                $last_seen = $module['last_seen'];
+                $last_measure = $module['last_measure'];
 
                 $html .= "<tr>\n";
                 $html .= "<td><img src=$module_type_img width='20' height='20' title='$module_type'</td>\n";
                 $html .= "<td>$module_name</td>\n";
-                $html .= "<td>$last_seen</td>\n";
+                $html .= "<td>$last_measure</td>\n";
 
                 if ($module_type == 'Basismodul') {
                     $wifi_status = $module['wifi_status'];

@@ -13,18 +13,9 @@
 			"Client ID": "Client ID",
 			"Client Secret": "Client Secret",
 
-			"Station-Name is only needed if you have more then one":
-				"Stationsname wird nur benötigt, wenn mehr als eine vorhanden ist",
+			"Station-Name only needs to be specified if you have more then one":
+				"Stationsname muss nur angegeben werden, wenn mehr als eine Station vorhanden ist",
 			"Station-Name": "Stationsname",
-
-			"Name of the ...": "Name des ...",
-			" ... Base-Module": " ... Basismoduls",
-			" ... Outdoor-Module": " ... Aussenmoduls",
-			" ... 1rst Indoor-Module": " ... 1. Innenmoduls",
-			" ... 2nd Indoor-Module": " ... 2. Innenmoduls",
-			" ... 3rd Indoor-Module": " ... 3. Innenmoduls",
-			" ... Rain-Gauge": "Regenmessers",
-			" ... Wind-Gauge": "Innenmoduls",
 
 			"optional data": "optionale Zusatzdaten",
 			" ... absolute Pressure": " ... absoluter Luftdruck",
@@ -33,9 +24,12 @@
 			" ... Windchill": " ... Windchill (Windkühle)",
 			" ... Heatindex": " ... Hitzeindex",
 			" ... Windstrength": " ... Windstärke",
-			" ... Wifi-/RF-Signal per module": " ... Wifi- und Signalstärke pro Modul",
-			" ... Battery per module (a global battery indicator is always present)":
-				" ... Batterie-Status pro Modul (ein globaler Batterie-Indikator ist immer vorhanden)",
+
+			"optional data per module": "optionale modulbezogene Zusatzdaten",
+			" ... Measure-Timestamp": " ... Messzeitpunkt",
+			" ... Wifi-/RF-Signal": " ... Wifi- und Signalstärke",
+			" ... Battery (a global battery indicator is always present)":
+				" ... Batterie-Status (ein globaler Batterie-Indikator ist immer vorhanden)",
 
 			"Konfiguration to update Wunderground (only if filled)":
 				"Konfiguration von Wunderground zum Update (nur wenn gefüllt)",
@@ -48,6 +42,10 @@
 			"Minutes": "Minuten",
 
 			"Update Weatherdata": "Aktualisiere Wetterdaten",
+
+			"Default of names of modul-specific variables iѕ <module-name> + <measurand>":
+				"Standardwert der Namen von modulbezogenen Variablen ist <Modulname> + <Messgröße>",
+			"Reset Variablenames": "Variablen-Name zurücksetzen",
 
 			"Instance getting created": "Instanz wird erstellt",
 			"Instance is active": "Instanz ist aktiv",

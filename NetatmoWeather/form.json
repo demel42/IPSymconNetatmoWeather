@@ -9,16 +9,8 @@
 				{ "type": "ValidationTextBox", "name": "Netatmo_Client", "caption": "Client ID" },
 				{ "type": "ValidationTextBox", "name": "Netatmo_Secret", "caption": "Client Secret" },
 
-				{ "type": "Label", "label": "Station-Name is only needed if you have more then one" },
+				{ "type": "Label", "label": "Station-Name only needs to be specified if you have more then one" },
 				{ "type": "ValidationTextBox", "name": "station_name", "caption": "Station-Name" },
-				{ "type": "Label", "label": "Name of the ..." },
-				{ "type": "ValidationTextBox", "name": "base_module_name", "caption": " ... Base-Module" },
-				{ "type": "ValidationTextBox", "name": "outdoor_module_name", "caption": " ... Outdoor-Module" },
-				{ "type": "ValidationTextBox", "name": "indoor1_module_name", "caption": " ... 1rst Indoor-Module" },
-				{ "type": "ValidationTextBox", "name": "indoor2_module_name", "caption": " ... 2nd Indoor-Module" },
-				{ "type": "ValidationTextBox", "name": "indoor3_module_name", "caption": " ... 3rd Indoor-Module" },
-				{ "type": "ValidationTextBox", "name": "rain_module_name", "caption": " ... Rain-Gauge" },
-				{ "type": "ValidationTextBox", "name": "wind_module_name", "caption": " ... Wind-Gauge" },
 
 				{ "type": "Label", "label": "optional data" },
 				{ "type": "CheckBox", "name": "with_absolute_pressure", "caption": " ... absolute Pressure" },
@@ -27,8 +19,11 @@
 				{ "type": "CheckBox", "name": "with_windchill", "caption": " ... Windchill" },
 				{ "type": "CheckBox", "name": "with_heatindex", "caption": " ... Heatindex" },
 				{ "type": "CheckBox", "name": "with_windstrength", "caption": " ... Windstrength" },
-				{ "type": "CheckBox", "name": "with_signal", "caption": " ... Wifi-/RF-Signal per module" },
-				{ "type": "CheckBox", "name": "with_battery", "caption": " ... Battery per module (a global battery indicator is always present)" },
+
+				{ "type": "Label", "label": "optional data per module" },
+				{ "type": "CheckBox", "name": "with_timestamp", "caption": " ... Measure-Timestamp" },
+				{ "type": "CheckBox", "name": "with_signal", "caption": " ... Wifi-/RF-Signal" },
+				{ "type": "CheckBox", "name": "with_battery", "caption": " ... Battery (a global battery indicator is always present)" },
 
 				{ "type": "Label", "label": "" },
 				{ "type": "Label", "label": "Konfiguration to update Wunderground (only if filled)" },
@@ -42,7 +37,9 @@
 			],
 	"actions":
 			[
-				{ "type": "Button", "label": "Update Weatherdata", "onClick": "NetatmoWeather_UpdateData($id);" }
+				{ "type": "Button", "label": "Update Weatherdata", "onClick": "NetatmoWeather_UpdateData($id);" },
+				{ "type": "Label", "label": "Default of names of modul-specific variables iѕ <module-name> + <measurand>" },
+				{ "type": "Button", "label": "Reset Variablenames", "onClick": "NetatmoWeather_RefreshVariableNames($id);" }
 			],		
 	"status":
 			[
