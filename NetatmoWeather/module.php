@@ -60,7 +60,7 @@ class NetatmoWeather extends IPSModule
         $this->CreateVarProfile('Netatmo.Temperatur', 2, ' °C', -10, 30, 0, 1, 'Temperature');
         $this->CreateVarProfile('Netatmo.Humidity', 2, ' %', 10, 100, 0, 0, 'Drops');
         $this->CreateVarProfile('Netatmo.absHumidity', 2, ' g/m³', 10, 100, 0, 0, 'Drops');
-        $this->CreateVarProfile('Netatmo.Dewpoint', 2, ' °', 0, 30, 0, 0, 'Drops');
+        $this->CreateVarProfile('Netatmo.Dewpoint', 2, ' °C', 0, 30, 0, 0, 'Drops');
         $this->CreateVarProfile('Netatmo.Heatindex', 2, ' °C', 0, 100, 0, 0, 'Temperature');
         $this->CreateVarProfile('Netatmo.CO2', 1, ' ppm', 250, 1500, 0, 0, 'Gauge');
         $this->CreateVarProfile('Netatmo.Noise', 1, ' dB', 10, 130, 0, 0, 'Speaker');
@@ -964,7 +964,7 @@ class NetatmoWeather extends IPSModule
             SetValue($this->GetIDForIdent('BASE_AbsolutePressure'), $AbsolutePressure);
         }
         if ($with_absolute_humidity) {
-            $abs_humidity = $this->calcAbsoluteHumidity($Temperature, $Humidity);
+            $abs_humidity = $this->CalcAbsoluteHumidity($Temperature, $Humidity);
             SetValue($this->GetIDForIdent('BASE_AbsoluteHumidity'), $abs_humidity);
         }
         if ($with_timestamp) {
@@ -1103,19 +1103,19 @@ class NetatmoWeather extends IPSModule
                         SetValue($this->GetIDForIdent('OUT_Temperature'), $Temperature);
                         SetValue($this->GetIDForIdent('OUT_Humidity'), $Humidity);
                         if ($with_absolute_humidity) {
-                            $abs_humidity = $this->calcAbsoluteHumidity($Temperature, $Humidity);
+                            $abs_humidity = $this->CalcAbsoluteHumidity($Temperature, $Humidity);
                             SetValue($this->GetIDForIdent('OUT_AbsoluteHumidity'), $abs_humidity);
                         }
                         if ($with_dewpoint) {
-                            $dewpoint = $this->calcDewpoint($Temperature, $Humidity);
+                            $dewpoint = $this->CalcDewpoint($Temperature, $Humidity);
                             SetValue($this->GetIDForIdent('OUT_Dewpoint'), $dewpoint);
                         }
                         if ($with_heatindex) {
-                            $heatindex = $this->calcHeatindex($Temperature, $Humidity);
+                            $heatindex = $this->CalcHeatindex($Temperature, $Humidity);
                             SetValue($this->GetIDForIdent('OUT_Heatindex'), $heatindex);
                         }
                         if ($with_dewpoint) {
-                            $dewpoint = $this->calcDewpoint($Temperature, $Humidity);
+                            $dewpoint = $this->CalcDewpoint($Temperature, $Humidity);
                             SetValue($this->GetIDForIdent('OUT_Dewpoint'), $dewpoint);
                         }
                         if ($with_timestamp) {
@@ -1143,9 +1143,9 @@ class NetatmoWeather extends IPSModule
                         SetValue($this->GetIDForIdent('WIND_GustSpeed'), $GustSpeed);
                         SetValue($this->GetIDForIdent('WIND_GustAngle'), $GustAngle);
                         if ($with_windstrength) {
-                            $windstrength = $this->windspeed2bft($WindSpeed);
+                            $windstrength = $this->ConvertWindSpeed2Strength($WindSpeed);
                             SetValue($this->GetIDForIdent('WIND_WindStrength'), $windstrength);
-                            $guststrength = $this->windspeed2bft($GustSpeed);
+                            $guststrength = $this->ConvertWindSpeed2Strength($GustSpeed);
                             SetValue($this->GetIDForIdent('WIND_GustStrength'), $guststrength);
                         }
                         if ($with_timestamp) {
@@ -1202,7 +1202,7 @@ class NetatmoWeather extends IPSModule
                         SetValue($this->GetIDForIdent($pfx . '_CO2'), $CO2);
                         SetValue($this->GetIDForIdent($pfx . '_Humidity'), $Humidity);
                         if ($with_absolute_humidity) {
-                            $abs_humidity = $this->calcAbsoluteHumidity($Temperature, $Humidity);
+                            $abs_humidity = $this->CalcAbsoluteHumidity($Temperature, $Humidity);
                             SetValue($this->GetIDForIdent($pfx . '_AbsoluteHumidity'), $abs_humidity);
                         }
                         if ($with_timestamp) {
@@ -1227,7 +1227,7 @@ class NetatmoWeather extends IPSModule
             if ($with_windchill) {
                 $temp = GetValue($this->GetIDForIdent('OUT_Temperature'));
                 $speed = GetValue($this->GetIDForIdent('WIND_WindSpeed'));
-                $windchill = $this->calcWindchill($temp, $speed);
+                $windchill = $this->CalcWindchill($temp, $speed);
                 SetValue($this->GetIDForIdent('OUT_Windchill'), $windchill);
             }
         }
@@ -1404,7 +1404,7 @@ class NetatmoWeather extends IPSModule
             $param .= '&humidity=' . rawurlencode($humidity);
         }
         if (strlen($temp) && strlen($humidity)) {
-            $dewpoint = $this->calcDewpoint($temp, $humidity);
+            $dewpoint = $this->CalcDewpoint($temp, $humidity);
             $param .= '&dewptf=' . rawurlencode($this->celsius2farenheit($dewpoint));
         }
         if (strlen($pressure)) {
@@ -1823,7 +1823,7 @@ class NetatmoWeather extends IPSModule
 
     // Taupunkt berechnen
     //   Quelle: https://www.wetterochs.de/wetter/feuchte.html
-    private function calcDewpoint($temp, $humidity)
+    public function CalcDewpoint($temp, $humidity)
     {
         if ($temp > 0) {
             $k2 = 17.62;
@@ -1840,7 +1840,7 @@ class NetatmoWeather extends IPSModule
 
     // relative Luffeuchtigkeit in absolute Feuchte umrechnen
     //   Quelle: https://www.wetterochs.de/wetter/feuchte.html
-    private function calcAbsoluteHumidity($temp, $humidity)
+    public function CalcAbsoluteHumidity($temp, $humidity)
     {
         if ($temp >= 0) {
             $a = 7.5;
@@ -1867,7 +1867,7 @@ class NetatmoWeather extends IPSModule
         // Temperatur in Kelvin
         $TK = $temp + 273.15;
 
-        // absolute Feuchte in g Wasserdampf pro m3 Luft
+        // absolute Feuchte in g Wasserdampf pro m³ Luft
         $AF = pow(10, 5) * $mw / $R * $DD / $TK;
         $AF = round($AF * 10) / 10; // auf eine NK runden
 
@@ -1876,8 +1876,11 @@ class NetatmoWeather extends IPSModule
 
     // gemessenen Luftdruck in absoluen Luftdruck (Meereshöhe) umrechnen
     //   Quelle: https://rechneronline.de/barometer/hoehe.php
-    private function calcAbsolutePressure($pressure, $temp, $altitude)
+    public function CalcAbsolutePressure($pressure, $temp, $altitude = "")
     {
+		if (!isset($altitude) || $altitude === "")
+			$altitude = $this->ReadPropertyInteger('station_altitude');
+
         // Temperaturgradient (geschätzt)
         $TG = 0.0065;
 
@@ -1898,7 +1901,7 @@ class NetatmoWeather extends IPSModule
 
     // Windrichtung in Grad als Bezeichnung ausgeben
     //   Quelle: https://www.windfinder.com/wind/windspeed.htm
-    public function winddir2text($dir)
+    public function ConvertWindDirection2Text($dir)
     {
         $dir2txt = [
             'N',
@@ -1930,7 +1933,7 @@ class NetatmoWeather extends IPSModule
 
     // Windgeschwindigkeit in Beaufort umrechnen
     //   Quelle: https://de.wikipedia.org/wiki/Beaufortskala
-    public function windspeed2bft($speed)
+    public function ConvertWindSpeed2Strength($speed)
     {
         $kmh2bft = [0.3, 1.6, 3.4, 5.5, 8.0, 10.8, 13.9, 17.2, 20.8, 24.5, 28.5, 32.7];
 
@@ -1945,7 +1948,7 @@ class NetatmoWeather extends IPSModule
 
     // Windstärke als Text ausgeben
     //  Quelle: https://de.wikipedia.org/wiki/Beaufortskala
-    public function bft2text($bft)
+    public function ConvertWindStrength2Text($bft)
     {
         $bft2txt = [
             'Windstille',
@@ -1973,7 +1976,7 @@ class NetatmoWeather extends IPSModule
 
     // Temperautur in Windchill umrechnen
     //   Quelle: https://de.wikipedia.org/wiki/Windchill
-    public function calcWindchill($temp, $speed)
+    public function CalcWindchill($temp, $speed)
     {
         if ($speed >= 5.0) {
             $wct = 13.12 + (0.6215 * $temp) - (11.37 * pow($speed, 0.16)) + (0.3965 * $temp * pow($speed, 0.16));
@@ -1986,7 +1989,7 @@ class NetatmoWeather extends IPSModule
 
     // Temperatur als Heatindex umrechnen
     //   Quelle: https://de.wikipedia.org/wiki/Hitzeindex
-    public function calcHeatindex($temp, $hum)
+    public function CalcHeatindex($temp, $hum)
     {
         $c1 = -8.784695;
         $c2 = 1.61139411;
