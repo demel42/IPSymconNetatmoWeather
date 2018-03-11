@@ -25,7 +25,7 @@ Es werden die Wetter-Daten von einer Netatmo-Wetterstation ausgelesen und gespec
 
 Die Angabe der Netatmo-Zugangsdaten ist obligatorisch damit die Instanz aktiviert werden kann.
 
-Weiterhin können die relevanten Wetterdaten in eine persöhnliche Wetterstation von Wunderground übertragen werden.
+Weiterhin können die relevanten Wetterdaten in eine persönliche Wetterstation von Wunderground übertragen werden.
 Übertragen wird:
  - Innenmodul: Luftdruck
  - Aussenmodul: Temperatur, Luftfeuchtigkeit und der daraus berechnete Taupunkt
@@ -41,6 +41,7 @@ Hinweis: Wunderground gibt an, das Daten von Netatmo automatisch übernommen wer
    hierzu benötigt man sowohl den "normalen" Benutzer-Account, der bei der Anmeldung der Geräte bei Netatmo erzeugt wird (https://my.netatmo.com) als auch einen Account sowie eine "App" bei Netatmo Connect, um die Werte abrufen zu können (https://dev.netatmo.com). 
  - optional ein Account bei Wunderground für eine "Personal-Weather-Station"
    hierzu muss man bei Wunderground ein Konto anlegen und eine eine Wettersttaion einrichten.
+
    Die von Wunderground angegebene Verknüpfung mit Netatmo über den Wunderground-Support ist nicht erforderlich
 
 ## 3. Installation
