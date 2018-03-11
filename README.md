@@ -40,7 +40,8 @@ Hinweis: Wunderground gibt an, das Daten von Netatmo automatisch übernommen wer
  - Netatmo Wetterstation und ein entsprechenden Account bei Netatmo
    hierzu benötigt man sowohl den "normalen" Benutzer-Account, der bei der Anmeldung der Geräte bei Netatmo erzeugt wird (https://my.netatmo.com) als auch einen Account sowie eine "App" bei Netatmo Connect, um die Werte abrufen zu können (https://dev.netatmo.com). 
  - optional ein Account bei Wunderground für eine "Personal-Weather-Station"
-   hierzu muss man bei Wunderground ein Konto anlegen und eine eine Wettersttaion einrichten. Die von Wunderground angegebene Verknüpfung mit Netatmo über den Wunderground-Support ist nicht erforderlich
+   hierzu muss man bei Wunderground ein Konto anlegen und eine eine Wettersttaion einrichten.
+   Die von Wunderground angegebene Verknüpfung mit Netatmo über den Wunderground-Support ist nicht erforderlich
 
 ## 3. Installation
 
