@@ -16,12 +16,12 @@ Modul für IP-Symcon ab Version 4.
 ## 1. Funktionsumfang
 
 Es werden die Wetter-Daten von einer Netatmo-Wetterstation ausgelesen und gespeichert. Zusätzlich
-- werden einige Status-Information ermittelt, unter anderen Status der Kommunikation mit Netatmo und Wunderground, Batterie- und Modul-Alarme
-- weitere (im wesentlichen modulbezogene) Daten werden sowohl in einer HTML-Box aufbereitet als auch als JSON-Struktur in einer Variable zur Verfügung gestellt
-- optional einige modulbezogene Daten in Variablen zur Verfügung gestellt
-- es können zusätzliche Wetter-Kenndaten berechnet werden: absoluter Luftdruck, Taupunkt, absolute Feuchte, Windchill, Heatindex
-- die geographіsche Position sowie die Höhe der Wetterstation aus von Netatmo übernommen und in die Instanz-Konfiguration als Property eingetragen
-- steht ein WebHook zur Verfügung, bei dem mit _/hook/NetatmoWeathcer/status_ die Status-Information (analog zur HTML-Box) als Webseite abgerufen werden können.
+ - werden einige Status-Information ermittelt, unter anderen Status der Kommunikation mit Netatmo und Wunderground, Batterie- und Modul-Alarme
+ - weitere (im wesentlichen modulbezogene) Daten werden sowohl in einer HTML-Box aufbereitet als auch als JSON-Struktur in einer Variable zur Verfügung gestellt
+ - optional einige modulbezogene Daten in Variablen zur Verfügung gestellt
+ - es können zusätzliche Wetter-Kenndaten berechnet werden: absoluter Luftdruck, Taupunkt, absolute Feuchte, Windchill, Heatindex
+ - die geographіsche Position sowie die Höhe der Wetterstation aus von Netatmo übernommen und in die Instanz-Konfiguration als Property eingetragen
+ - steht ein WebHook zur Verfügung, bei dem mit _/hook/NetatmoWeathcer/status_ die Status-Information (analog zur HTML-Box) als Webseite abgerufen werden können.
 
 Die Angabe der Netatmo-Zugangsdaten ist obligatorisch damit die Instanz aktiviert werden kann.
 
@@ -67,11 +67,11 @@ Anschließend erscheint ein Eintrag für das Modul in der Liste der Instanz _Mod
 In IP-Symcon nun _Instanz hinzufügen_ (_CTRL+1_) auswählen unter der Kategorie, unter der man die Instanz hinzufügen will, und Hersteller _Netatmo_ und als Gerät _NetatmoWeather_ auswählen.
 
 Die modulbezogenen Variablen haben als ID die Prefixe:
-	- _BASE_ = Basismodul
-	- _OUT_ = Aussenmodul
-	- _IN1_, _IN2_, _IN3_ = Innenmodule
-	- _RAIN_ = Regenmesser
-	- _WIND_ = Windmesser
+ - _BASE_ = Basismodul
+ - _OUT_ = Aussenmodul
+ - _IN1_, _IN2_, _IN3_ = Innenmodule
+ - _RAIN_ = Regenmesser
+ - _WIND_ = Windmesser
 
 Die Namen der Variablen werden bei der Erstanlage auf den Prefix + die Messgröße gesetzt, nach dem ersten Aufruf von _NetatmoWeather_UpdateData_ (z.B. durch Betätigen von _Aktualisiere Wetterdaten_) werden die Namen einmalig geändert in Modulnamen + Messgröße. Dieser Vorgang kann später durch _Variablen-Namen zurücksetzen_ erneut ausgelöst werden, z.B. wenn man im Netatmo Bezeichungen von Modulen geändert hat.
 
