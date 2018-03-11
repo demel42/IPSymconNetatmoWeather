@@ -16,10 +16,12 @@ Modul für IP-Symcon ab Version 4.
 ## 1. Funktionsumfang
 
 Es werden die Wetter-Daten von einer Netatmo-Wetterstation ausgelesen und gespechert. Zusätzlich
-- werden einige Status-Information ermittelt und sowohl in einer HTML-Box aufbereitet als auch optional in Variablen abgelegt als auch 
+- werden einige Status-Information ermittelt, unter anderen Status der Kommunikation mit Netatmo und Wunderground, Batterie- und Modul-Alarme
+- weitere (im wesentlichen modulbezogene) Daten werden sowohl in einer HTML-Box aufbereitet als JSON-Struktur in einer Variable zur Verfügung gestellt
+- optional einige modulbezogene Daten in Variablen zur Verfügung gestellt
 - es können zusätzliche Wetter-Kenndaten berechnet werden: absoluter Luftdruck, Taupunkt, absolute Feuchte, Windchill, Heatindex
-- die geographіsche Position sowie die Höhe aus der Konfiguration der Netatmo-Wetterstation werden automatisch in die Instanz-Konfiguration übernommen (Property)
-- steht ein WebHook zur Verfügung, bei dem mit _/hook/NetatmoWeathcer/status_ die Status-Information (analog zur HTLM-Box〕 als Webseite abgerufen werden können.
+- die geographіsche Position sowie die Höhe aus der Konfiguration der Netatmo-Wetterstation werden automatisch in die Instanz-Konfiguration als Property übernommen
+- steht ein WebHook zur Verfügung, bei dem mit _/hook/NetatmoWeathcer/status_ die Status-Information (analog zur HTML-Box) als Webseite abgerufen werden können.
 
 Die Angabe der 4 Netatmo-Zugangsdaten ist obligatorische, damit die Instanz aktiviert werden kann.
 
@@ -101,6 +103,7 @@ berechnet aus der Temperatur (in °C) und der Windgeschwindigkeit (in km/h) den 
 `string NetatmoWeather_ConvertWindDirection2Text(integer $InstanzID, integer $WindDirection)`
 
 ermittelt aus der Windrichtung (in °) die korespondierende Bezeichnung
+
 
 `integer NetatmoWeather_ConvertWindSpeed2Strength(integer $InstanzID, float $WindSpeed)`
 
