@@ -19,6 +19,7 @@
 				{ "type": "CheckBox", "name": "with_windchill", "caption": " ... Windchill" },
 				{ "type": "CheckBox", "name": "with_heatindex", "caption": " ... Heatindex" },
 				{ "type": "CheckBox", "name": "with_windstrength", "caption": " ... Windstrength" },
+				{ "type": "CheckBox", "name": "with_winddirection", "caption": " ... Winddirection with label" },
 
 				{ "type": "Label", "label": "optional data per module" },
 				{ "type": "CheckBox", "name": "with_timestamp", "caption": " ... Measure-Timestamp" },

@@ -51,6 +51,7 @@ class NetatmoWeather extends IPSModule
         $this->RegisterPropertyBoolean('with_windchill', false);
         $this->RegisterPropertyBoolean('with_heatindex', false);
         $this->RegisterPropertyBoolean('with_windstrength', false);
+        $this->RegisterPropertyBoolean('with_winddirection', false);
 
         $this->RegisterPropertyBoolean('with_timestamp', false);
         $this->RegisterPropertyBoolean('with_signal', false);
@@ -68,13 +69,14 @@ class NetatmoWeather extends IPSModule
         $this->CreateVarProfile('Netatmo.WindSpeed', 2, ' km/h', 0, 100, 0, 0, 'WindSpeed');
         $this->CreateVarProfile('Netatmo.WindStrength', 1, ' bft', 0, 13, 0, 0, 'WindSpeed');
         $this->CreateVarProfile('Netatmo.WindAngle', 1, ' °', 0, 360, 0, 0, 'WindDirection');
+        $this->CreateVarProfile('Netatmo.WindDirection', 3, '', 0, 0, 0, 0, 'WindDirection');
         $this->CreateVarProfile('Netatmo.Rainfall', 2, ' mm', 0, 60, 0, 1, 'Rainfall');
         if (!IPS_VariableProfileExists('Netatmo.Alarm')) {
             IPS_CreateVariableProfile('Netatmo.Alarm', 0);
             IPS_SetVariableProfileText('Netatmo.Alarm', '', '');
             IPS_SetVariableProfileIcon('Netatmo.Alarm', 'Alert');
-            IPS_SetVariableProfileAssociation('Netatmo.Alarm', false, 'OK', '', -1);
-            IPS_SetVariableProfileAssociation('Netatmo.Alarm', true, 'Alarm', '', 0xEE0000);
+            IPS_SetVariableProfileAssociation('Netatmo.Alarm', false, 'Nein', '', -1);
+            IPS_SetVariableProfileAssociation('Netatmo.Alarm', true, 'Ja', '', 0xEE0000);
         }
         if (!IPS_VariableProfileExists('Netatmo.Wifi')) {
             IPS_CreateVariableProfile('Netatmo.Wifi', 1);
@@ -136,6 +138,7 @@ class NetatmoWeather extends IPSModule
         $with_windchill = $this->ReadPropertyBoolean('with_windchill');
         $with_heatindex = $this->ReadPropertyBoolean('with_heatindex');
         $with_windstrength = $this->ReadPropertyBoolean('with_windstrength');
+        $with_winddirection = $this->ReadPropertyBoolean('with_winddirection');
         $with_timestamp = $this->ReadPropertyBoolean('with_timestamp');
         $with_signal = $this->ReadPropertyBoolean('with_signal');
         $with_battery = $this->ReadPropertyBoolean('with_battery');
@@ -330,6 +333,13 @@ class NetatmoWeather extends IPSModule
                     $this->UnregisterVariable('WIND_WindStrength');
                     $this->UnregisterVariable('WIND_GustStrength');
                 }
+                if ($with_winddirection) {
+                    $this->RegisterVariableString('WIND_WindDirection', $s . 'Windrichtung', 'Netatmo.WindDirection', $vpos++);
+                    $this->RegisterVariableString('WIND_GustDirection', $s . 'Windrichtung', 'Netatmo.WindDirection', $vpos++);
+                } else {
+                    $this->UnregisterVariable('WIND_WindDirection');
+                    $this->UnregisterVariable('WIND_WindDirection');
+                }
                 if ($with_timestamp) {
                     $this->RegisterVariableInteger('WIND_LastMeasure', $s . 'letzte Messung', '~UnixTimestamp', $vpos++);
                 } else {
@@ -352,6 +362,8 @@ class NetatmoWeather extends IPSModule
                 $this->UnregisterVariable('WIND_GustSpeed');
                 $this->UnregisterVariable('WIND_GustAngle');
                 $this->UnregisterVariable('WIND_GustStrength');
+				$this->UnregisterVariable('WIND_WindDirection');
+				$this->UnregisterVariable('WIND_WindDirection');
                 $this->UnregisterVariable('WIND_LastMeasure');
                 $this->UnregisterVariable('WIND_RfSignal');
                 $this->UnregisterVariable('WIND_Battery');
@@ -389,6 +401,7 @@ class NetatmoWeather extends IPSModule
         $with_windchill = $this->ReadPropertyBoolean('with_windchill');
         $with_heatindex = $this->ReadPropertyBoolean('with_heatindex');
         $with_windstrength = $this->ReadPropertyBoolean('with_windstrength');
+        $with_winddirection = $this->ReadPropertyBoolean('with_winddirection');
         $with_timestamp = $this->ReadPropertyBoolean('with_timestamp');
         $with_signal = $this->ReadPropertyBoolean('with_signal');
         $with_battery = $this->ReadPropertyBoolean('with_battery');
@@ -487,6 +500,10 @@ class NetatmoWeather extends IPSModule
                 IPS_SetName($this->GetIDForIdent('WIND_WindStrength'), $s . 'Windstärke');
                 IPS_SetName($this->GetIDForIdent('WIND_GustStrength'), $s . 'Stärke der Böen');
             }
+            if ($with_winddirection) {
+                IPS_SetName($this->GetIDForIdent('WIND_WindDirection'), $s . 'Windrichtung');
+                IPS_SetName($this->GetIDForIdent('WIND_GustDirection'), $s . 'Richtung der Böen');
+			}
             if ($with_signal) {
                 IPS_SetName($this->GetIDForIdent('WIND_RfSignal'), $s . 'Signal-Stärke');
             }
@@ -551,6 +568,7 @@ class NetatmoWeather extends IPSModule
         $with_windchill = $this->ReadPropertyBoolean('with_windchill');
         $with_heatindex = $this->ReadPropertyBoolean('with_heatindex');
         $with_windstrength = $this->ReadPropertyBoolean('with_windstrength');
+        $with_winddirection = $this->ReadPropertyBoolean('with_winddirection');
         $with_timestamp = $this->ReadPropertyBoolean('with_timestamp');
         $with_signal = $this->ReadPropertyBoolean('with_signal');
         $with_battery = $this->ReadPropertyBoolean('with_battery');
@@ -1148,6 +1166,12 @@ class NetatmoWeather extends IPSModule
                             $guststrength = $this->ConvertWindSpeed2Strength($GustSpeed);
                             SetValue($this->GetIDForIdent('WIND_GustStrength'), $guststrength);
                         }
+                        if ($with_winddirection) {
+    						$dir = $this->ConvertWindDirection2Text($WindAngle) . " (" . $WindAngle . "°)";
+                            SetValue($this->GetIDForIdent('WIND_WindDirection'), $dir);
+    						$dir = $this->ConvertWindDirection2Text($GustAngle) . " (" . $GustAngle . "°)";
+                            SetValue($this->GetIDForIdent('WIND_GustDirection'), $dir);
+                        }
                         if ($with_timestamp) {
                             SetValue($this->GetIDForIdent('WIND_LastMeasure'), $time_utc);
                         }
@@ -1220,7 +1244,7 @@ class NetatmoWeather extends IPSModule
 
                         break;
                 }
-                $msg = "        module_type=$module_type, module_name=$module_name, last_measure=$last_measure, rf_status=$rf_status, battery_status=$battery_status";
+                $msg = "  module_type=$module_type, module_name=$module_name, last_measure=$last_measure, rf_status=$rf_status, battery_status=$battery_status";
                 $this->SendDebug($this->scriptName, utf8_decode($msg), 0);
             }
 
@@ -1233,11 +1257,11 @@ class NetatmoWeather extends IPSModule
         }
 
         $station_data = [
-                'now'			       => $now,
-                'status'		     => $netatmo['status'],
-                'last_contact'	=> $last_contact,
-                'station_name'	=> $station_name,
-                'modules'		    => $module_data,
+                'now'          => $now,
+                'status'       => $netatmo['status'],
+                'last_contact' => $last_contact,
+                'station_name' => $station_name,
+                'modules'      => $module_data,
             ];
 
         SetValueBoolean($this->GetIDForIdent('Status'), true);
@@ -1923,7 +1947,7 @@ class NetatmoWeather extends IPSModule
             'NNW',
         ];
 
-        $idx = int((($dir + 11.25) % 360) / 22.5);
+        $idx = floor((($dir + 11.25) % 360) / 22.5);
         if ($idx >= 0 && $idx < count($dir2txt)) {
             $txt = $dir2txt[$idx];
         } else {

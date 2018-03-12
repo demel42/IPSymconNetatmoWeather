@@ -24,6 +24,7 @@
 			" ... Windchill": " ... Windchill (Windkühle)",
 			" ... Heatindex": " ... Hitzeindex",
 			" ... Windstrength": " ... Windstärke",
+			" ... Winddirection with label": " ... Windrichtung mit Text",
 
 			"optional data per module": "optionale modulbezogene Zusatzdaten",
 			" ... Measure-Timestamp": " ... Messzeitpunkt",
