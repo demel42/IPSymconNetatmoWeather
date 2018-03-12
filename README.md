@@ -135,7 +135,7 @@ ermittelt aus der Windstärke (in bft) die korespondierende Bezeichnung gemäß 
 | Netatmo-Zugangsdaten      | string   |              | Benutzername und Passwort von https://my.netatmo.com sowie Client-ID und -Secret von https://dev.netatmo.com |
 | Stationsname              | string   |              | muss nur angegeben werden, wenn mehr als eine Station angemeldet ist |
 | Aktualiserungsintervall   | integer  | 5            | Angabe in Minuten |
-| <optionale Zusatzdaten>   | boolean  | false        | wie auf der Konfigurationsseite angegeben |
+| \<optionale Zusatzdaten\>   | boolean  | false        | wie auf der Konfigurationsseite angegeben |
 | Wunderground-Zugangsdaten | string   |              | Station-ID und -Key von https://www.wunderground.com/personal-weather-station/mypws |
 
 Hinweis zum Intervall: die Daten werden nur ca. alle 10m von der Wetterstation an Netatmo übertragen, ein minütliches Intervall ist zulässig, macht aber nur begrenzt Sinn.
