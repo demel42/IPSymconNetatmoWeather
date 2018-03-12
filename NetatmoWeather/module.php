@@ -362,8 +362,8 @@ class NetatmoWeather extends IPSModule
                 $this->UnregisterVariable('WIND_GustSpeed');
                 $this->UnregisterVariable('WIND_GustAngle');
                 $this->UnregisterVariable('WIND_GustStrength');
-				$this->UnregisterVariable('WIND_WindDirection');
-				$this->UnregisterVariable('WIND_WindDirection');
+                $this->UnregisterVariable('WIND_WindDirection');
+                $this->UnregisterVariable('WIND_WindDirection');
                 $this->UnregisterVariable('WIND_LastMeasure');
                 $this->UnregisterVariable('WIND_RfSignal');
                 $this->UnregisterVariable('WIND_Battery');
@@ -503,7 +503,7 @@ class NetatmoWeather extends IPSModule
             if ($with_winddirection) {
                 IPS_SetName($this->GetIDForIdent('WIND_WindDirection'), $s . 'Windrichtung');
                 IPS_SetName($this->GetIDForIdent('WIND_GustDirection'), $s . 'Richtung der Böen');
-			}
+            }
             if ($with_signal) {
                 IPS_SetName($this->GetIDForIdent('WIND_RfSignal'), $s . 'Signal-Stärke');
             }
@@ -1167,9 +1167,9 @@ class NetatmoWeather extends IPSModule
                             SetValue($this->GetIDForIdent('WIND_GustStrength'), $guststrength);
                         }
                         if ($with_winddirection) {
-    						$dir = $this->ConvertWindDirection2Text($WindAngle) . " (" . $WindAngle . "°)";
+                            $dir = $this->ConvertWindDirection2Text($WindAngle) . ' (' . $WindAngle . '°)';
                             SetValue($this->GetIDForIdent('WIND_WindDirection'), $dir);
-    						$dir = $this->ConvertWindDirection2Text($GustAngle) . " (" . $GustAngle . "°)";
+                            $dir = $this->ConvertWindDirection2Text($GustAngle) . ' (' . $GustAngle . '°)';
                             SetValue($this->GetIDForIdent('WIND_GustDirection'), $dir);
                         }
                         if ($with_timestamp) {
