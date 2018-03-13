@@ -6,7 +6,6 @@ class NetatmoWeather extends IPSModule
 
     public function Create()
     {
-        //Never delete this line!
         parent::Create();
 
         $this->RegisterPropertyString('Netatmo_User', '');
@@ -59,18 +58,35 @@ class NetatmoWeather extends IPSModule
 
         // Variablenprofil anlegen ($name, $ProfileType, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits, $Icon)
         $this->CreateVarProfile('Netatmo.Temperatur', 2, ' °C', -10, 30, 0, 1, 'Temperature');
-        $this->CreateVarProfile('Netatmo.Humidity', 2, ' %', 10, 100, 0, 0, 'Drops');
-        $this->CreateVarProfile('Netatmo.absHumidity', 2, ' g/m³', 10, 100, 0, 0, 'Drops');
+        $this->CreateVarProfile('Netatmo.Humidity', 2, ' %', 10, 100, 0, 0, 'Drops'); $this->CreateVarProfile('Netatmo.absHumidity', 2, ' g/m³', 10, 100, 0, 0, 'Drops');
         $this->CreateVarProfile('Netatmo.Dewpoint', 2, ' °C', 0, 30, 0, 0, 'Drops');
         $this->CreateVarProfile('Netatmo.Heatindex', 2, ' °C', 0, 100, 0, 0, 'Temperature');
-        $this->CreateVarProfile('Netatmo.CO2', 1, ' ppm', 250, 1500, 0, 0, 'Gauge');
-        $this->CreateVarProfile('Netatmo.Noise', 1, ' dB', 10, 130, 0, 0, 'Speaker');
         $this->CreateVarProfile('Netatmo.Pressure', 2, ' mbar', 500, 1200, 0, 0, 'Gauge');
         $this->CreateVarProfile('Netatmo.WindSpeed', 2, ' km/h', 0, 100, 0, 0, 'WindSpeed');
         $this->CreateVarProfile('Netatmo.WindStrength', 1, ' bft', 0, 13, 0, 0, 'WindSpeed');
         $this->CreateVarProfile('Netatmo.WindAngle', 1, ' °', 0, 360, 0, 0, 'WindDirection');
         $this->CreateVarProfile('Netatmo.WindDirection', 3, '', 0, 0, 0, 0, 'WindDirection');
         $this->CreateVarProfile('Netatmo.Rainfall', 2, ' mm', 0, 60, 0, 1, 'Rainfall');
+        if (!IPS_VariableProfileExists('Netatmo.Noise')) {
+            IPS_CreateVariableProfile('Netatmo.Noise', 1);
+            IPS_SetVariableProfileText('Netatmo.Noise', '', '');
+            IPS_SetVariableProfileIcon('Netatmo.Noise', 'Speaker');
+            IPS_SetVariableProfileValues('Netatmo.Noise', 10, 130, 0);
+            IPS_SetVariableProfileAssociation('Netatmo.Noise', 0, '%d', '', 0x008040);
+            IPS_SetVariableProfileAssociation('Netatmo.Noise', 40, '%d', '', 0xFFFF31);
+            IPS_SetVariableProfileAssociation('Netatmo.Noise', 65, '%d', '', 0xFF8000);
+            IPS_SetVariableProfileAssociation('Netatmo.Noise', 95, '%d', '', 0xFF0000);
+        }
+        if (!IPS_VariableProfileExists('Netatmo.CO2')) {
+            IPS_CreateVariableProfile('Netatmo.CO2', 1);
+            IPS_SetVariableProfileText('Netatmo.CO2', '', '');
+            IPS_SetVariableProfileIcon('Netatmo.CO2', 'Gauge');
+            IPS_SetVariableProfileValues('Netatmo.CO2', 250, 2000, 0);
+            IPS_SetVariableProfileAssociation('Netatmo.CO2', 0, '%d', '', 0x008000);
+            IPS_SetVariableProfileAssociation('Netatmo.CO2', 1000, '%d', '', 0xFFFF00);
+            IPS_SetVariableProfileAssociation('Netatmo.CO2', 1250, '%d', '', 0xFF8000);
+            IPS_SetVariableProfileAssociation('Netatmo.CO2', 1300, '%d', '', 0xFF0000);
+        }
         if (!IPS_VariableProfileExists('Netatmo.Alarm')) {
             IPS_CreateVariableProfile('Netatmo.Alarm', 0);
             IPS_SetVariableProfileText('Netatmo.Alarm', '', '');
@@ -114,7 +130,6 @@ class NetatmoWeather extends IPSModule
 
     public function ApplyChanges()
     {
-        //Never delete this line!
         parent::ApplyChanges();
 
         $netatmo_user = $this->ReadPropertyString('Netatmo_User');
@@ -335,7 +350,7 @@ class NetatmoWeather extends IPSModule
                 }
                 if ($with_winddirection) {
                     $this->RegisterVariableString('WIND_WindDirection', $s . 'Windrichtung', 'Netatmo.WindDirection', $vpos++);
-                    $this->RegisterVariableString('WIND_GustDirection', $s . 'Windrichtung', 'Netatmo.WindDirection', $vpos++);
+                    $this->RegisterVariableString('WIND_GustDirection', $s . 'Richtung der Böen letzten 5m', 'Netatmo.WindDirection', $vpos++);
                 } else {
                     $this->UnregisterVariable('WIND_WindDirection');
                     $this->UnregisterVariable('WIND_WindDirection');
@@ -1274,7 +1289,7 @@ class NetatmoWeather extends IPSModule
         $html = '';
 
         $html .= "<style>\n";
-        $html .= "body { margin: 1; padding: 0; font-family: 'Open Sans', sans-serif; font-size: 14px; }\n";
+        $html .= "body { margin: 1; padding: 0; }\n";
         $html .= "table { border-collapse: collapse; border: 0px solid; margin: 0.5em; width: 100%; }\n";
         $html .= "th, td { padding: 1; }\n";
         $html .= "tbody th { text-align: left; }\n";
