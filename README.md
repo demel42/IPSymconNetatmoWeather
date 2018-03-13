@@ -15,7 +15,9 @@ Modul für IP-Symcon ab Version 4.
 
 ## 1. Funktionsumfang
 
-Es werden die Wetter-Daten von einer Netatmo-Wetterstation ausgelesen und gespeichert. Zusätzlich
+Es werden die Wetter-Daten von einer Netatmo-Wetterstation ausgelesen und gespeichert. Es werden alle Module unterstützt in der maximalen Ausbaustufe: Basis-, Außen- und 3 Innenmodule sowie WInd- und Regenmesser.
+
+Zusätzlich
  - werden einige Status-Information ermittelt, unter anderen Status der Kommunikation mit Netatmo und Wunderground, Batterie- und Modul-Alarme
  - weitere (im wesentlichen modulbezogene) Daten werden sowohl in einer HTML-Box aufbereitet als auch als JSON-Struktur in einer Variable zur Verfügung gestellt
  - optional einige modulbezogene Daten in Variablen zur Verfügung gestellt
