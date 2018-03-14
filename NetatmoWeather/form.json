@@ -12,7 +12,7 @@
 				{ "type": "Label", "label": "Station-Name only needs to be specified if you have more then one" },
 				{ "type": "ValidationTextBox", "name": "station_name", "caption": "Station-Name" },
 
-				{ "type": "Label", "label": "optional data" },
+				{ "type": "Label", "label": "optional weather data" },
 				{ "type": "CheckBox", "name": "with_absolute_pressure", "caption": " ... absolute Pressure" },
 				{ "type": "CheckBox", "name": "with_absolute_humidity", "caption": " ... absolute Humidity" },
 				{ "type": "CheckBox", "name": "with_dewpoint", "caption": " ... Dewpoint" },
@@ -21,8 +21,12 @@
 				{ "type": "CheckBox", "name": "with_windstrength", "caption": " ... Windstrength" },
 				{ "type": "CheckBox", "name": "with_winddirection", "caption": " ... Winddirection with label" },
 
+				{ "type": "Label", "label": "optional global data" },
+				{ "type": "CheckBox", "name": "with_last_contact", "caption": " ... last transmission to Netatmo" },
+				{ "type": "CheckBox", "name": "with_status_box", "caption": " ... html-box with state of station and modules" },
+
 				{ "type": "Label", "label": "optional data per module" },
-				{ "type": "CheckBox", "name": "with_timestamp", "caption": " ... Measure-Timestamp" },
+				{ "type": "CheckBox", "name": "with_last_measure", "caption": " ... Measure-Timestamp" },
 				{ "type": "CheckBox", "name": "with_signal", "caption": " ... Wifi-/RF-Signal" },
 				{ "type": "CheckBox", "name": "with_battery", "caption": " ... Battery (a global battery indicator is always present)" },
 
@@ -34,7 +38,10 @@
 
 				{ "type": "Label", "label": "" },
 				{ "type": "Label", "label": "Update Weatherdata every X minutes" },
-				{ "type": "IntervalBox", "name": "UpdateDataInterval", "caption": "Minutes" }
+				{ "type": "IntervalBox", "name": "UpdateDataInterval", "caption": "Minutes" },
+
+				{ "type": "Label", "label": "Duration until the connection to netatmo or between stations is marked disturbed" },
+				{ "type": "IntervalBox", "name": "minutes2fail", "caption": "Minutes" }
 			],
 	"actions":
 			[
@@ -46,6 +53,12 @@
 			[
 				{ "code": 101, "icon": "inactive", "caption": "Instance getting created" },
 				{ "code": 102, "icon": "active", "caption": "Instance is active" },
-				{ "code": 104, "icon": "inactive", "caption": "Instance is inactive" }
+				{ "code": 104, "icon": "inactive", "caption": "Instance is inactive" },
+
+				{ "code": 201, "icon": "unauthorized", "caption": "Instance is inactive (unauthorized)" },
+				{ "code": 202, "icon": "server error", "caption": "Instance is inactive (server error)" },
+				{ "code": 203, "icon": "http error", "caption": "Instance is inactive (http error)" },
+				{ "code": 204, "icon": "invalid data", "caption": "Instance is inactive (invalid data)" },
+				{ "code": 205, "icon": "station missing", "caption": "Instance is inactive (station missing)" }
 			]
 }
