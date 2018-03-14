@@ -165,18 +165,18 @@ class NetatmoWeather extends IPSModule
             $vpos = 1;
             // status of connection to netatmo
             $this->RegisterVariableBoolean('Status', $this->Translate('State'), '~Alert.Reversed', $vpos++);
-			if ($with_last_contact) {
-				$this->RegisterVariableString('LastContact', $this->Translate('last transmission'), '', $vpos++);
-			} else {
-				$this->UnregisterVariable('LastContact');
-			}
+            if ($with_last_contact) {
+                $this->RegisterVariableString('LastContact', $this->Translate('last transmission'), '', $vpos++);
+            } else {
+                $this->UnregisterVariable('LastContact');
+            }
             $this->RegisterVariableBoolean('BatteryAlarm', $this->Translate('Battery of one or more modules ist low or empty'), 'Netatmo.Alarm', $vpos++);
             $this->RegisterVariableBoolean('ModuleAlarm', $this->Translate('station or modules stopped don\'t communicate'), 'Netatmo.Alarm', $vpos++);
-			if ($with_status_box) {
-				$this->RegisterVariableString('StatusBox', $this->Translate('State of station and modules'), '~HTMLBox', $vpos++);
-			} else {
+            if ($with_status_box) {
+                $this->RegisterVariableString('StatusBox', $this->Translate('State of station and modules'), '~HTMLBox', $vpos++);
+            } else {
                 $this->UnregisterVariable('StatusBox');
-			}
+            }
 
             if ($wunderground_id != '' && $wunderground_key != '') {
                 $this->RegisterVariableBoolean('Wunderground', $this->Translate('State of upload to wunderground'), '~Alert.Reversed', $vpos++);
@@ -407,24 +407,24 @@ class NetatmoWeather extends IPSModule
         }
     }
 
-	protected function SetValue($Ident, $Value)
-	{
-	    if (IPS_GetKernelVersion() >= 5) {
-			parent::SetValue($Ident, $Value);
-		} else {
-			SetValue($this->GetIDForIdent($Ident), $Value);
-		}
-	}
+    protected function SetValue($Ident, $Value)
+    {
+        if (IPS_GetKernelVersion() >= 5) {
+            parent::SetValue($Ident, $Value);
+        } else {
+            SetValue($this->GetIDForIdent($Ident), $Value);
+        }
+    }
 
-	// noch etwas unklar, wenn ich der Funktion den boolschen Wert false übergeben meckert er: can't autoconvert
-	protected function SetValueBoolean($Ident, $Value)
-	{
-	    if (IPS_GetKernelVersion() >= 5) {
-			parent::SetValueBoolean($Ident, $Value);
-		} else {
-			SetValueBoolean($this->GetIDForIdent($Ident), $Value == 'true');
-		}
-	}
+    // noch etwas unklar, wenn ich der Funktion den boolschen Wert false übergeben meckert er: can't autoconvert
+    protected function SetValueBoolean($Ident, $Value)
+    {
+        if (IPS_GetKernelVersion() >= 5) {
+            parent::SetValueBoolean($Ident, $Value);
+        } else {
+            SetValueBoolean($this->GetIDForIdent($Ident), $Value == 'true');
+        }
+    }
 
     public function ApplyModulNames($base_module_mod, $outdoor_module_mod, $indoor1_module_mod, $indoor2_module_mod, $indoor3_module_mod, $rain_module_mod, $wind_module_mod)
     {
@@ -623,8 +623,8 @@ class NetatmoWeather extends IPSModule
 
         $dtoken = $this->GetBuffer('Token');
         $jtoken = json_decode($dtoken, true);
-		$token = isset($jtoken['token']) ? $jtoken['token'] : '';
-		$token_expiration = isset($jtoken['token_expiration']) ? $jtoken['token_expiration'] : 0;
+        $token = isset($jtoken['token']) ? $jtoken['token'] : '';
+        $token_expiration = isset($jtoken['token_expiration']) ? $jtoken['token_expiration'] : 0;
 
         if ($token_expiration < time()) {
             $postdata = [
@@ -641,41 +641,40 @@ class NetatmoWeather extends IPSModule
             $token = '';
             $token_expiration = 0;
 
-			$do_abort = false;
-			$response = $this->do_HttpRequest($netatmo_auth_url, $postdata);
-			if ($response != '') {
+            $do_abort = false;
+            $response = $this->do_HttpRequest($netatmo_auth_url, $postdata);
+            if ($response != '') {
                 $params = json_decode($response, true);
                 if ($params['access_token'] == '') {
                     $err = "no 'access_token' in response from netatmo";
-					$this->SendDebug($this->scriptName, $err, 0);
-					$this->SetStatus(204);
-					$do_abort = true;
+                    $this->SendDebug($this->scriptName, $err, 0);
+                    $this->SetStatus(204);
+                    $do_abort = true;
                 } else {
                     $token = $params['access_token'];
                     $expires_in = $params['expires_in'];
                     $token_expiration = time() + $expires_in - 60;
                 }
             } else {
-				$do_abort = true;
-			}
+                $do_abort = true;
+            }
 
-            $this->SendDebug($this->scriptName, "token=" . $token . ", expiration=" . $token_expiration, 0);
+            $this->SendDebug($this->scriptName, 'token=' . $token . ', expiration=' . $token_expiration, 0);
 
-			$jtoken = array(
-					'token'            => $token,
-					'token_expiration' => $token_expiration
-				);
-			$this->SetBuffer('Token', json_encode($jtoken));
-
+            $jtoken = [
+                    'token'            => $token,
+                    'token_expiration' => $token_expiration
+                ];
+            $this->SetBuffer('Token', json_encode($jtoken));
 
             if ($do_abort) {
                 $this->SetValueBoolean('Status', 'fail');
                 $this->SetValueBoolean('BatteryAlarm', true);
                 $this->SetValueBoolean('ModuleAlarm', true);
                 $this->SetValueBoolean('Wunderground', 'fail');
-				if ($with_status_box) {
-					$this->SetValue('StatusBox', '');
-				}
+                if ($with_status_box) {
+                    $this->SetValue('StatusBox', '');
+                }
                 $this->SetBuffer('Data', '');
                 return -1;
             }
@@ -686,60 +685,60 @@ class NetatmoWeather extends IPSModule
 
         $this->SendDebug($this->scriptName, "netatmo-data-url: $api_url", 0);
 
-		$do_abort = false;
-		$data = $this->do_HttpRequest($api_url);
-		if ($data != '') {
-			$err = '';
-			$statuscode = 0;
+        $do_abort = false;
+        $data = $this->do_HttpRequest($api_url);
+        if ($data != '') {
+            $err = '';
+            $statuscode = 0;
             $netatmo = json_decode($data, true);
             $status = $netatmo['status'];
             if ($status != 'ok') {
                 $err = "got status \"$status\" from netamo";
-				$statuscode = 204;
+                $statuscode = 204;
             } else {
-				$_station_name = $station_name;
-				$devices = $netatmo['body']['devices'];
-				if ($station_name != '') {
-					$station_found = false;
-					foreach ($devices as $device) {
-						if ($_station_name == $device['station_name']) {
-							$station_found = true;
-							break;
-						}
-					}
-					if (!$station_found) {
-						$err = "station \"$station_name\" don't exists";
-						$statuscode = 205;
-					}
-				} else {
-					if (count($devices) > 0) {
-						$device = $devices[0];
-						$_station_name = $device['station_name'];
-						$station_found = true;
-					} else {
-						$err = 'data contains no station';
-						$statuscode = 205;
-					}
-				}
-			}
-			if ($statuscode) {
-				$this->SendDebug($this->scriptName, $err, 0);
-				$this->SetStatus($statuscode);
-				$do_abort = true;
-			}
+                $_station_name = $station_name;
+                $devices = $netatmo['body']['devices'];
+                if ($station_name != '') {
+                    $station_found = false;
+                    foreach ($devices as $device) {
+                        if ($_station_name == $device['station_name']) {
+                            $station_found = true;
+                            break;
+                        }
+                    }
+                    if (!$station_found) {
+                        $err = "station \"$station_name\" don't exists";
+                        $statuscode = 205;
+                    }
+                } else {
+                    if (count($devices) > 0) {
+                        $device = $devices[0];
+                        $_station_name = $device['station_name'];
+                        $station_found = true;
+                    } else {
+                        $err = 'data contains no station';
+                        $statuscode = 205;
+                    }
+                }
+            }
+            if ($statuscode) {
+                $this->SendDebug($this->scriptName, $err, 0);
+                $this->SetStatus($statuscode);
+                $do_abort = true;
+            }
         } else {
-			$do_abort = true;
-		}
+            $do_abort = true;
+        }
 
         if ($do_abort) {
             $this->SetValueBoolean('Status', 'fail');
             $this->SetValueBoolean('BatteryAlarm', true);
             $this->SetValueBoolean('ModuleAlarm', true);
             $this->SetValueBoolean('Wunderground', 'fail');
-			if ($with_status_box) {
-				$this->SetValue('StatusBox', '');
-			}
-			$this->SetBuffer('Data', '');
+            if ($with_status_box) {
+                $this->SetValue('StatusBox', '');
+            }
+            $this->SetBuffer('Data', '');
             return -1;
         }
 
@@ -993,7 +992,7 @@ class NetatmoWeather extends IPSModule
         $module_data[] = [
                 'module_type'  => $module_type,
                 'module_name'  => $module_name,
-				'time_utc'     => $time_utc,
+                'time_utc'     => $time_utc,
                 'last_measure' => $last_measure,
                 'wifi_status'  => $wifi_status,
             ];
@@ -1003,9 +1002,9 @@ class NetatmoWeather extends IPSModule
         $msg = "  module_type=$module_type, module_name=$module_name, last_measure=$last_measure, wifi_status=$wifi_status, last_contact=$last_contact";
         $this->SendDebug($this->scriptName, utf8_decode($msg), 0);
 
-		if ($with_last_contact) {
-			$this->SetValue('LastContact', $last_contact);
-		}
+        if ($with_last_contact) {
+            $this->SetValue('LastContact', $last_contact);
+        }
 
         $this->SetValue('BASE_Temperature', $Temperature);
         $this->SetValue('BASE_CO2', $CO2);
@@ -1302,12 +1301,12 @@ class NetatmoWeather extends IPSModule
         $this->SetValueBoolean('Status', true);
         $this->SetValueBoolean('BatteryAlarm', $battery_alarm);
         $this->SetValueBoolean('ModuleAlarm', $module_alarm);
-		$this->SetBuffer('Data', json_encode($station_data));
+        $this->SetBuffer('Data', json_encode($station_data));
 
-		if ($with_status_box) {
-			$html = $this->Build_StatusBox($station_data);
-			$this->SetValue('StatusBox', $html);
-		}
+        if ($with_status_box) {
+            $html = $this->Build_StatusBox($station_data);
+            $this->SetValue('StatusBox', $html);
+        }
 
         // Messwerte für Wunderground bereitstellen
         $pressure = '';
@@ -1454,166 +1453,166 @@ class NetatmoWeather extends IPSModule
         }
     }
 
-	private function do_HttpRequest($url, $postdata = "")
-	{
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		if ($postdata != "") {
-			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
-		}
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-		$cdata = curl_exec($ch);
-		$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		curl_close($ch);
+    private function do_HttpRequest($url, $postdata = '')
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        if ($postdata != '') {
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+        }
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        $cdata = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
 
-		$statuscode = 0;
-		$err = "";
-		$data = "";
-		if ($httpcode != 200) {
-			if ($httpcode == 400 || $httpcode == 401) {
-				$statuscode = 201;
-				$err = "got http-code $httpcode (unauthorized) from netatmo";
-			} else if ($httpcode >= 500 && $httpcode <= 599) {
-				$statuscode = 202;
-				$err = "got http-code $httpcode (server error) from netatmo";
-			} else {
-				$statuscode = 203;
-				$err = "got http-code $httpcode from netatmo";
-			}
-		} elseif ($cdata == '') {
-			$statuscode = 204;
-			$err = 'no data from netatmo';
-		} else {
-			$jdata = json_decode($cdata, true);
-			if ($jdata == '') {
-				$statuscode = 204;
-				$err = 'malformed response from netatmo';
-			} else {
-				$data = $cdata;
-			}
-		}
+        $statuscode = 0;
+        $err = '';
+        $data = '';
+        if ($httpcode != 200) {
+            if ($httpcode == 400 || $httpcode == 401) {
+                $statuscode = 201;
+                $err = "got http-code $httpcode (unauthorized) from netatmo";
+            } elseif ($httpcode >= 500 && $httpcode <= 599) {
+                $statuscode = 202;
+                $err = "got http-code $httpcode (server error) from netatmo";
+            } else {
+                $statuscode = 203;
+                $err = "got http-code $httpcode from netatmo";
+            }
+        } elseif ($cdata == '') {
+            $statuscode = 204;
+            $err = 'no data from netatmo';
+        } else {
+            $jdata = json_decode($cdata, true);
+            if ($jdata == '') {
+                $statuscode = 204;
+                $err = 'malformed response from netatmo';
+            } else {
+                $data = $cdata;
+            }
+        }
 
-		if ($statuscode) {
-			$this->SendDebug($this->scriptName, $err, 0);
-			$this->SetStatus($statuscode);
-		}
+        if ($statuscode) {
+            $this->SendDebug($this->scriptName, $err, 0);
+            $this->SetStatus($statuscode);
+        }
 
-		return ($data);
-	}
+        return $data;
+    }
 
-	private function Build_StatusBox($station_data)
-	{
-		$img_path = '/hook/NetatmoWeather/imgs/';
+    private function Build_StatusBox($station_data)
+    {
+        $img_path = '/hook/NetatmoWeather/imgs/';
 
-		$html = '';
+        $html = '';
 
-		$html .= "<style>\n";
-		$html .= "body { margin: 1; padding: 0; }\n";
-		$html .= "table { border-collapse: collapse; border: 0px solid; margin: 0.5em; width: 100%; }\n";
-		$html .= "th, td { padding: 1; }\n";
-		$html .= "tbody th { text-align: left; }\n";
-		$html .= "#spalte_caption { width: 200px; }\n";
-		$html .= "#spalte_type { width: 25px; }\n";
-		$html .= "#spalte_signal { width: 50px; }\n";
-		$html .= "#spalte_battery { width: 50px; }\n";
-		$html .= "</style>\n";
+        $html .= "<style>\n";
+        $html .= "body { margin: 1; padding: 0; }\n";
+        $html .= "table { border-collapse: collapse; border: 0px solid; margin: 0.5em; width: 100%; }\n";
+        $html .= "th, td { padding: 1; }\n";
+        $html .= "tbody th { text-align: left; }\n";
+        $html .= "#spalte_caption { width: 200px; }\n";
+        $html .= "#spalte_type { width: 25px; }\n";
+        $html .= "#spalte_signal { width: 50px; }\n";
+        $html .= "#spalte_battery { width: 50px; }\n";
+        $html .= "</style>\n";
 
-		$dt = date('d.m.Y H:i:s', $station_data['now']);
-		$status = $station_data['status'];
-		$station_name = $station_data['station_name'];
-		$last_contact = $station_data['last_contact'];
+        $dt = date('d.m.Y H:i:s', $station_data['now']);
+        $status = $station_data['status'];
+        $station_name = $station_data['station_name'];
+        $last_contact = $station_data['last_contact'];
 
-		$html .= "<table>\n";
-		$html .= "<colgroup><col id=\"spalte_caption\"></colgroup>\n";
-		$html .= "<tdata>\n";
+        $html .= "<table>\n";
+        $html .= "<colgroup><col id=\"spalte_caption\"></colgroup>\n";
+        $html .= "<tdata>\n";
 
-		$html .= "<tr>\n";
-		$html .= "<td>Stationsname:</td>\n";
-		$html .= "<th>$station_name</th>\n";
-		$html .= "</tr>\n";
+        $html .= "<tr>\n";
+        $html .= "<td>Stationsname:</td>\n";
+        $html .= "<th>$station_name</th>\n";
+        $html .= "</tr>\n";
 
-		$html .= "<tr>\n";
-		$html .= "<td>Status:</td>\n";
-		$html .= "<th>$status</th>\n";
-		$html .= "</tr>\n";
+        $html .= "<tr>\n";
+        $html .= "<td>Status:</td>\n";
+        $html .= "<th>$status</th>\n";
+        $html .= "</tr>\n";
 
-		$html .= "<tr>\n";
-		$html .= "<td>&nbsp;&nbsp;... aktualisiert:</td>\n";
-		$html .= "<th>$dt</th>\n";
-		$html .= "</tr>\n";
+        $html .= "<tr>\n";
+        $html .= "<td>&nbsp;&nbsp;... aktualisiert:</td>\n";
+        $html .= "<th>$dt</th>\n";
+        $html .= "</tr>\n";
 
-		$html .= "<tr>\n";
-		$html .= "<td>letzte Kommunikation:</td>\n";
-		$html .= "<th>$last_contact</th>\n";
-		$html .= "</tr>\n";
+        $html .= "<tr>\n";
+        $html .= "<td>letzte Kommunikation:</td>\n";
+        $html .= "<th>$last_contact</th>\n";
+        $html .= "</tr>\n";
 
-		$html .= "</tdata>\n";
-		$html .= "</table>\n";
-		$html .= "<table>\n";
+        $html .= "</tdata>\n";
+        $html .= "</table>\n";
+        $html .= "<table>\n";
 
-		$html .= "<br>\n";
+        $html .= "<br>\n";
 
-		$html .= "<colgroup><col id=\"spalte_type\"></colgroup>\n";
-		$html .= "<colgroup><col></colgroup>\n";
-		$html .= "<colgroup><col></colgroup>\n";
-		$html .= "<colgroup><col></colgroup>\n";
-		$html .= "<colgroup><col id=\"spalte_signal\"></colgroup>\n";
-		$html .= "<colgroup><col id=\"spalte_battry\"></colgroup>\n";
+        $html .= "<colgroup><col id=\"spalte_type\"></colgroup>\n";
+        $html .= "<colgroup><col></colgroup>\n";
+        $html .= "<colgroup><col></colgroup>\n";
+        $html .= "<colgroup><col></colgroup>\n";
+        $html .= "<colgroup><col id=\"spalte_signal\"></colgroup>\n";
+        $html .= "<colgroup><col id=\"spalte_battry\"></colgroup>\n";
 
-		$html .= "<tdata>\n";
+        $html .= "<tdata>\n";
 
-		$html .= "<tr>\n";
-		$html .= "<th></th>\n";
-		$html .= "<th>Modultyp</th>\n";
-		$html .= "<th>Name</th>\n";
-		$html .= "<th>letzte Meldung</th>\n";
-		$html .= "<th style='padding: 0; text-align: left'>Signal</th>\n";
-		$html .= "<th style='padding: 0; text-align: left'>Batterie</th>\n";
-		$html .= "</tr>\n";
+        $html .= "<tr>\n";
+        $html .= "<th></th>\n";
+        $html .= "<th>Modultyp</th>\n";
+        $html .= "<th>Name</th>\n";
+        $html .= "<th>letzte Meldung</th>\n";
+        $html .= "<th style='padding: 0; text-align: left'>Signal</th>\n";
+        $html .= "<th style='padding: 0; text-align: left'>Batterie</th>\n";
+        $html .= "</tr>\n";
 
-		$modules = $station_data['modules'];
-		foreach ($modules as $module) {
-			$module_type = $module['module_type'];
-			$module_type_img = $img_path . $this->module2img($module_type);
-			$module_name = $module['module_name'];
-			$module_type = $module['module_type'];
-			$last_measure = $module['last_measure'];
+        $modules = $station_data['modules'];
+        foreach ($modules as $module) {
+            $module_type = $module['module_type'];
+            $module_type_img = $img_path . $this->module2img($module_type);
+            $module_name = $module['module_name'];
+            $module_type = $module['module_type'];
+            $last_measure = $module['last_measure'];
 
-			$html .= "<tr>\n";
-			$html .= "<td><img src=$module_type_img width='20' height='20' title='$module_type'</td>\n";
-			$html .= "<td>$module_type</td>\n";
-			$html .= "<td>$module_name</td>\n";
-			$html .= "<td>$last_measure</td>\n";
+            $html .= "<tr>\n";
+            $html .= "<td><img src=$module_type_img width='20' height='20' title='$module_type'</td>\n";
+            $html .= "<td>$module_type</td>\n";
+            $html .= "<td>$module_name</td>\n";
+            $html .= "<td>$last_measure</td>\n";
 
-			if ($module_type == 'Basismodul') {
-				$wifi_status = $module['wifi_status'];
-				$wifi_status_text = $this->wifi_status2text($wifi_status);
-				$wifi_status_img = $img_path . $this->wifi_stautus2img($wifi_status);
-				$html .= "<td><img src=$wifi_status_img width='30' height='20' title='$wifi_status_text'></td>\n";
-				$html .= "<td>&nbsp;</td>\n";
-			} else {
-				$rf_status = $module['rf_status'];
-				$rf_status_text = $this->signal_status2text($rf_status);
-				$rf_status_img = $img_path . $this->signal_status2img($rf_status);
-				$battery_status = $module['battery_status'];
-				$battery_status_text = $this->battery_status2text($battery_status);
-				$battery_status_img = $img_path . $this->battery_status2img($battery_status);
-				$html .= "<td><img src=$rf_status_img width='25' height='20' title='$rf_status_text'></td>\n";
-				$html .= "<td><img src=$battery_status_img width='30' height='15' title='$battery_status_text'></td>\n";
-			}
+            if ($module_type == 'Basismodul') {
+                $wifi_status = $module['wifi_status'];
+                $wifi_status_text = $this->wifi_status2text($wifi_status);
+                $wifi_status_img = $img_path . $this->wifi_stautus2img($wifi_status);
+                $html .= "<td><img src=$wifi_status_img width='30' height='20' title='$wifi_status_text'></td>\n";
+                $html .= "<td>&nbsp;</td>\n";
+            } else {
+                $rf_status = $module['rf_status'];
+                $rf_status_text = $this->signal_status2text($rf_status);
+                $rf_status_img = $img_path . $this->signal_status2img($rf_status);
+                $battery_status = $module['battery_status'];
+                $battery_status_text = $this->battery_status2text($battery_status);
+                $battery_status_img = $img_path . $this->battery_status2img($battery_status);
+                $html .= "<td><img src=$rf_status_img width='25' height='20' title='$rf_status_text'></td>\n";
+                $html .= "<td><img src=$battery_status_img width='30' height='15' title='$battery_status_text'></td>\n";
+            }
 
-			$html .= "</tr>\n";
-		}
+            $html .= "</tr>\n";
+        }
 
-		$html .= "</tdata>\n";
-		$html .= "</table>\n";
+        $html .= "</tdata>\n";
+        $html .= "</table>\n";
 
-		return ($html);
-	}
+        return $html;
+    }
 
     private function ProcessHook_Status()
     {
@@ -2133,5 +2132,4 @@ class NetatmoWeather extends IPSModule
         $hi = round($hi); // ohne NK
         return $hi;
     }
-
 }
