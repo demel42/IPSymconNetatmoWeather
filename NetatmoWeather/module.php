@@ -962,7 +962,7 @@ class NetatmoWeather extends IPSModule
             $last_contact = $s != '' ? "vor $s" : '';
             $min = floor($sec / 60);
             if ($min > $minutes2fail) {
-                $status = fail;
+                $status = false;
             }
         } else {
             $last_contact = $last_status_store;
