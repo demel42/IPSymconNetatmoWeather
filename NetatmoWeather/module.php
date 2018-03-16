@@ -2127,5 +2127,3 @@ class NetatmoWeather extends IPSModule
         return $hi;
     }
 }
-
-?>
