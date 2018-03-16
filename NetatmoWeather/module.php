@@ -636,10 +636,11 @@ class NetatmoWeather extends IPSModule
             if ($response != '') {
                 $params = json_decode($response, true);
                 if ($params['access_token'] == '') {
+                    $statuscode = 204;
                     $err = "no 'access_token' in response from netatmo";
                     echo "statuscode=$statuscode, err=$err";
                     $this->SendDebug($this->scriptName, $err, 0);
-                    $this->SetStatus(204);
+                    $this->SetStatus($statuscode);
                     $do_abort = true;
                 } else {
                     $token = $params['access_token'];
@@ -2126,3 +2127,5 @@ class NetatmoWeather extends IPSModule
         return $hi;
     }
 }
+
+?>
