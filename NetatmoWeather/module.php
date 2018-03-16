@@ -416,16 +416,6 @@ class NetatmoWeather extends IPSModule
         }
     }
 
-    // noch etwas unklar, wenn ich der Funktion den boolschen Wert false übergeben meckert er: can't autoconvert
-    protected function SetValueBoolean($Ident, $Value)
-    {
-        if (IPS_GetKernelVersion() >= 5) {
-            parent::SetValueBoolean($Ident, $Value);
-        } else {
-            SetValueBoolean($this->GetIDForIdent($Ident), $Value == 'true');
-        }
-    }
-
     public function ApplyModulNames($base_module_mod, $outdoor_module_mod, $indoor1_module_mod, $indoor2_module_mod, $indoor3_module_mod, $rain_module_mod, $wind_module_mod)
     {
         $base_module_name = $this->ReadPropertyString('base_module_name');
@@ -572,7 +562,7 @@ class NetatmoWeather extends IPSModule
     {
         $wunderground_url = 'https://weatherstation.wunderground.com/weatherstation/updateweatherstation.php';
         $netatmo_auth_url = 'https://api.netatmo.net/oauth2/token';
-        $netatmo_api_url = 'https://api.netatmo.net/api/devicelist';
+        $netatmo_netatmo_data_url = 'https://api.netatmo.net/api/devicelist';
 
         $netatmo_user = $this->ReadPropertyString('Netatmo_User');
         $netatmo_password = $this->ReadPropertyString('Netatmo_Password');
@@ -636,7 +626,7 @@ class NetatmoWeather extends IPSModule
                 'scope'         => 'read_station'
             ];
 
-            $this->SendDebug($this->scriptName, "netatmo-auth-url: $netatmo_auth_url, postdata=" . print_r($postdata, true), 0);
+            $this->SendDebug($this->scriptName, "netatmo-auth-url=$netatmo_auth_url, postdata=" . print_r($postdata, true), 0);
 
             $token = '';
             $token_expiration = 0;
@@ -647,6 +637,7 @@ class NetatmoWeather extends IPSModule
                 $params = json_decode($response, true);
                 if ($params['access_token'] == '') {
                     $err = "no 'access_token' in response from netatmo";
+                    echo "statuscode=$statuscode, err=$err";
                     $this->SendDebug($this->scriptName, $err, 0);
                     $this->SetStatus(204);
                     $do_abort = true;
@@ -668,10 +659,10 @@ class NetatmoWeather extends IPSModule
             $this->SetBuffer('Token', json_encode($jtoken));
 
             if ($do_abort) {
-                $this->SetValueBoolean('Status', 'fail');
-                $this->SetValueBoolean('BatteryAlarm', true);
-                $this->SetValueBoolean('ModuleAlarm', true);
-                $this->SetValueBoolean('Wunderground', 'fail');
+                $this->SetValue('Status', false);
+                $this->SetValue('BatteryAlarm', true);
+                $this->SetValue('ModuleAlarm', true);
+                $this->SetValue('Wunderground', false);
                 if ($with_status_box) {
                     $this->SetValue('StatusBox', '');
                 }
@@ -681,12 +672,12 @@ class NetatmoWeather extends IPSModule
         }
 
         // Anfrage mit Token
-        $api_url = $netatmo_api_url . '?access_token=' . $token;
+        $netatmo_data_url = $netatmo_netatmo_data_url . '?access_token=' . $token;
 
-        $this->SendDebug($this->scriptName, "netatmo-data-url: $api_url", 0);
+        $this->SendDebug($this->scriptName, "netatmo-data-url=$netatmo_data_url", 0);
 
         $do_abort = false;
-        $data = $this->do_HttpRequest($api_url);
+        $data = $this->do_HttpRequest($netatmo_data_url);
         if ($data != '') {
             $err = '';
             $statuscode = 0;
@@ -722,6 +713,7 @@ class NetatmoWeather extends IPSModule
                 }
             }
             if ($statuscode) {
+                echo "statuscode=$statuscode, err=$err";
                 $this->SendDebug($this->scriptName, $err, 0);
                 $this->SetStatus($statuscode);
                 $do_abort = true;
@@ -731,10 +723,10 @@ class NetatmoWeather extends IPSModule
         }
 
         if ($do_abort) {
-            $this->SetValueBoolean('Status', 'fail');
-            $this->SetValueBoolean('BatteryAlarm', true);
-            $this->SetValueBoolean('ModuleAlarm', true);
-            $this->SetValueBoolean('Wunderground', 'fail');
+            $this->SetValue('Status', false);
+            $this->SetValue('BatteryAlarm', true);
+            $this->SetValue('ModuleAlarm', true);
+            $this->SetValue('Wunderground', false);
             if ($with_status_box) {
                 $this->SetValue('StatusBox', '');
             }
@@ -1298,9 +1290,9 @@ class NetatmoWeather extends IPSModule
                 'modules'      => $module_data,
             ];
 
-        $this->SetValueBoolean('Status', true);
-        $this->SetValueBoolean('BatteryAlarm', $battery_alarm);
-        $this->SetValueBoolean('ModuleAlarm', $module_alarm);
+        $this->SetValue('Status', true);
+        $this->SetValue('BatteryAlarm', $battery_alarm);
+        $this->SetValue('ModuleAlarm', $module_alarm);
         $this->SetBuffer('Data', json_encode($station_data));
 
         if ($with_status_box) {
@@ -1414,7 +1406,7 @@ class NetatmoWeather extends IPSModule
             return -1;
         }
 
-        $this->SetValueBoolean('Wunderground', true);
+        $this->SetValue('Wunderground', true);
     }
 
     // Variablenprofile erstellen
@@ -1497,6 +1489,7 @@ class NetatmoWeather extends IPSModule
         }
 
         if ($statuscode) {
+            echo "statuscode=$statuscode, err=$err";
             $this->SendDebug($this->scriptName, $err, 0);
             $this->SetStatus($statuscode);
         }
