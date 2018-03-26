@@ -5,7 +5,7 @@ if (!defined('IPS_KERNELMESSAGE')) {
     define('IPS_KERNELMESSAGE', 10100);
 }
 if (!defined('KR_READY')) {
-	define('KR_READY', 10103);
+    define('KR_READY', 10103);
 }
 
 class NetatmoWeatherDevice extends IPSModule
@@ -103,21 +103,22 @@ class NetatmoWeatherDevice extends IPSModule
 
         $this->ConnectParent('{26A55798-5CBC-88F6-5C7B-370B043B24F9}');
 
-		// Inspired by module SymconTest/HookServe
-		// We need to call the RegisterHook function on Kernel READY
-		$this->RegisterMessage(0, IPS_KERNELMESSAGE);
+        // Inspired by module SymconTest/HookServe
+        // We need to call the RegisterHook function on Kernel READY
+        $this->RegisterMessage(0, IPS_KERNELMESSAGE);
     }
 
-	// Inspired by module SymconTest/HookServe
-	public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
+    // Inspired by module SymconTest/HookServe
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+    {
 
-		//Never delete this line!
-		parent::MessageSink($TimeStamp, $SenderID, $Message, $Data);
+        //Never delete this line!
+        parent::MessageSink($TimeStamp, $SenderID, $Message, $Data);
 
-		if ($Message == IPS_KERNELMESSAGE && $Data[0] == KR_READY) {
-			$this->RegisterHook('/hook/NetatmoWeatherDevice');
-		}
-	}
+        if ($Message == IPS_KERNELMESSAGE && $Data[0] == KR_READY) {
+            $this->RegisterHook('/hook/NetatmoWeatherDevice');
+        }
+    }
 
     public function ApplyChanges()
     {
@@ -468,10 +469,10 @@ class NetatmoWeatherDevice extends IPSModule
 
         if ($module_type == 'NAMain') {
             // Inspired by module SymconTest/HookServe
-			// Only call this in READY state. On startup the WebHook instance might not be available yet
-			if (IPS_GetKernelRunlevel() == KR_READY) {
-				$this->RegisterHook('/hook/NetatmoWeatherDevice');
-			}
+            // Only call this in READY state. On startup the WebHook instance might not be available yet
+            if (IPS_GetKernelRunlevel() == KR_READY) {
+                $this->RegisterHook('/hook/NetatmoWeatherDevice');
+            }
         }
 
         $this->SetStatus(102);
@@ -1208,9 +1209,9 @@ class NetatmoWeatherDevice extends IPSModule
     {
         $ids = IPS_GetInstanceListByModuleID('{015A6EB8-D6E5-4B93-B496-0D3F77AE9FE1}');
         if (count($ids) > 0) {
-			$hooks = json_decode(IPS_GetProperty($ids[0], "Hooks"), true);
+            $hooks = json_decode(IPS_GetProperty($ids[0], 'Hooks'), true);
             $found = false;
-            foreach($hooks as $index => $hook) {
+            foreach ($hooks as $index => $hook) {
                 if ($hook['Hook'] == $WebHook) {
                     if ($hook['TargetID'] == $this->InstanceID) {
                         return;
