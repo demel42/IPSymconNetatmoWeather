@@ -15,7 +15,9 @@ Modul für IP-Symcon ab Version 4.
 
 ## 1. Funktionsumfang
 
-Es werden die Wetter-Daten von einer Netatmo-Wetterstation ausgelesen und gespeichert. Es werden alle Module unterstützt in der maximalen Ausbaustufe: Basis-, Außen- und 3 Innenmodule sowie WInd- und Regenmesser.
+Es werden die Wetter-Daten von einer Netatmo-Wetterstation ausgelesen und gespeichert. Es werden alle Module unterstützt in der maximalen Ausbaustufe: Basis-, Außen- und 3 Innenmodule sowie Wind- und Regenmesser.
+
+Jedes Netatmo-Modul ist eine eigene Instanz.
 
 Zusätzlich
  - werden einige Status-Information ermittelt, unter anderen Status der Kommunikation mit Netatmo und Wunderground, Batterie- und Modul-Alarme
@@ -23,7 +25,7 @@ Zusätzlich
  - optional einige modulbezogene Daten in Variablen zur Verfügung gestellt
  - es können zusätzliche Wetter-Kenndaten berechnet werden: absoluter Luftdruck, Taupunkt, absolute Feuchte, Windchill, Heatindex, Windstärke ...
  - werden die geographіsche Position sowie die Höhe der Wetterstation von Netatmo übernommen und in die Instanz-Konfiguration als Property eingetragen
- - steht ein WebHook zur Verfügung, bei dem mit _/hook/NetatmoWeathcer/status_ die Status-Information (analog zur HTML-Box) als Webseite abgerufen werden können.
+ - steht ein WebHook zur Verfügung, bei dem mit _/hook/NetatmoWeather/status_ die Status-Information (analog zur HTML-Box) als Webseite abgerufen werden können.
 
 Die Angabe der Netatmo-Zugangsdaten ist obligatorisch damit die Instanz aktiviert werden kann.
 
@@ -46,7 +48,7 @@ Hinweis: Wunderground gibt an, das Daten von Netatmo automatisch übernommen wer
  - optional ein Account bei Wunderground für eine "Personal-Weather-Station"
    hierzu muss man bei Wunderground ein Konto anlegen und eine eine Wettersttaion einrichten.
 
-   Die von Wunderground angegebene Verknüpfung mit Netatmo über den Wunderground-Support ist nicht erforderlich
+   Die von Wunderground angegebene Verknüpfung mit Netatmo über den Wunderground-Support ist nicht erforderlich.
 
 ## 3. Installation
 
@@ -66,16 +68,27 @@ Anschließend erscheint ein Eintrag für das Modul in der Liste der Instanz _Mod
 
 ### b. Einrichtung in IPS
 
-In IP-Symcon nun _Instanz hinzufügen_ (_CTRL+1_) auswählen unter der Kategorie, unter der man die Instanz hinzufügen will, und Hersteller _Netatmo_ und als Gerät _NetatmoWeather_ auswählen.
+In IP-Symcon nun unterhalb von _I/O Instanzen_ die Funktion _Instanz hinzufügen_ (_CTRL+1_) auswählen, als Hersteller _Netatmo_ und als Gerät _NetatmoWeather_ auswählen.
 
-Die modulbezogenen Variablen haben als ID die Prefixe:
- - Basismodul: _BASE_
- - Aussenmodul: _OUT_
- - Innenmodule: _IN1_, _IN2_, _IN3_
- - Regenmesser: _RAIN_
- - Windmesser: _WIND_
+In dem Konfigurationsdialog die Netatmo-Zugangsdaten eintragen.
 
-Die Namen der Variablen werden bei der Erstanlage auf den Prefix + die Messgröße gesetzt, nach dem ersten Aufruf von _NetatmoWeather_UpdateData_ (z.B. durch Betätigen von _Aktualisiere Wetterdaten_) werden die Namen einmalig geändert in Modulnamen + Messgröße. Dieser Vorgang kann später durch _Variablen-Namen zurücksetzen_ erneut ausgelöst werden, z.B. wenn man im Netatmo Bezeichungen von Modulen geändert hat.
+Dann unter _Konfigurator Instanzen_ analog den Konfigurator _NetatmoWeather_ hinzufügen.
+
+Hier kann man in dem Konfigurationsdialog einen Stationsnamen eintragen; das ist aber nur erforderlich, wenn mehr als eine Station mit dem, in der I/O-Instanz angegebenen, Netatmo-Konto verknüpft ist.
+
+Mit Betätigen der Schaltfläche _Importieren der Station_ werden für jedes Modul, das zu dieser Station im Netatmo registriert ist, eine Geräte-Instanzen unterhalb von _IP-Symcon_ angelegt.
+Der Namen der Instanzen ist der der Netatmo-Module, in derm Feld _Beschreibung_ der Instanzen ist der Modultyp sowie der Namen der Station und des Moduls æingetragen.
+
+Der Aufruf des Konfigurators kann jederzeit wiederholt werden, es werden dann fehlende Module angelegt.
+
+Die Module werden aufgrund der internen _ID_ der Module identifiziert, d.h. eine Änderung des Modulnamens muss in IPS nachgeführt werden.
+Ein Ersatz eines Moduls wird beim Aufruf des Konfigurators dazuführen, das eine weitere Instanz angelegt wird 
+
+Die im Netatmo eingetragenen Höhe der Station sowie die geographische Position wird als Property zu dem Basismodul eingetragen.
+
+Zu den Geräte-Instanzen werden im Rahmen der Konfiguration Modultyp-abhängig Variablen angelegt. Zusätzlich kann man in den Modultyp-spezifischen Konfigurationsdialog weitere Variablen aktivieren.
+
+Die Instanzen können dann in gewohnter Weise im Objektbaum frei positioniert werden.
 
 ## 4. PHP-Befehlsreferenz
 
@@ -130,26 +143,139 @@ ermittelt aus der Windstärke (in bft) die korespondierende Bezeichnung gemäß 
 
 ## 5. Konfiguration:
 
-### Variablen
+### I/O-Modul
+
+#### Variablen
 
 | Eigenschaft               | Typ      | Standardwert | Beschreibung |
 | :-----------------------: | :-----:  | :----------: | :----------------------------------------------------------------------------------------------------------: |
 | Netatmo-Zugangsdaten      | string   |              | Benutzername und Passwort von https://my.netatmo.com sowie Client-ID und -Secret von https://dev.netatmo.com |
-| Stationsname              | string   |              | muss nur angegeben werden, wenn mehr als eine Station angemeldet ist |
 | Aktualiserungsintervall   | integer  | 5            | Angabe in Minuten |
-| \<optionale Zusatzdaten\>   | boolean  | false        | wie auf der Konfigurationsseite angegeben |
-| Wunderground-Zugangsdaten | string   |              | Station-ID und -Key von https://www.wunderground.com/personal-weather-station/mypws |
 
 Hinweis zum Intervall: die Daten werden nur ca. alle 10m von der Wetterstation an Netatmo übertragen, ein minütliches Intervall ist zulässig, macht aber nur begrenzt Sinn.
 Bei einer Angabe von 5m sind die Werte nicht älter als 15m.
 
-### Schaltflächen
+#### Schaltflächen
 
 | Bezeichnung                  | Beschreibung |
 | :--------------------------: | :------------------------------------------------: |
 | Aktualisiere Wetterdaten     | führt eine sofortige Aktualisierung durch |
-| Variablen-Namen zurücksetzen | setzt die Variablen-Name auf den Standarwert zurück |
+
+### Konfigurator
+
+#### Variablen
+
+| Eigenschaft               | Typ      | Standardwert | Beschreibung |
+| :-----------------------: | :-----:  | :----------: | :----------------------------------------------------------------------------------------------------------: |
+| Stationsname              | string   |              | muss nur angegeben werden, wenn mehr als eine Station angemeldet ist |
+| Intervall                 | integer  | 30           | Angabe in Minuten |
+
+Das hier angebbare Minuten-Intervall dient zu Überprüfung der Kommunikation zwischen
+ - den Modulen und dem Basismodul
+ - dem basismodul und dem Netatmo-Server
+  ist die Zeit überschritten, wird die Variable _Status_ des Basismoduls auf Fehler gesetzt.
+  Anmerkung: die Variable _Status_ wird auch auf Fehler gesetzt wenn das IO-Modul einen Fehler feststellt.
+  
+#### Schaltflächen
+
+| Bezeichnung                  | Beschreibung |
+| :--------------------------: | :------------------------------------------------: |
+| Inport der Station           | richtet die Geräte-Instanzen ein |
+  
+### Geräte
+
+#### Properties
+
+werden vom Konfigurator gesetzt, bei Neuanleg der Instanz sowie bei einem erneuten Aufruf (z.B. zur Übernahme einer korrigierten _altitude_).
+
+| Eigenschaft            | Typ     | Standardwert | Beschreibung                               |
+| :--------------------: | :-----: | :----------: | :----------------------------------------: |
+| altitude               | float   |              | Höhe der Station                           |
+| longitude              | float   |              | Längengrad der Station                     |
+| latitude               | float   |              | Breitengrad der Station                    |
+| station_id             | string  |              | ID der Station                             |
+| module_id              | string  |              | ID des Moduls                              |
+| module_type            | string  |              | Typ des Moduls                             |
+
+_module_type_: NAMain=Basis, NAModule1=Außen, NAModule2=Wind, NAModule3=Regen, NAModule4=Innen
+
+#### Variablen
+
+stehen je nach Typ des Moduls zur Verfügung
+
+| Eigenschaft               | Typ     | Standardwert | Beschreibung                               |
+| :-----------------------: | :-----: | :----------: | :----------------------------------------: |
+| with_absolute_humidity    | boolean | false        | absolute Luftfeucht                        |
+| with_absolute_pressure    | boolean | false        | absoluter Luftdruck                        |
+| with_battery              | boolean | false        | Batterie-Status                            |
+| with_dewpoint             | boolean | false        | Taupunkt                                   |
+| with_heatindex            | boolean | false        | Hitzeindex                                 |
+| with_last_contact         | boolean | false        | letzte Übertragung an Netatmo              |
+| with_last_measure         | boolean | false        | Messzeitpunkt                              |
+| with_signal               | boolean | false        | Wifi-/RF-Signalstärke                      |
+| with_status_box           | boolean | false        | HTML-Box mit Status der Station und Module |
+| with_windangle            | boolean | true         | Windrichtung in Grad                       |
+| with_windchill            | boolean | false        | Windchill (Windkühle)                      |
+| with_winddirection        | boolean | false        | Windrichtung mit Text                      |
+| with_windstrength         | boolean | false        | Windstärke
+|                           |         |              |                                            |
+| Wunderground-Zugangsdaten | string   |              | Station-ID und -Key von https://www.wunderground.com/personal-weather-station/mypws |
+
+### Statusvariablen
+
+folgende Variable werden angelegt, zum Teil optional
+
+| Name             | Typ     | Beschreibung                                    | Option                 | Module    |
+| :--------------: | :-----: | :---------------------------------------------: | :--------------------: | :-------: |
+| AbsoluteHumidity | float   | absolute Luftfeuchtigkeit                       | with_absolute_humidity | B,A,I     |
+| AbsolutePressure | float   | absoluter Luftdruck                             | with_absolute_pressure | B         |
+| BatteryAlarm     | boolean | Batterie-Zustand eines oder mehrere Module      |                        | B         |
+| Battery          | integer | Batterie-Status                                 | with_battery           | A,W,R,I   |
+| CO2              | integer | CO2                                             |                        | B,I       |
+| Dewpoint         | float   | Taupunkt                                        | with_dewpoint          | B,A,I     |
+| GustAngle        | integer | Richtung der Böen der letzten 5m                | with_windangle         | W         |
+| GustDirection    | string  | Richtung der Böen der letzten 5m                | with_winddirection     | W         |
+| GustSpeed        | float   | Geschwindigkeit der Böen der letzten 5m         |                        | W         |
+| GustStrength     | integer | Strenth of gusts                                | with_windstrength      | W         |
+| Heatindex        | float   | Hitzeindex                                      | with_heatindex         | B,A,I     |
+| Humidity         | float   | Luftfeuchtigkeit                                |                        | B,A,I     |
+| LastContact      | string  | letzte Übertragung                              | with_last_contact      | B         |
+| LastMeasure      | integer | letzte Messung                                  | with_last_measure      | B,A,W,R,I |
+| ModuleAlarm      | boolean | Station oder Module kommunizieren nicht         |                        | B         |
+| Noise            | integer | Lärm                                            |                        | B         |
+| Pressure         | float   | Luftdruck                                       |                        | B         |
+| Rain_1h          | float   | Regenmenge der letzten 1h                       |                        | R         |
+| Rain_24h         | float   | Regenmenge der letzten 24h                      |                        | R         |
+| Rain             | float   | Regenmenge                                      |                        | R         |
+| RfSignal         | integer | Signal-Stärke                                   | with_signal            | A,W,R,I   |
+| Status           | boolean | Status                                          |                        | B         |
+| StatusBox        | string  | Status der Station und der Module               | with_status_box        | B         |
+| Temperature      | float   | Temperatur                                      |                        | B,A,I     |
+| Wifi             | integer | Strength of wifi-signal                         | with_signal            | B         |
+| WindAngle        | integer | Windrichtung                                    | with_windangle         | W         |
+| Windchill        | float   | Windchill                                       | with_windchill         | A         |
+| WindDirection    | string  | Windrichtung                                    | with_winddirection     | W         |
+| WindSpeed        | float   | Windgeschwindigkeit                             |                        | W         |
+| WindStrength     | integer | Windstärke                                      | with_windstrength      | W         |
+| Wunderground     | boolean | Status der Übertragung an Wunderground          | wunderground_id        | B         |
+
+_Module_: B=Basis, A=Außen, W=Wind, R=Regen, I=Innen
+
+### Variablenprofile
+
+Es werden folgende Variableprofile angelegt:
+* Boolean<br>
+Netatmo.Alarm
+
+* Integer<br>
+Netatmo.Battery, Netatmo.CO2, Netatmo.Noise, Netatmo.RfSignal, Netatmo.Wifi, Netatmo.WindAngle, Netatmo.WindStrength
+
+* Float<br>
+Netatmo.absHumidity, Netatmo.Dewpoint, Netatmo.Heatindex, Netatmo.Humidity, Netatmo.Pressure, Netatmo.Rainfall, Netatmo.Temperatur, Netatmo.WindSpeed
+
+* String<br>
+Netatmo.WindDirection
 
 ## 6. Anhang
 
-GUID: `{4E453F9B-DEB9-2071-CF32-C0D0F28D8F06}` 
+GUID: `{0F675628-33AE-88E8-D9C4-9A2D1C7FE394}` 
