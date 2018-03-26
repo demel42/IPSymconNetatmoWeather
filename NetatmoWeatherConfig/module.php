@@ -40,6 +40,10 @@ class NetatmoWeatherConfig extends IPSModule
 
         if ($instID == '') {
             $instID = IPS_CreateInstance('{1023DB4A-D491-A0D5-17CD-380D3578D0FA}');
+			if ($instID == '') {
+				echo "unablte to create instance \"" . $module_name . "\"";
+				return $instID;
+			}
             IPS_SetProperty($instID, 'module_id', $module_id);
         }
 
@@ -118,6 +122,8 @@ class NetatmoWeatherConfig extends IPSModule
         if ($do_abort) {
             return -1;
         }
+
+        $this->SetStatus(102);
 
         $this->SetStatus(102);
 
