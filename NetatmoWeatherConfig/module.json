@@ -3,7 +3,7 @@
 	"name": "NetatmoWeatherConfig",
 	"type": 4,
 	"vendor": "Netatmo",
-	"aliases": ["NetatmoWeather-Test Konfigurator"],
+	"aliases": ["NetatmoWeather Konfigurator"],
 	"parentRequirements": ["{DC5A0AD3-88A5-CAED-3CA9-44C20CC20610}"],
 	"childRequirements": [],
 	"implemented": ["{2D42552F-2545-9145-D3C8-A299E3FDC6EA}"],

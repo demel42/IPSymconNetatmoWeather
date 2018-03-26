@@ -3,7 +3,7 @@
 	"name": "NetatmoWeatherDevice",
 	"type": 3,
 	"vendor": "Netatmo",
-	"aliases": ["NetatmoWeather-Test"],
+	"aliases": ["NetatmoWeather"],
 	"parentRequirements": ["{2D42552F-2545-9145-D3C8-A299E3FDC6EA}"],
 	"childRequirements": [],
 	"implemented": ["{2D42552F-2545-9145-D3C8-A299E3FDC6EA}"],
