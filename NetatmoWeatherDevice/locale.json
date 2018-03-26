@@ -1,0 +1,90 @@
+{
+	"translations": {
+		"de": {
+			"Netatmo Weather-Station - Module: base module":
+				"Netatmo Wetterstation - Basismodul",
+			"Netatmo Weather-Station - Module: outdoor module":
+				"Netatmo Wetterstation - Außenmodul",
+			"Netatmo Weather-Station - Module: wind gauge":
+				"Netatmo Wetterstation - Windmesser",
+			"Netatmo Weather-Station - Module: rain gauge":
+				"Netatmo Wetterstation - Regenmesser",
+			"Netatmo Weather-Station - Module: indoor module":
+				"Netatmo Wetterstation - Innenmodul",
+
+			"optional weather data": "optionale Wetterdaten",
+			" ... absolute Pressure": " ... absoluter Luftdruck",
+			" ... absolute Humidity": " ... absolute Luftfeuchte",
+			" ... Dewpoint": " ... Taupunkt",
+			" ... Windchill": " ... Windchill (Windkühle)",
+			" ... Heatindex": " ... Hitzeindex",
+			" ... Windstrength": " ... Windstärke",
+			" ... Winddirection with degree": " ... Windrichtung in Grad",
+			" ... Winddirection with label": " ... Windrichtung mit Text",
+
+			"optional global data": "optionale globale Zusatzdaten",
+			" ... last transmission to Netatmo": " ... letzte Übertragung an Netatmo",
+			" ... html-box with state of station and modules": " ... HTML-Box mit Status der Station und Module",
+
+			"optional data per module": "optionale modulbezogene Zusatzdaten",
+			" ... Measurement-Timestamp": " ... Messzeitpunkt",
+			" ... Wifi-Signal": " ... Wifi-Signalstärke",
+			" ... RF-Signal": " ... Funk-Signalstärke",
+			" ... Battery (a global battery indicator is always present)":
+				" ... Batterie-Status (ein globaler Batterie-Indikator ist immer vorhanden)",
+
+			"Konfiguration to update Wunderground (only if filled)":
+				"Konfiguration von Wunderground zum Update (nur wenn gefüllt)",
+			"Wunderground Access-Details from https://www.wunderground.com/personal-weather-station/mypws":
+				"Wunderground Zugangsdaten von https://www.wunderground.com/personal-weather-station/mypws",
+			"Station ID": "Station ID",
+			"Station Key": "Station Key",
+
+			"absolute humidity": "absolute Luftfeuchtigkeit",
+			"absolute pressure": "absoluter Luftdruck",
+			"Air pressure": "Luftdruck",
+			"station or modules stopped don't communicate":
+				"Station oder Module kommunizieren nicht",
+			"Battery of one or more modules ist low or empty":
+				"Batterie-Zustand eines oder mehrere Module ist niedrig oder leer",
+			"Battery-Status": "Batterie-Status",
+			"CO2": "CO2",
+			"Dewpoint": "Taupunkt",
+			"Direction of gusts": "Richtung der Böen",
+			"Direction of gusts of last 5m": "Richtung der Böen der letzten 5m",
+			"Heatindex": "Hitzeindex",
+			"Humidity": "Luftfeuchtigkeit",
+			"last measurement": "letzte Messung",
+			"last transmission": "letzte Übertragung",
+			"Noise": "Lärm",
+			"Rainfall of last 1h": "Regenmenge der letzten 1h",
+			"Rainfall of last 24h": "Regenmenge der letzten 24h",
+			"Rainfall": "Regenmenge",
+			"Signal-strength": "Signal-Stärke",
+			"Speed of gusts of last 5m": "Geschwindigkeit der Böen der letzten 5m",
+			"State of station and modules": "Status der Station und der Module",
+			"State of upload to wunderground": "Status der Übertragung an Wunderground",
+			"State": "Status",
+			"Strength of wifi-signal": "Stärke des Wifi-Signals",
+			"Strenth of gusts": "Stärke der Böen",
+			"Temperature": "Temperatur",
+			"Windchill": "Windchill",
+			"Winddirection": "Windrichtung",
+			"Windspeed": "Windgeschwindigkeit",
+			"Windstrength": "Windstärke",
+
+			"base module": "Basismodul",
+			"outdoor module": "Außenmodul",
+			"indoor module": "Innenmodul",
+			"rain gauge": "Regenmesser",
+			"wind gauge": "Windmesser",
+
+			"Instance getting created": "Instanz wird erstellt",
+			"Instance is active": "Instanz ist aktiv",
+			"Instance is inactive": "Instanz ist inaktiv",
+
+			"Instance is inactive (no data)": "Instanz ist inaktiv (keine Daten)",
+			"Instance is inactive (station missing)": "Instanz ist inaktiv (Station ist unbekannt)"
+		}
+	}
+}

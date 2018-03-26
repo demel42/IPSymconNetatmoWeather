@@ -1,0 +1,32 @@
+{
+	"translations": {
+		"de": {
+			"Netatmo Access-Details": "Netatmo Zugangsdaten",
+
+			"Netatmo-Account from https://my.netatmo.com":
+				"Netatmo Konto-Daten von https://my.netatmo.com",
+			"Username": "Benutzername",
+			"Password": "Passwort",
+
+			"Netatmo-Connect from https://dev.netatmo.com":
+				"Netatmo-Connect-Daten von https://dev.netatmo.com",
+			"Client ID": "Client ID",
+			"Client Secret": "Client Secret",
+
+			"Update Weatherdata every X minutes": "Aktualisiere Wetterdaten alle X Minuten",
+			"Minutes": "Minuten",
+
+			"Update Weatherdata": "Aktualisiere Wetterdaten",
+
+			"Instance getting created": "Instanz wird erstellt",
+			"Instance is active": "Instanz ist aktiv",
+			"Instance is inactive": "Instanz ist inaktiv",
+
+			"Instance is inactive (unauthorized)": "Instanz ist inaktiv (Authorisierung fehlerhaft)",
+			"Instance is inactive (server error)": "Instanz ist inaktiv (Serverfehler)",
+			"Instance is inactive (http error)": "Instanz ist inaktiv (HTTP-Fehler)",
+			"Instance is inactive (invalid data)": "Instanz ist inaktiv (ungültige Daten)",
+			"Instance is inactive (no station)": "Instanz ist inaktiv (keine Station vorhanden)"
+		}
+	}
+}

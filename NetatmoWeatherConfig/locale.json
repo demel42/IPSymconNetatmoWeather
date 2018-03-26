@@ -1,0 +1,23 @@
+{
+	"translations": {
+		"de": {
+			"Station-Name only needs to be specified if you have more then one":
+				"Stationsname muss nur angegeben werden, wenn mehr als eine Station vorhanden ist",
+			"Station-Name": "Stationsname",
+
+			"Duration until the connection to netatmo or between stations is marked disturbed":
+				"Dauer bis die Verbindung zu Netatmo oder zwischen den Stationen als gestört gilt",
+
+			"Import of station": "Importieren der Station",
+
+			"Instance getting created": "Instanz wird erstellt",
+			"Instance is active": "Instanz ist aktiv",
+			"Instance is inactive": "Instanz ist inaktiv",
+
+			"Instance is inactive (no data)": "Instanz ist inaktiv (keine Daten)",
+			"Instance is inactive (station missing)": "Instanz ist inaktiv (Station ist unbekannt)",
+			"Instance is inactive (no station)": "Instanz ist inaktiv (keine Station vorhanden)",
+			"Instance is inactive (more then one station)": "Instanz ist inaktiv (mehr als eine Station vorhanden)"
+		}
+	}
+}
