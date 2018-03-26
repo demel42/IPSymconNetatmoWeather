@@ -50,33 +50,33 @@ class NetatmoWeatherDevice extends IPSModule
         $this->CreateVarProfile('Netatmo.WindDirection', 3, '', 0, 0, 0, 0, 'WindDirection');
         $this->CreateVarProfile('Netatmo.Rainfall', 2, ' mm', 0, 60, 0, 1, 'Rainfall');
 
-        $associations = '';
+        $associations = array();
         $associations[] = ['Wert' =>  0, 'Name' => '%d', 'Farbe' => 0x008040];
         $associations[] = ['Wert' => 40, 'Name' => '%d', 'Farbe' => 0xFFFF31];
         $associations[] = ['Wert' => 65, 'Name' => '%d', 'Farbe' => 0xFF8000];
         $associations[] = ['Wert' => 95, 'Name' => '%d', 'Farbe' => 0xFF0000];
         $this->CreateVarProfile('Netatmo.Noise', 1, ' dB', 0, 130, 0, 1, 'Speaker', $associations);
 
-        $associations = '';
+        $associations = array();
         $associations[] = ['Wert' =>    0, 'Name' => '%d', 'Farbe' => 0x008000];
         $associations[] = ['Wert' => 1000, 'Name' => '%d', 'Farbe' => 0xFFFF00];
         $associations[] = ['Wert' => 1250, 'Name' => '%d', 'Farbe' => 0xFF8000];
         $associations[] = ['Wert' => 1300, 'Name' => '%d', 'Farbe' => 0xFF0000];
         $this->CreateVarProfile('Netatmo.CO2', 1, ' ppm', 250, 2000, 0, 1, 'Gauge', $associations);
 
-        $associations = '';
+        $associations = array();
         $associations[] = ['Wert' => false, 'Name' => 'Nein', 'Farbe' => -1];
         $associations[] = ['Wert' => true, 'Name' => 'Ja', 'Farbe' => 0xEE0000];
         $this->CreateVarProfile('Netatmo.Alarm', 0, '', 0, 0, 0, 1, 'Alert', $associations);
 
-        $associations = '';
+        $associations = array();
         $associations[] = ['Wert' => 0, 'Name' => $this->wifi_status2text(0), 'Farbe' => 0xEE0000];
         $associations[] = ['Wert' => 1, 'Name' => $this->wifi_status2text(1), 'Farbe' => 0xFFFF00];
         $associations[] = ['Wert' => 2, 'Name' => $this->wifi_status2text(2), 'Farbe' => 0x32CD32];
         $associations[] = ['Wert' => 3, 'Name' => $this->wifi_status2text(3), 'Farbe' => 0x228B22];
         $this->CreateVarProfile('Netatmo.Wifi', 1, '', 0, 0, 0, 1, 'Intensity', $associations);
 
-        $associations = '';
+        $associations = array();
         $associations[] = ['Wert' => 0, 'Name' => $this->signal_status2text(0), 'Farbe' => 0xEE0000];
         $associations[] = ['Wert' => 1, 'Name' => $this->signal_status2text(1), 'Farbe' => 0xFFA500];
         $associations[] = ['Wert' => 2, 'Name' => $this->signal_status2text(2), 'Farbe' => 0xFFFF00];
@@ -84,7 +84,7 @@ class NetatmoWeatherDevice extends IPSModule
         $associations[] = ['Wert' => 4, 'Name' => $this->signal_status2text(4), 'Farbe' => 0x228B22];
         $this->CreateVarProfile('Netatmo.RfSignal', 1, '', 0, 0, 0, 1, 'Intensity', $associations);
 
-        $associations = '';
+        $associations = array();
         $associations[] = ['Wert' => 0, 'Name' => $this->battery_status2text(0), 'Farbe' => 0xEE0000];
         $associations[] = ['Wert' => 1, 'Name' => $this->battery_status2text(1), 'Farbe' => 0xFFA500];
         $associations[] = ['Wert' => 2, 'Name' => $this->battery_status2text(2), 'Farbe' => 0xFFFF00];
@@ -697,7 +697,7 @@ class NetatmoWeatherDevice extends IPSModule
         $statuscode = 102;
         $battery_alarm = false;
         $module_alarm = false;
-        $module_data = '';
+        $module_data = array();
 
         $station_status = true;
 
@@ -877,15 +877,6 @@ class NetatmoWeatherDevice extends IPSModule
 
             $rf_status = $this->map_rf_status($module['rf_status']);
             $battery_status = $this->map_battery_status($module_type, $module['battery_vp']);
-
-            $module_data[] = [
-                    'module_type'     => $module_type,
-                    'module_name'     => $module_name,
-                    'time_utc'        => $time_utc,
-                    'last_measure'    => $last_measure,
-                    'rf_status'       => $rf_status,
-                    'battery_status'  => $battery_status,
-                ];
 
             switch ($module_type) {
                 case 'NAModule1':
@@ -1193,7 +1184,7 @@ class NetatmoWeatherDevice extends IPSModule
         if (count($ids) > 0) {
             $hooks = json_decode(IPS_GetProperty($ids[0], 'Hooks'), true);
             $found = false;
-            foreach ($hooks as $index => $hook) {
+            foreach ($hooks as $hook) {
                 if ($hook['Hook'] == $WebHook) {
                     if ($hook['TargetID'] == $this->InstanceID) {
                         return;
