@@ -26,7 +26,7 @@ class NetatmoWeatherDevice extends IPSModule
         $this->RegisterPropertyFloat('station_longitude', 0);
         $this->RegisterPropertyFloat('station_latitude', 0);
 
-        $this->RegisterPropertyInteger('minutes2fail', 0);
+        $this->RegisterPropertyInteger('minutes2fail', 30);
 
         $this->RegisterPropertyBoolean('with_absolute_pressure', false);
         $this->RegisterPropertyBoolean('with_absolute_humidity', false);
@@ -114,7 +114,7 @@ class NetatmoWeatherDevice extends IPSModule
         parent::MessageSink($TimeStamp, $SenderID, $Message, $Data);
 
         if ($Message == IPS_KERNELMESSAGE && $Data[0] == KR_READY) {
-            $this->RegisterHook('/hook/NetatmoWeatherDevice');
+            $this->RegisterHook('/hook/NetatmoWeather');
         }
     }
 
@@ -143,9 +143,7 @@ class NetatmoWeatherDevice extends IPSModule
 
         $vpos = 1;
         switch ($module_type) {
-            case 'NAMain':
-                // Basismodul
-
+            case 'Station':
                 // station-global vars
 
                 // status of connection to netatmo
@@ -159,10 +157,17 @@ class NetatmoWeatherDevice extends IPSModule
                 }
                 $vpos++;
 
-                $this->RegisterVariableBoolean('BatteryAlarm', $this->Translate('Battery of one or more modules ist low or empty'), 'Netatmo.Alarm', $vpos);
+                if ($with_signal) {
+                    $this->RegisterVariableInteger('Wifi', $this->Translate('Strength of wifi-signal'), 'Netatmo.Wifi', $vpos);
+                } else {
+                    $this->UnregisterVariable('Wifi');
+                }
                 $vpos++;
 
                 $this->RegisterVariableBoolean('ModuleAlarm', $this->Translate('station or modules stopped don\'t communicate'), 'Netatmo.Alarm', $vpos);
+                $vpos++;
+
+                $this->RegisterVariableBoolean('BatteryAlarm', $this->Translate('Battery of one or more modules ist low or empty'), 'Netatmo.Alarm', $vpos);
                 $vpos++;
 
                 if ($with_status_box) {
@@ -179,8 +184,9 @@ class NetatmoWeatherDevice extends IPSModule
                 }
                 $vpos++;
 
-                // module vars
-
+                break;
+            case 'NAMain':
+                // Basismodul
                 $this->RegisterVariableFloat('Temperature', $this->Translate('Temperature'), 'Netatmo.Temperatur', $vpos);
                 $vpos++;
 
@@ -228,13 +234,6 @@ class NetatmoWeatherDevice extends IPSModule
                     $this->RegisterVariableInteger('LastMeasure', $this->Translate('last measurement'), '~UnixTimestamp', $vpos);
                 } else {
                     $this->UnregisterVariable('LastMeasure');
-                }
-                $vpos++;
-
-                if ($with_signal) {
-                    $this->RegisterVariableInteger('Wifi', $this->Translate('Strength of wifi-signal'), 'Netatmo.Wifi', $vpos);
-                } else {
-                    $this->UnregisterVariable('Wifi');
                 }
                 $vpos++;
 
@@ -465,11 +464,11 @@ class NetatmoWeatherDevice extends IPSModule
                 break;
         }
 
-        if ($module_type == 'NAMain') {
+        if ($module_type == 'Station') {
             // Inspired by module SymconTest/HookServe
             // Only call this in READY state. On startup the WebHook instance might not be available yet
             if (IPS_GetKernelRunlevel() == KR_READY) {
-                $this->RegisterHook('/hook/NetatmoWeatherDevice');
+                $this->RegisterHook('/hook/NetatmoWeather');
             }
         }
 
@@ -483,6 +482,9 @@ class NetatmoWeatherDevice extends IPSModule
         $formElements = [];
 
         switch ($module_type) {
+            case 'Station':
+                $formElements[] = ['type' => 'Label', 'label' => 'Netatmo Weather-Station'];
+                break;
             case 'NAMain':
                 $formElements[] = ['type' => 'Label', 'label' => 'Netatmo Weather-Station - Module: base module'];
                 break;
@@ -532,26 +534,29 @@ class NetatmoWeatherDevice extends IPSModule
         }
 
         switch ($module_type) {
-            case 'NAMain':
-                $formElements[] = ['type' => 'Label', 'label' => 'optional global data'];
+            case 'Station':
+                $formElements[] = ['type' => 'Label', 'label' => 'station data'];
+                $formElements[] = ['type' => 'NumberSpinner', 'name' => 'station_altitude', 'caption' => 'Altitude'];
+                $formElements[] = ['type' => 'NumberSpinner', 'digits' => 5, 'name' => 'station_longitude', 'caption' => 'Longitude'];
+                $formElements[] = ['type' => 'NumberSpinner', 'digits' => 5, 'name' => 'station_latitude', 'caption' => 'Latitude'];
+
+                $formElements[] = ['type' => 'Label', 'label' => 'optional station data'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_last_contact', 'caption' => ' ... last transmission to Netatmo'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_status_box', 'caption' => ' ... html-box with state of station and modules'];
-                break;
-            default:
-                break;
-        }
-
-        switch ($module_type) {
-            case 'NAMain':
-                $formElements[] = ['type' => 'Label', 'label' => 'optional data per module'];
-                $formElements[] = ['type' => 'CheckBox', 'name' => 'with_last_measure', 'caption' => ' ... Measurement-Timestamp'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_signal', 'caption' => ' ... Wifi-Signal'];
+
+                $formElements[] = ['type' => 'Label', 'label' => 'Duration until the connection to netatmo or between stations is marked disturbed'];
+                $formElements[] = ['type' => 'IntervalBox', 'name' => 'minutes2fail', 'caption' => 'Minutes'];
+                break;
+            case 'NAMain':
+                $formElements[] = ['type' => 'Label', 'label' => 'optional module data'];
+                $formElements[] = ['type' => 'CheckBox', 'name' => 'with_last_measure', 'caption' => ' ... Measurement-Timestamp'];
                 break;
             case 'NAModule1':
             case 'NAModule2':
             case 'NAModule3':
             case 'NAModule4':
-                $formElements[] = ['type' => 'Label', 'label' => 'optional data per module'];
+                $formElements[] = ['type' => 'Label', 'label' => 'optional module data'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_last_measure', 'caption' => ' ... Measurement-Timestamp'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_signal', 'caption' => ' ... RF-Signal'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_battery', 'caption' => ' ... Battery (a global battery indicator is always present)'];
@@ -559,7 +564,7 @@ class NetatmoWeatherDevice extends IPSModule
         }
 
         switch ($module_type) {
-            case 'NAMain':
+            case 'Station':
                 $formElements[] = ['type' => 'Label', 'label' => 'Konfiguration to update Wunderground (only if filled)'];
                 $formElements[] = ['type' => 'Label', 'label' => 'Wunderground Access-Details from https://www.wunderground.com/personal-weather-station/mypws'];
                 $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'Wunderground_ID', 'caption' => 'Station ID'];
@@ -700,20 +705,13 @@ class NetatmoWeatherDevice extends IPSModule
         $this->SetValue('Wunderground', true);
     }
 
-    private function eval_NAMain($netatmo, $device)
+    private function eval_Station($netatmo, $device)
     {
-        $module_type = $this->ReadPropertyString('module_type');
         $module_id = $this->ReadPropertyString('module_id');
 
-        $with_absolute_pressure = $this->ReadPropertyBoolean('with_absolute_pressure');
-        $with_absolute_humidity = $this->ReadPropertyBoolean('with_absolute_humidity');
-        $with_dewpoint = $this->ReadPropertyBoolean('with_dewpoint');
-        $with_heatindex = $this->ReadPropertyBoolean('with_heatindex');
         $with_last_contact = $this->ReadPropertyBoolean('with_last_contact');
         $with_status_box = $this->ReadPropertyBoolean('with_status_box');
-        $with_last_measure = $this->ReadPropertyBoolean('with_last_measure');
         $with_signal = $this->ReadPropertyBoolean('with_signal');
-        $with_battery = $this->ReadPropertyBoolean('with_battery');
 
         $minutes2fail = $this->ReadPropertyInteger('minutes2fail');
 
@@ -726,14 +724,8 @@ class NetatmoWeatherDevice extends IPSModule
 
         $station_status = true;
 
+        $station_name = $device['station_name'];
         $module_name = $device['module_name'];
-
-        $Temperature = $device['dashboard_data']['Temperature'];					// °C
-        $CO2 = $device['dashboard_data']['CO2'];									// ppm
-        $Humidity = $device['dashboard_data']['Humidity'];							// %
-        $Noise = $device['dashboard_data']['Noise'];								// dB
-        $Pressure = $device['dashboard_data']['Pressure'];							// mbar
-        $AbsolutePressure = $device['dashboard_data']['AbsolutePressure'];			// mbar
 
         $time_utc = $device['dashboard_data']['time_utc'];
         $s = $this->seconds2duration($now - $time_utc);
@@ -756,46 +748,20 @@ class NetatmoWeatherDevice extends IPSModule
         $wifi_status = $this->map_wifi_status($device['wifi_status']);
 
         $module_data[] = [
-                'module_type'  => $module_type,
+                'module_type'  => $device['type'],
                 'module_name'  => $module_name,
                 'time_utc'     => $time_utc,
                 'last_measure' => $last_measure,
                 'wifi_status'  => $wifi_status,
             ];
 
-        $msg = "base-module \"$module_name\": Temperature=$Temperature, CO2=$CO2, Humidity=$Humidity, Noise=$Noise, Pressure=$Pressure, AbsolutePressure=$AbsolutePressure";
-        $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
-        $module_type_text = $this->module_type2text($module_type);
-        $msg = "module_type=$module_type($module_type_text), module_name=$module_name, last_measure=$last_measure, wifi_status=$wifi_status, last_contact=$last_contact";
+        $msg = "station \"$module_name\": station_name=$station_name, wifi_status=$wifi_status, last_contact=$last_contact";
         $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
 
         if ($with_last_contact) {
             $this->SetValue('LastContact', $last_contact);
         }
 
-        $this->SetValue('Temperature', $Temperature);
-        $this->SetValue('CO2', $CO2);
-        $this->SetValue('Humidity', $Humidity);
-        $this->SetValue('Noise', $Noise);
-        $this->SetValue('Pressure', $Pressure);
-        if ($with_absolute_pressure) {
-            $this->SetValue('AbsolutePressure', $AbsolutePressure);
-        }
-        if ($with_absolute_humidity) {
-            $abs_humidity = $this->CalcAbsoluteHumidity($Temperature, $Humidity);
-            $this->SetValue('AbsoluteHumidity', $abs_humidity);
-        }
-        if ($with_dewpoint) {
-            $dewpoint = $this->CalcDewpoint($Temperature, $Humidity);
-            $this->SetValue('Dewpoint', $dewpoint);
-        }
-        if ($with_heatindex) {
-            $heatindex = $this->CalcHeatindex($Temperature, $Humidity);
-            $this->SetValue('Heatindex', $heatindex);
-        }
-        if ($with_last_measure) {
-            $this->SetValue('LastMeasure', $time_utc);
-        }
         if ($with_signal) {
             $this->SetValue('Wifi', $wifi_status);
         }
@@ -835,11 +801,6 @@ class NetatmoWeatherDevice extends IPSModule
             }
         }
 
-        $this->SetValue('Status', $station_status);
-
-        $this->SetValue('BatteryAlarm', $battery_alarm);
-        $this->SetValue('ModuleAlarm', $module_alarm);
-
         $station_data = [
                 'now'          => $now,
                 'status'       => $netatmo['status'],
@@ -850,9 +811,74 @@ class NetatmoWeatherDevice extends IPSModule
 
         $this->SetBuffer('Data', json_encode($station_data));
 
+        $this->SetValue('Status', $station_status);
+        $this->SetValue('ModuleAlarm', $module_alarm);
+        $this->SetValue('BatteryAlarm', $battery_alarm);
+
         if ($with_status_box) {
             $html = $this->Build_StatusBox($station_data);
             $this->SetValue('StatusBox', $html);
+        }
+
+        return $statuscode;
+    }
+
+    private function eval_NAMain($netatmo, $device)
+    {
+        $module_type = $this->ReadPropertyString('module_type');
+        $module_id = $this->ReadPropertyString('module_id');
+
+        $with_absolute_pressure = $this->ReadPropertyBoolean('with_absolute_pressure');
+        $with_absolute_humidity = $this->ReadPropertyBoolean('with_absolute_humidity');
+        $with_dewpoint = $this->ReadPropertyBoolean('with_dewpoint');
+        $with_heatindex = $this->ReadPropertyBoolean('with_heatindex');
+        $with_last_measure = $this->ReadPropertyBoolean('with_last_measure');
+
+        $now = time();
+
+        $statuscode = 102;
+
+        $module_name = $device['module_name'];
+
+        $Temperature = $device['dashboard_data']['Temperature'];					// °C
+        $CO2 = $device['dashboard_data']['CO2'];									// ppm
+        $Humidity = $device['dashboard_data']['Humidity'];							// %
+        $Noise = $device['dashboard_data']['Noise'];								// dB
+        $Pressure = $device['dashboard_data']['Pressure'];							// mbar
+        $AbsolutePressure = $device['dashboard_data']['AbsolutePressure'];			// mbar
+
+        $time_utc = $device['dashboard_data']['time_utc'];
+        $s = $this->seconds2duration($now - $time_utc);
+        $last_measure = $s != '' ? "vor $s" : '';
+
+        $msg = "base-module \"$module_name\": Temperature=$Temperature, CO2=$CO2, Humidity=$Humidity, Noise=$Noise, Pressure=$Pressure, AbsolutePressure=$AbsolutePressure";
+        $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
+        $module_type_text = $this->module_type2text($module_type);
+        $msg = "module_type=$module_type($module_type_text), module_name=$module_name, last_measure=$last_measure";
+        $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
+
+        $this->SetValue('Temperature', $Temperature);
+        $this->SetValue('CO2', $CO2);
+        $this->SetValue('Humidity', $Humidity);
+        $this->SetValue('Noise', $Noise);
+        $this->SetValue('Pressure', $Pressure);
+        if ($with_absolute_pressure) {
+            $this->SetValue('AbsolutePressure', $AbsolutePressure);
+        }
+        if ($with_absolute_humidity) {
+            $abs_humidity = $this->CalcAbsoluteHumidity($Temperature, $Humidity);
+            $this->SetValue('AbsoluteHumidity', $abs_humidity);
+        }
+        if ($with_dewpoint) {
+            $dewpoint = $this->CalcDewpoint($Temperature, $Humidity);
+            $this->SetValue('Dewpoint', $dewpoint);
+        }
+        if ($with_heatindex) {
+            $heatindex = $this->CalcHeatindex($Temperature, $Humidity);
+            $this->SetValue('Heatindex', $heatindex);
+        }
+        if ($with_last_measure) {
+            $this->SetValue('LastMeasure', $time_utc);
         }
 
         return $statuscode;
@@ -871,8 +897,6 @@ class NetatmoWeatherDevice extends IPSModule
         $with_windstrength = $this->ReadPropertyBoolean('with_windstrength');
         $with_windangle = $this->ReadPropertyBoolean('with_windangle');
         $with_winddirection = $this->ReadPropertyBoolean('with_winddirection');
-        $with_last_contact = $this->ReadPropertyBoolean('with_last_contact');
-        $with_status_box = $this->ReadPropertyBoolean('with_status_box');
         $with_last_measure = $this->ReadPropertyBoolean('with_last_measure');
         $with_signal = $this->ReadPropertyBoolean('with_signal');
         $with_battery = $this->ReadPropertyBoolean('with_battery');
@@ -1096,23 +1120,6 @@ class NetatmoWeatherDevice extends IPSModule
         $module_type = $this->ReadPropertyString('module_type');
         $module_id = $this->ReadPropertyString('module_id');
 
-        $with_absolute_pressure = $this->ReadPropertyBoolean('with_absolute_pressure');
-        $with_absolute_humidity = $this->ReadPropertyBoolean('with_absolute_humidity');
-        $with_dewpoint = $this->ReadPropertyBoolean('with_dewpoint');
-        $with_windchill = $this->ReadPropertyBoolean('with_windchill');
-        $with_heatindex = $this->ReadPropertyBoolean('with_heatindex');
-        $with_windstrength = $this->ReadPropertyBoolean('with_windstrength');
-        $with_winddirection = $this->ReadPropertyBoolean('with_winddirection');
-        $with_last_contact = $this->ReadPropertyBoolean('with_last_contact');
-        $with_status_box = $this->ReadPropertyBoolean('with_status_box');
-        $with_last_measure = $this->ReadPropertyBoolean('with_last_measure');
-        $with_signal = $this->ReadPropertyBoolean('with_signal');
-        $with_battery = $this->ReadPropertyBoolean('with_battery');
-
-        $battery_alarm = false;
-        $module_alarm = false;
-        $module_data = '';
-
         $err = '';
         $statuscode = 0;
         $do_abort = false;
@@ -1121,17 +1128,16 @@ class NetatmoWeatherDevice extends IPSModule
             $netatmo = json_decode($buf, true);
 
             $station_found = false;
-            $id = $module_type == 'NAMain' ? $module_id : $station_id;
             $devices = $netatmo['body']['devices'];
             foreach ($devices as $device) {
                 $_id = $device['_id'];
-                if ($id == $_id) {
+                if ($station_id == $_id) {
                     $station_found = true;
                     break;
                 }
             }
             if ($station_found == false) {
-                $err = "station_id \"$id\" not found";
+                $err = "station_id \"$station_id\" not found";
                 $statuscode = 202;
                 $do_abort = true;
             }
@@ -1158,6 +1164,9 @@ class NetatmoWeatherDevice extends IPSModule
         $now = time();
 
         switch ($module_type) {
+             case 'Station':
+                $statuscode = $this->eval_Station($netatmo, $device);
+                break;
              case 'NAMain':
                 $statuscode = $this->eval_NAMain($netatmo, $device);
                 break;
@@ -1176,7 +1185,7 @@ class NetatmoWeatherDevice extends IPSModule
 
         $this->SetStatus($statuscode);
 
-        if ($module_type == 'NAMain') {
+        if ($module_type == 'Station') {
             $this->update_Wunderground($netatmo, $device);
         }
     }
@@ -1228,7 +1237,7 @@ class NetatmoWeatherDevice extends IPSModule
 
     private function Build_StatusBox($station_data)
     {
-        $img_path = '/hook/NetatmoWeatherDevice/imgs/';
+        $img_path = '/hook/NetatmoWeather/imgs/';
 
         $html = '';
 
@@ -1384,7 +1393,7 @@ class NetatmoWeatherDevice extends IPSModule
             $html .= "<colgroup><col id=\"spalte_battry\"></colgroup>\n";
             $html .= "<tdata>\n";
 
-            $img_path = '/hook/NetatmoWeatherDevice/imgs/';
+            $img_path = '/hook/NetatmoWeather/imgs/';
 
             $modules = $station_data['modules'];
             foreach ($modules as $module) {
@@ -1439,7 +1448,7 @@ class NetatmoWeatherDevice extends IPSModule
             http_response_code(404);
             die('File not found!');
         }
-        $basename = substr($uri, strlen('/hook/NetatmoWeatherDevice/'));
+        $basename = substr($uri, strlen('/hook/NetatmoWeather/'));
         if ($basename == 'status') {
             $this->ProcessHook_Status();
             return;

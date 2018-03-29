@@ -9,7 +9,6 @@ class NetatmoWeatherConfig extends IPSModule
         $this->ConnectParent('{26A55798-5CBC-88F6-5C7B-370B043B24F9}');
 
         $this->RegisterPropertyString('station_name', '');
-        $this->RegisterPropertyInteger('minutes2fail', 30);
     }
 
     public function ApplyChanges()
@@ -43,11 +42,12 @@ class NetatmoWeatherConfig extends IPSModule
                 return $instID;
             }
             IPS_SetProperty($instID, 'module_id', $module_id);
+			IPS_SetName($instID, $module_name);
+			IPS_SetInfo($instID, $module_info);
+			IPS_SetPosition($instID, $pos);
         }
 
-        IPS_SetName($instID, $module_name);
-        IPS_SetInfo($instID, $module_info);
-        IPS_SetPosition($instID, $pos);
+        $this->SetSummary($module_info);
         foreach ($properties as $key => $property) {
             IPS_SetProperty($instID, $key, $property);
         }
@@ -126,29 +126,36 @@ class NetatmoWeatherConfig extends IPSModule
         $this->SetStatus(102);
 
         $place = $device['place'];
+        $station_id = $device['_id'];
         $station_altitude = $place['altitude'];
         $station_longitude = $place['location'][0];
         $station_latitude = $place['location'][1];
 
-        /* Basismodul */
-        $module_type = 'NAMain';
-        $module_id = $device['_id'];
-        $module_name = $device['module_name'];
-        $module_info = 'Basismodul (' . $station_name . '\\' . $module_name . ')';
-
-        $minutes2fail = $this->ReadPropertyInteger('minutes2fail');
+        /* Station */
+        $module_type = 'Station';
+        $module_info = 'Station (' . $station_name . ')';
 
         $properties = [
                 'module_type'       => $module_type,
+				'station_id'        => $station_id,
                 'station_altitude'  => $station_altitude,
                 'station_longitude' => $station_longitude,
                 'station_latitude'  => $station_latitude,
-                'minutes2fail'      => $minutes2fail
             ];
         $pos = 1000;
-        $instID = $this->FindOrCreateInstance($module_id, $module_name, $module_info, $properties, $pos++);
+        $instID = $this->FindOrCreateInstance('', $station_name, $module_info, $properties, $pos++);
 
-        $station_id = $module_id;
+        /* Basismodul */
+        $module_type = 'NAMain';
+        $module_name = $device['module_name'];
+        $module_info = 'Basismodul (' . $station_name . '\\' . $module_name . ')';
+
+        $properties = [
+                'module_type' => $module_type,
+				'station_id'  => $station_id,
+            ];
+        $instID = $this->FindOrCreateInstance($station_id, $module_name, $module_info, $properties, $pos++);
+
         $modules = $netatmo['body']['modules'];
         foreach (['NAModule4', 'NAModule1', 'NAModule3', 'NAModule2'] as $types) {
             foreach ($modules as $module) {

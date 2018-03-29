@@ -2,10 +2,7 @@
 	"elements":
 			[
 				{ "type": "Label", "label": "Station-Name only needs to be specified if you have more then one" },
-				{ "type": "ValidationTextBox", "name": "station_name", "caption": "Station-Name" },
-
-				{ "type": "Label", "label": "Duration until the connection to netatmo or between stations is marked disturbed" },
-				{ "type": "IntervalBox", "name": "minutes2fail", "caption": "Minutes" }
+				{ "type": "ValidationTextBox", "name": "station_name", "caption": "Station-Name" }
 			],
 	"actions":
 			[

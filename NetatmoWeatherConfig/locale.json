@@ -5,9 +5,6 @@
 				"Stationsname muss nur angegeben werden, wenn mehr als eine Station vorhanden ist",
 			"Station-Name": "Stationsname",
 
-			"Duration until the connection to netatmo or between stations is marked disturbed":
-				"Dauer bis die Verbindung zu Netatmo oder zwischen den Stationen als gestört gilt",
-
 			"Import of station": "Importieren der Station",
 
 			"Instance getting created": "Instanz wird erstellt",

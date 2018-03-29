@@ -22,11 +22,20 @@
 			" ... Winddirection with degree": " ... Windrichtung in Grad",
 			" ... Winddirection with label": " ... Windrichtung mit Text",
 
-			"optional global data": "optionale globale Zusatzdaten",
+			"Duration until the connection to netatmo or between stations is marked disturbed":
+				"Dauer bis die Verbindung zu Netatmo oder zwischen den Stationen als gestört gilt",
+			"Minutes": "Minuten",
+
+			"station data": "Angaben zur Station",
+			"Altitude" : "Höhe",
+			"Longitude" : "Längengrad",
+			"Latitude" : "Breitengrad",
+
+			"optional station data": "optionale Zusatzdaten zur Station",
 			" ... last transmission to Netatmo": " ... letzte Übertragung an Netatmo",
 			" ... html-box with state of station and modules": " ... HTML-Box mit Status der Station und Module",
 
-			"optional data per module": "optionale modulbezogene Zusatzdaten",
+			"optional module data": "optionale Zusatzdaten zum Modul",
 			" ... Measurement-Timestamp": " ... Messzeitpunkt",
 			" ... Wifi-Signal": " ... Wifi-Signalstärke",
 			" ... RF-Signal": " ... Funk-Signalstärke",
