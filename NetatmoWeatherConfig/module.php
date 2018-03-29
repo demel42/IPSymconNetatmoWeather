@@ -42,9 +42,9 @@ class NetatmoWeatherConfig extends IPSModule
                 return $instID;
             }
             IPS_SetProperty($instID, 'module_id', $module_id);
-			IPS_SetName($instID, $module_name);
-			IPS_SetInfo($instID, $module_info);
-			IPS_SetPosition($instID, $pos);
+            IPS_SetName($instID, $module_name);
+            IPS_SetInfo($instID, $module_info);
+            IPS_SetPosition($instID, $pos);
         }
 
         $this->SetSummary($module_info);
@@ -137,7 +137,7 @@ class NetatmoWeatherConfig extends IPSModule
 
         $properties = [
                 'module_type'       => $module_type,
-				'station_id'        => $station_id,
+                'station_id'        => $station_id,
                 'station_altitude'  => $station_altitude,
                 'station_longitude' => $station_longitude,
                 'station_latitude'  => $station_latitude,
@@ -152,7 +152,7 @@ class NetatmoWeatherConfig extends IPSModule
 
         $properties = [
                 'module_type' => $module_type,
-				'station_id'  => $station_id,
+                'station_id'  => $station_id,
             ];
         $instID = $this->FindOrCreateInstance($station_id, $module_name, $module_info, $properties, $pos++);
 
