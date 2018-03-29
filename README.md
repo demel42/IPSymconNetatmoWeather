@@ -100,43 +100,43 @@ ruft die Daten der Netatmo-Wetterstation ab und aktualisiert optional dien Wunde
 
 ### Hilfsfunktionen
 
-`float NetatmoWeather_CalcAbsoluteHumidity(integer $InstanzID, float $Temperatur, float $Humidity)`
+`float NetatmoWeatherDevice_CalcAbsoluteHumidity(integer $InstanzID, float $Temperatur, float $Humidity)`
 
 berechnet aus der Temperatur (in °C) und der relativen Luftfeuchtigkeit (in %) die absulte Feuchte (in g/m³)
 
 
-`float NetatmoWeather_CalcAbsolutePressure(integer $InstanzID, float $Pressure, $Temperatur, integer $Altitude)`
+`float NetatmoWeatherDevice_CalcAbsolutePressure(integer $InstanzID, float $Pressure, $Temperatur, integer $Altitude)`
 
 berechnet aus dem relativen Luftdruck (in mbar) und der Temperatur (in °C) und Höhe (in m) der absoluten Luftdruck (in mbar)
 ist die Höhe nicht angegeben, wird die Höhe der Netatmo-Wettersttaion verwendet
 
 
-`float NetatmoWeather_CalcDewpoint(integer $InstanzID, float $Temperatur, float $Humidity)`
+`float NetatmoWeatherDevice_CalcDewpoint(integer $InstanzID, float $Temperatur, float $Humidity)`
 
 berechnet aus der Temperatur (in °C) und der relativen Luftfeuchtigkeit (in %) den Taupunkt (in °C)
 
 
-`float NetatmoWeather_CalcHeatindex(integer $InstanzID, float $Temperatur, float $Humidity)`
+`float NetatmoWeatherDevice_CalcHeatindex(integer $InstanzID, float $Temperatur, float $Humidity)`
 
 berechnet aus der Temperatur (in °C) und der relativen Luftfeuchtigkeit (in %) den Hitzeindex (in °C)
 
 
-`float NetatmoWeather_CalcWindchill(integer $InstanzID, float $Temperatur, float $WindSpeed)`
+`float NetatmoWeatherDevice_CalcWindchill(integer $InstanzID, float $Temperatur, float $WindSpeed)`
 
 berechnet aus der Temperatur (in °C) und der Windgeschwindigkeit (in km/h) den Windchill (Windkühle) (in °C)
 
 
-`string NetatmoWeather_ConvertWindDirection2Text(integer $InstanzID, integer $WindDirection)`
+`string NetatmoWeatherDevice_ConvertWindDirection2Text(integer $InstanzID, integer $WindDirection)`
 
 ermittelt aus der Windrichtung (in °) die korespondierende Bezeichnung auf der Windrose
 
 
-`integer NetatmoWeather_ConvertWindSpeed2Strength(integer $InstanzID, float $WindSpeed)`
+`integer NetatmoWeatherDevice_ConvertWindSpeed2Strength(integer $InstanzID, float $WindSpeed)`
 
 berechnet aus der Windgeschwindigkeit (in km/h) die Windstärke (in bft)
 
 
-`string NetatmoWeather_ConvertWindStrength2Text(integer $InstanzID, integer $WindStrength)`
+`string NetatmoWeatherDevice_ConvertWindStrength2Text(integer $InstanzID, integer $WindStrength)`
 
 ermittelt aus der Windstärke (in bft) die korespondierende Bezeichnung gemäß Beaufortskala
 
