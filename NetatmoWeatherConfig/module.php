@@ -2,8 +2,6 @@
 
 class NetatmoWeatherConfig extends IPSModule
 {
-    private $scriptName = 'NetatmoWeatherConfig';
-
     public function Create()
     {
         parent::Create();
@@ -65,17 +63,17 @@ class NetatmoWeatherConfig extends IPSModule
         $SendData = ['DataID' => '{DC5A0AD3-88A5-CAED-3CA9-44C20CC20610}'];
         $data = $this->SendDataToParent(json_encode($SendData));
 
-        $this->SendDebug($this->scriptName, "data=$data", 0);
+        $this->SendDebug(__FUNCTION__, "data=$data", 0);
 
         $statuscode = 0;
         $do_abort = false;
 
         if ($data != '') {
             $netatmo = json_decode($data, true);
-            $this->SendDebug($this->scriptName, 'netatmo=' . print_r($netatmo, true), 0);
+            $this->SendDebug(__FUNCTION__, 'netatmo=' . print_r($netatmo, true), 0);
 
             $devices = $netatmo['body']['devices'];
-            $this->SendDebug($this->scriptName, 'devices=' . print_r($devices, true), 0);
+            $this->SendDebug(__FUNCTION__, 'devices=' . print_r($devices, true), 0);
             if ($station_name != '') {
                 $station_found = false;
                 foreach ($devices as $device) {
@@ -106,7 +104,7 @@ class NetatmoWeatherConfig extends IPSModule
             }
             if ($statuscode) {
                 echo "statuscode=$statuscode, err=$err";
-                $this->SendDebug($this->scriptName, $err, 0);
+                $this->SendDebug(__FUNCTION__, $err, 0);
                 $this->SetStatus($statuscode);
                 $do_abort = true;
             }
@@ -114,7 +112,7 @@ class NetatmoWeatherConfig extends IPSModule
             $err = 'no data';
             $statuscode = 201;
             echo "statuscode=$statuscode, err=$err";
-            $this->SendDebug($this->scriptName, $err, 0);
+            $this->SendDebug(__FUNCTION__, $err, 0);
             $this->SetStatus($statuscode);
             $do_abort = true;
         }
@@ -181,7 +179,7 @@ class NetatmoWeatherConfig extends IPSModule
                         break;
                     default:
                         echo 'unknown module_type ' . $module['type'];
-                        $this->SendDebug($this->scriptName, 'unknown module_type ' . $module['type'], 0);
+                        $this->SendDebug(__FUNCTION__, 'unknown module_type ' . $module['type'], 0);
                         continue;
                 }
                 $properties = [

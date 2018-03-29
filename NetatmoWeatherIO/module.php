@@ -2,8 +2,6 @@
 
 class NetatmoWeatherIO extends IPSModule
 {
-    private $scriptName = 'NetatmoWeatherIO';
-
     public function Create()
     {
         parent::Create();
@@ -56,14 +54,14 @@ class NetatmoWeatherIO extends IPSModule
 
     protected function SendData($data)
     {
-        $this->SendDebug($this->scriptName, 'SendData(): data=' . print_r($data, true), 0);
+        $this->SendDebug(__FUNCTION__, 'SendData(): data=' . print_r($data, true), 0);
         $this->SendDataToChildren(json_encode(['DataID' => '{2D42552F-2545-9145-D3C8-A299E3FDC6EA}', 'Buffer' => $data]));
     }
 
     public function ForwardData($JSONString)
     {
         $data = $this->GetBuffer('LastData');
-        $this->SendDebug($this->scriptName, 'ForwardData(): data=' . print_r($data, true), 0);
+        $this->SendDebug(__FUNCTION__, 'ForwardData(): data=' . print_r($data, true), 0);
         return $data;
     }
 
@@ -92,7 +90,7 @@ class NetatmoWeatherIO extends IPSModule
                 'scope'         => 'read_station'
             ];
 
-            $this->SendDebug($this->scriptName, "netatmo-auth-url=$netatmo_auth_url, postdata=" . print_r($postdata, true), 0);
+            $this->SendDebug(__FUNCTION__, "netatmo-auth-url=$netatmo_auth_url, postdata=" . print_r($postdata, true), 0);
 
             $token = '';
             $token_expiration = 0;
@@ -105,7 +103,7 @@ class NetatmoWeatherIO extends IPSModule
                     $statuscode = 204;
                     $err = "no 'access_token' in response from netatmo";
                     echo "statuscode=$statuscode, err=$err";
-                    $this->SendDebug($this->scriptName, $err, 0);
+                    $this->SendDebug(__FUNCTION__, $err, 0);
                     $this->SetStatus($statuscode);
                     $do_abort = true;
                 } else {
@@ -117,7 +115,7 @@ class NetatmoWeatherIO extends IPSModule
                 $do_abort = true;
             }
 
-            $this->SendDebug($this->scriptName, 'token=' . $token . ', expiration=' . $token_expiration, 0);
+            $this->SendDebug(__FUNCTION__, 'token=' . $token . ', expiration=' . $token_expiration, 0);
 
             $jtoken = [
                     'token'            => $token,
@@ -135,7 +133,7 @@ class NetatmoWeatherIO extends IPSModule
         // Anfrage mit Token
         $netatmo_data_url = $netatmo_netatmo_data_url . '?access_token=' . $token;
 
-        $this->SendDebug($this->scriptName, "netatmo-data-url=$netatmo_data_url", 0);
+        $this->SendDebug(__FUNCTION__, "netatmo-data-url=$netatmo_data_url", 0);
 
         $do_abort = false;
         $data = $this->do_HttpRequest($netatmo_data_url);
@@ -156,7 +154,7 @@ class NetatmoWeatherIO extends IPSModule
             }
             if ($statuscode) {
                 echo "statuscode=$statuscode, err=$err";
-                $this->SendDebug($this->scriptName, $err, 0);
+                $this->SendDebug(__FUNCTION__, $err, 0);
                 $this->SetStatus($statuscode);
                 $do_abort = true;
             }
@@ -221,7 +219,7 @@ class NetatmoWeatherIO extends IPSModule
 
         if ($statuscode) {
             echo "statuscode=$statuscode, err=$err";
-            $this->SendDebug($this->scriptName, $err, 0);
+            $this->SendDebug(__FUNCTION__, $err, 0);
             $this->SetStatus($statuscode);
         }
 

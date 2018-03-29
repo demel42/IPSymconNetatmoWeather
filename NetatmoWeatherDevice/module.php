@@ -10,8 +10,6 @@ if (!defined('KR_READY')) {
 
 class NetatmoWeatherDevice extends IPSModule
 {
-    private $scriptName = 'NetatmoWeatherDevice';
-
     public function Create()
     {
         parent::Create();
@@ -463,7 +461,7 @@ class NetatmoWeatherDevice extends IPSModule
 
                 break;
             default:
-                $this->SendDebug($this->scriptName, "unknown module_type '$module_type'", 0);
+                $this->SendDebug(__FUNCTION__, "unknown module_type '$module_type'", 0);
                 break;
         }
 
@@ -679,10 +677,10 @@ class NetatmoWeatherDevice extends IPSModule
         $msg .= ', gust=' . $windgust . ' km/h';
         $msg .= ' (' . $windgustdir . '°)';
         $msg .= ', pressure=' . $pressure . ' mb';
-        $this->SendDebug($this->scriptName, $msg, 0);
+        $this->SendDebug(__FUNCTION__, $msg, 0);
 
         $url = $wunderground_url . '?ID=' . $wunderground_id . '&PASSWORD=' . $wunderground_key . '&action=updateraw' . $param;
-        $this->SendDebug($this->scriptName, "wunderground-url: $url", 0);
+        $this->SendDebug(__FUNCTION__, "wunderground-url: $url", 0);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -694,7 +692,7 @@ class NetatmoWeatherDevice extends IPSModule
 
         if ($httpcode != 200) {
             $err = "got http-code $httpcode from wunderground";
-            $this->SendDebug($this->scriptName, $err, 0);
+            $this->SendDebug(__FUNCTION__, $err, 0);
             $this->SetValue('Wunderground', fail);
             return -1;
         }
@@ -766,10 +764,10 @@ class NetatmoWeatherDevice extends IPSModule
             ];
 
         $msg = "base-module \"$module_name\": Temperature=$Temperature, CO2=$CO2, Humidity=$Humidity, Noise=$Noise, Pressure=$Pressure, AbsolutePressure=$AbsolutePressure";
-        $this->SendDebug($this->scriptName, utf8_decode($msg), 0);
+        $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
         $module_type_text = $this->module_type2text($module_type);
         $msg = "module_type=$module_type($module_type_text), module_name=$module_name, last_measure=$last_measure, wifi_status=$wifi_status, last_contact=$last_contact";
-        $this->SendDebug($this->scriptName, utf8_decode($msg), 0);
+        $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
 
         if ($with_last_contact) {
             $this->SetValue('LastContact', $last_contact);
@@ -940,7 +938,7 @@ class NetatmoWeatherDevice extends IPSModule
                     }
 
                     $msg = "outdoor module \"$module_name\": Temperature=$Temperature, Humidity=$Humidity";
-                    $this->SendDebug($this->scriptName, utf8_decode($msg), 0);
+                    $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
                     break;
                 case 'NAModule2':
                     // Windmesser
@@ -978,7 +976,7 @@ class NetatmoWeatherDevice extends IPSModule
                     }
 
                     $msg = "wind gauge \"$module_name\": WindSpeed=$WindSpeed, WindAngle=$WindAngle, GustSpeed=$GustSpeed, GustAngle=$GustAngle";
-                    $this->SendDebug($this->scriptName, utf8_decode($msg), 0);
+                    $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
                     break;
                 case 'NAModule3':
                     // Regenmesser
@@ -1000,7 +998,7 @@ class NetatmoWeatherDevice extends IPSModule
                     }
 
                     $msg = "rain gauge \"$module_name\": Rain=$Rain, sum_rain_1=$sum_rain_1, sum_rain_24=$sum_rain_24";
-                    $this->SendDebug($this->scriptName, utf8_decode($msg), 0);
+                    $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
                     break;
                 case 'NAModule4':
                     // Innenmodul
@@ -1034,13 +1032,13 @@ class NetatmoWeatherDevice extends IPSModule
                     }
 
                     $msg = "indoor module \"$module_name\": Temperature=$Temperature, Humidity=$Humidity, CO2=$CO2";
-                    $this->SendDebug($this->scriptName, utf8_decode($msg), 0);
+                    $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
                     break;
             }
 
             $module_type_text = $this->module_type2text($module_type);
             $msg = "  module_type=$module_type($module_type_text), module_name=$module_name, last_measure=$last_measure, rf_status=$rf_status, battery_status=$battery_status";
-            $this->SendDebug($this->scriptName, utf8_decode($msg), 0);
+            $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
         }
 
         if ($module_found == false) {
@@ -1048,7 +1046,7 @@ class NetatmoWeatherDevice extends IPSModule
             $module_type_text = $this->module_type2text($module_type);
             $msg = "instance $this->InstanceID \"$instName\" ($module_type_text) module with id $module_id not found";
             echo "$msg";
-            $this->SendDebug($this->scriptName, utf8_decode($msg), 0);
+            $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
         }
 
         if ($module_type == 'NAModule1') {
@@ -1086,7 +1084,7 @@ class NetatmoWeatherDevice extends IPSModule
     public function ReceiveData($data)
     {
         $jdata = json_decode($data);
-        $this->SendDebug($this->scriptName, 'data=' . print_r($jdata, true), 0);
+        $this->SendDebug(__FUNCTION__, 'data=' . print_r($jdata, true), 0);
         $buf = $jdata->Buffer;
 
         $wunderground_url = 'https://weatherstation.wunderground.com/weatherstation/updateweatherstation.php';
@@ -1145,7 +1143,7 @@ class NetatmoWeatherDevice extends IPSModule
 
         if ($do_abort) {
             echo "statuscode=$statuscode, err=$err";
-            $this->SendDebug($this->scriptName, $err, 0);
+            $this->SendDebug(__FUNCTION__, $err, 0);
             $this->SetStatus($statuscode);
 
             if ($module_type == 'NAMain') {
@@ -1171,7 +1169,7 @@ class NetatmoWeatherDevice extends IPSModule
                 break;
             default:
                 echo 'unknown module_type ' . $module_type;
-                $this->SendDebug($this->scriptName, 'unknown module_type ' . $module_type, 0);
+                $this->SendDebug(__FUNCTION__, 'unknown module_type ' . $module_type, 0);
                 $statuscode = 102;
                 break;
         }
@@ -1226,58 +1224,6 @@ class NetatmoWeatherDevice extends IPSModule
             IPS_SetProperty($ids[0], 'Hooks', json_encode($hooks));
             IPS_ApplyChanges($ids[0]);
         }
-    }
-
-    private function do_HttpRequest($url, $postdata = '')
-    {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        if ($postdata != '') {
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
-        }
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        $cdata = curl_exec($ch);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        $statuscode = 0;
-        $err = '';
-        $data = '';
-        if ($httpcode != 200) {
-            if ($httpcode == 400 || $httpcode == 401) {
-                $statuscode = 201;
-                $err = "got http-code $httpcode (unauthorized) from netatmo";
-            } elseif ($httpcode >= 500 && $httpcode <= 599) {
-                $statuscode = 202;
-                $err = "got http-code $httpcode (server error) from netatmo";
-            } else {
-                $statuscode = 203;
-                $err = "got http-code $httpcode from netatmo";
-            }
-        } elseif ($cdata == '') {
-            $statuscode = 204;
-            $err = 'no data from netatmo';
-        } else {
-            $jdata = json_decode($cdata, true);
-            if ($jdata == '') {
-                $statuscode = 204;
-                $err = 'malformed response from netatmo';
-            } else {
-                $data = $cdata;
-            }
-        }
-
-        if ($statuscode) {
-            echo "statuscode=$statuscode, err=$err";
-            $this->SendDebug($this->scriptName, $err, 0);
-            $this->SetStatus($statuscode);
-        }
-
-        return $data;
     }
 
     private function Build_StatusBox($station_data)
@@ -1416,7 +1362,7 @@ class NetatmoWeatherDevice extends IPSModule
         $html .= "#spalte_battery { width: 30px; }\n";
         $html .= "</style>\n";
 
-        $this->SendDebug($this->scriptName, 'station_data=$' . print_r($station_data, true), 0);
+        $this->SendDebug(__FUNCTION__, 'station_data=$' . print_r($station_data, true), 0);
 
         $dt = date('d.m. H:i', $station_data['now']);
         $s = '<font size="-1">Stand:</font> ';
