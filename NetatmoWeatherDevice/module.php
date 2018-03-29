@@ -1834,7 +1834,20 @@ class NetatmoWeatherDevice extends IPSModule
     public function CalcAbsolutePressure(float $pressure, float $temp, int $altitude = null)
     {
         if (!isset($altitude) || $altitude === null) {
-            $altitude = $this->ReadPropertyInteger('station_altitude');
+			$instIDs = IPS_GetInstanceListByModuleID('{1023DB4A-D491-A0D5-17CD-380D3578D0FA}');
+			foreach ($instIDs as $id) {
+				$cfg = IPS_GetConfiguration($id);
+				$jcfg = json_decode($cfg, true);
+				if (!isset($jcfg['module_type'])) {
+					continue;
+				}
+				echo "module_type=" . $jcfg['module_type'] . "\n";
+				if ($jcfg['module_type'] == "Station") {
+					$altitude = $jcfg['station_altitude'];
+					break;
+				}
+			}
+			echo "altitude=" . $altitude . "\n";
         }
 
         // Temperaturgradient (geschätzt)
