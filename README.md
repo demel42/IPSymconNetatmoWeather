@@ -77,14 +77,14 @@ Dann unter _Konfigurator Instanzen_ analog den Konfigurator _NetatmoWeather_ hin
 Hier kann man in dem Konfigurationsdialog einen Stationsnamen eintragen; das ist aber nur erforderlich, wenn mehr als eine Station mit dem, in der I/O-Instanz angegebenen, Netatmo-Konto verknüpft ist.
 
 Mit Betätigen der Schaltfläche _Importieren der Station_ werden für jedes Modul, das zu dieser Station im Netatmo registriert ist, eine Geräte-Instanzen unterhalb von _IP-Symcon_ angelegt.
-Der Namen der Instanzen ist der der Netatmo-Module, in derm Feld _Beschreibung_ der Instanzen ist der Modultyp sowie der Namen der Station und des Moduls æingetragen.
+Der Namen der Instanzen ist der der Netatmo-Module, in derm Feld _Beschreibung_ der Instanzen ist der Modultyp sowie der Namen der Station und des Moduls eingetragen.
 
 Der Aufruf des Konfigurators kann jederzeit wiederholt werden, es werden dann fehlende Module angelegt.
 
 Die Module werden aufgrund der internen _ID_ der Module identifiziert, d.h. eine Änderung des Modulnamens muss in IPS nachgeführt werden.
-Ein Ersatz eines Moduls wird beim Aufruf des Konfigurators dazuführen, das eine weitere Instanz angelegt wird 
+Ein Ersatz eines Moduls wird beim Aufruf des Konfigurators dazuführen, das eine weitere Instanz angelegt wird. 
 
-Die im Netatmo eingetragenen Höhe der Station sowie die geographische Position wird als Property zu dem Basismodul eingetragen.
+Die im Netatmo eingetragenen Höhe der Station sowie die geographische Position wird als Property zu dem virtuellen Modul _Station_ eingetragen.
 
 Zu den Geräte-Instanzen werden im Rahmen der Konfiguration Modultyp-abhängig Variablen angelegt. Zusätzlich kann man in den Modultyp-spezifischen Konfigurationsdialog weitere Variablen aktivieren.
 
@@ -166,38 +166,28 @@ Bei einer Angabe von 5m sind die Werte nicht älter als 15m.
 #### Variablen
 
 | Eigenschaft               | Typ      | Standardwert | Beschreibung |
-| :-----------------------: | :-----:  | :----------: | :----------------------------------------------------------------------------------------------------------: |
+| :-----------------------: | :-----:  | :----------: | :------------------------------------------------------------------: |
 | Stationsname              | string   |              | muss nur angegeben werden, wenn mehr als eine Station angemeldet ist |
-| Intervall                 | integer  | 30           | Angabe in Minuten |
-
-Das hier angebbare Minuten-Intervall dient zu Überprüfung der Kommunikation zwischen
- - den Modulen und dem Basismodul
- - dem basismodul und dem Netatmo-Server
-  ist die Zeit überschritten, wird die Variable _Status_ des Basismoduls auf Fehler gesetzt.
-  Anmerkung: die Variable _Status_ wird auch auf Fehler gesetzt wenn das IO-Modul einen Fehler feststellt.
   
 #### Schaltflächen
 
 | Bezeichnung                  | Beschreibung |
 | :--------------------------: | :------------------------------------------------: |
-| Inport der Station           | richtet die Geräte-Instanzen ein |
+| Import der Station           | richtet die Geräte-Instanzen ein |
   
 ### Geräte
 
 #### Properties
 
-werden vom Konfigurator gesetzt, bei Neuanleg der Instanz sowie bei einem erneuten Aufruf (z.B. zur Übernahme einer korrigierten _altitude_).
+werden vom Konfigurator beim Anlegen der Instanz gesetzt.
 
 | Eigenschaft            | Typ     | Standardwert | Beschreibung                               |
 | :--------------------: | :-----: | :----------: | :----------------------------------------: |
-| altitude               | float   |              | Höhe der Station                           |
-| longitude              | float   |              | Längengrad der Station                     |
-| latitude               | float   |              | Breitengrad der Station                    |
 | station_id             | string  |              | ID der Station                             |
 | module_id              | string  |              | ID des Moduls                              |
 | module_type            | string  |              | Typ des Moduls                             |
 
-_module_type_: NAMain=Basis, NAModule1=Außen, NAModule2=Wind, NAModule3=Regen, NAModule4=Innen
+_module_type_: _NAMain_=Basis, _NAModule1_=Außen, _NAModule2_=Wind, _NAModule3_=Regen, _NAModule4_=Innen sowie _Station_, die für die Netatmo-Station als Ganzes steht.
 
 #### Variablen
 
@@ -205,6 +195,12 @@ stehen je nach Typ des Moduls zur Verfügung
 
 | Eigenschaft               | Typ     | Standardwert | Beschreibung                               |
 | :-----------------------: | :-----: | :----------: | :----------------------------------------: |
+| altitude                  | float   |              | Höhe der Station                           |
+| longitude                 | float   |              | Längengrad der Station                     |
+| latitude                  | float   |              | Breitengrad der Station                    |
+|                           |         |              |                                            |
+| Intervall                 | integer | 30           | Angabe in Minuten                          |
+|                           |         |              |                                            |
 | with_absolute_humidity    | boolean | false        | absolute Luftfeucht                        |
 | with_absolute_pressure    | boolean | false        | absoluter Luftdruck                        |
 | with_battery              | boolean | false        | Batterie-Status                            |
@@ -219,7 +215,13 @@ stehen je nach Typ des Moduls zur Verfügung
 | with_winddirection        | boolean | false        | Windrichtung mit Text                      |
 | with_windstrength         | boolean | false        | Windstärke
 |                           |         |              |                                            |
-| Wunderground-Zugangsdaten | string   |              | Station-ID und -Key von https://www.wunderground.com/personal-weather-station/mypws |
+| Wunderground-Zugangsdaten | string  |              | Station-ID und -Key von https://www.wunderground.com/personal-weather-station/mypws |
+
+Das hier angebbare Minuten-Intervall dient zu Überprüfung der Kommunikation zwischen
+ - den Modulen und dem Basismodul
+ - dem Basismodul und dem Netatmo-Server
+  ist die Zeit überschritten, wird die Variable _Status_ des Basismoduls auf Fehler gesetzt.
+  Anmerkung: die Variable _Status_ wird auch auf Fehler gesetzt wenn das IO-Modul einen Fehler feststellt.
 
 ### Statusvariablen
 
