@@ -42,9 +42,9 @@ class NetatmoWeatherConfig extends IPSModule
                 return $instID;
             }
             IPS_SetProperty($instID, 'module_id', $module_id);
-			foreach ($properties as $key => $property) {
-				IPS_SetProperty($instID, $key, $property);
-			}
+            foreach ($properties as $key => $property) {
+                IPS_SetProperty($instID, $key, $property);
+            }
             IPS_SetName($instID, $module_name);
             IPS_SetInfo($instID, $module_info);
             IPS_SetPosition($instID, $pos);
