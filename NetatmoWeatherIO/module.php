@@ -1,5 +1,9 @@
 <?php
 
+// Constants will be defined with IP-Symcon 5.0 and newer
+if (!defined('KR_READY')) {
+    define('KR_READY', 10103);
+}
 class NetatmoWeatherIO extends IPSModule
 {
     public function Create()
@@ -26,7 +30,7 @@ class NetatmoWeatherIO extends IPSModule
         $netatmo_secret = $this->ReadPropertyString('Netatmo_Secret');
 
         if ($netatmo_user != '' && $netatmo_password != '' && $netatmo_client != '' && $netatmo_secret != '') {
-            if (IPS_GetKernelRunlevel() == 10103) { // IPS läuft dann gleich Daten abholen
+            if (IPS_GetKernelRunlevel() == KR_READY) {
                 $this->UpdateData();
             }
             $this->SetUpdateInterval();
