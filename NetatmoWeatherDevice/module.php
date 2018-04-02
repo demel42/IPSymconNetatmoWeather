@@ -8,6 +8,19 @@ if (!defined('KR_READY')) {
     define('KR_READY', 10103);
 }
 
+if (!defined('IPS_BOOLEAN')) {
+    define('IPS_BOOLEAN', 0);
+}
+if (!defined('IPS_INTEGER')) {
+    define('IPS_INTEGER', 1);
+}
+if (!defined('IPS_FLOAT')) {
+    define('IPS_FLOAT', 2);
+}
+if (!defined('IPS_STRING')) {
+    define('IPS_STRING', 3);
+}
+
 class NetatmoWeatherDevice extends IPSModule
 {
     public function Create()
@@ -44,43 +57,43 @@ class NetatmoWeatherDevice extends IPSModule
         $this->RegisterPropertyBoolean('with_signal', false);
         $this->RegisterPropertyBoolean('with_battery', false);
 
-        $this->CreateVarProfile('Netatmo.Temperatur', 2, ' °C', -10, 30, 0, 1, 'Temperature');
-        $this->CreateVarProfile('Netatmo.Humidity', 2, ' %', 10, 100, 0, 0, 'Drops');
-        $this->CreateVarProfile('Netatmo.absHumidity', 2, ' g/m³', 10, 100, 0, 0, 'Drops');
-        $this->CreateVarProfile('Netatmo.Dewpoint', 2, ' °C', 0, 30, 0, 0, 'Drops');
-        $this->CreateVarProfile('Netatmo.Heatindex', 2, ' °C', 0, 100, 0, 0, 'Temperature');
-        $this->CreateVarProfile('Netatmo.Pressure', 2, ' mbar', 500, 1200, 0, 0, 'Gauge');
-        $this->CreateVarProfile('Netatmo.WindSpeed', 2, ' km/h', 0, 100, 0, 0, 'WindSpeed');
-        $this->CreateVarProfile('Netatmo.WindStrength', 1, ' bft', 0, 13, 0, 0, 'WindSpeed');
-        $this->CreateVarProfile('Netatmo.WindAngle', 1, ' °', 0, 360, 0, 0, 'WindDirection');
-        $this->CreateVarProfile('Netatmo.WindDirection', 3, '', 0, 0, 0, 0, 'WindDirection');
-        $this->CreateVarProfile('Netatmo.Rainfall', 2, ' mm', 0, 60, 0, 1, 'Rainfall');
+        $this->CreateVarProfile('Netatmo.Temperatur', IPS_FLOAT, ' °C', -10, 30, 0, 1, 'Temperature');
+        $this->CreateVarProfile('Netatmo.Humidity', IPS_FLOAT, ' %', 10, 100, 0, 0, 'Drops');
+        $this->CreateVarProfile('Netatmo.absHumidity', IPS_FLOAT, ' g/m³', 10, 100, 0, 0, 'Drops');
+        $this->CreateVarProfile('Netatmo.Dewpoint', IPS_FLOAT, ' °C', 0, 30, 0, 0, 'Drops');
+        $this->CreateVarProfile('Netatmo.Heatindex', IPS_FLOAT, ' °C', 0, 100, 0, 0, 'Temperature');
+        $this->CreateVarProfile('Netatmo.Pressure', IPS_FLOAT, ' mbar', 500, 1200, 0, 0, 'Gauge');
+        $this->CreateVarProfile('Netatmo.WindSpeed', IPS_FLOAT, ' km/h', 0, 100, 0, 0, 'WindSpeed');
+        $this->CreateVarProfile('Netatmo.WindStrength', IPS_INTEGER, ' bft', 0, 13, 0, 0, 'WindSpeed');
+        $this->CreateVarProfile('Netatmo.WindAngle', IPS_INTEGER, ' °', 0, 360, 0, 0, 'WindDirection');
+        $this->CreateVarProfile('Netatmo.WindDirection', IPS_STRING, '', 0, 0, 0, 0, 'WindDirection');
+        $this->CreateVarProfile('Netatmo.Rainfall', IPS_FLOAT, ' mm', 0, 60, 0, 1, 'Rainfall');
 
         $associations = [];
         $associations[] = ['Wert' =>  0, 'Name' => '%d', 'Farbe' => 0x008040];
         $associations[] = ['Wert' => 40, 'Name' => '%d', 'Farbe' => 0xFFFF31];
         $associations[] = ['Wert' => 65, 'Name' => '%d', 'Farbe' => 0xFF8000];
         $associations[] = ['Wert' => 95, 'Name' => '%d', 'Farbe' => 0xFF0000];
-        $this->CreateVarProfile('Netatmo.Noise', 1, ' dB', 0, 130, 0, 1, 'Speaker', $associations);
+        $this->CreateVarProfile('Netatmo.Noise', IPS_INTEGER, ' dB', 0, 130, 0, 1, 'Speaker', $associations);
 
         $associations = [];
         $associations[] = ['Wert' =>    0, 'Name' => '%d', 'Farbe' => 0x008000];
         $associations[] = ['Wert' => 1000, 'Name' => '%d', 'Farbe' => 0xFFFF00];
         $associations[] = ['Wert' => 1250, 'Name' => '%d', 'Farbe' => 0xFF8000];
         $associations[] = ['Wert' => 1300, 'Name' => '%d', 'Farbe' => 0xFF0000];
-        $this->CreateVarProfile('Netatmo.CO2', 1, ' ppm', 250, 2000, 0, 1, 'Gauge', $associations);
+        $this->CreateVarProfile('Netatmo.CO2', IPS_INTEGER, ' ppm', 250, 2000, 0, 1, 'Gauge', $associations);
 
         $associations = [];
         $associations[] = ['Wert' => false, 'Name' => 'Nein', 'Farbe' => -1];
         $associations[] = ['Wert' => true, 'Name' => 'Ja', 'Farbe' => 0xEE0000];
-        $this->CreateVarProfile('Netatmo.Alarm', 0, '', 0, 0, 0, 1, 'Alert', $associations);
+        $this->CreateVarProfile('Netatmo.Alarm', IPS_BOOLEAN, '', 0, 0, 0, 1, 'Alert', $associations);
 
         $associations = [];
         $associations[] = ['Wert' => 0, 'Name' => $this->wifi_status2text(0), 'Farbe' => 0xEE0000];
         $associations[] = ['Wert' => 1, 'Name' => $this->wifi_status2text(1), 'Farbe' => 0xFFFF00];
         $associations[] = ['Wert' => 2, 'Name' => $this->wifi_status2text(2), 'Farbe' => 0x32CD32];
         $associations[] = ['Wert' => 3, 'Name' => $this->wifi_status2text(3), 'Farbe' => 0x228B22];
-        $this->CreateVarProfile('Netatmo.Wifi', 1, '', 0, 0, 0, 1, 'Intensity', $associations);
+        $this->CreateVarProfile('Netatmo.Wifi', IPS_INTEGER, '', 0, 0, 0, 1, 'Intensity', $associations);
 
         $associations = [];
         $associations[] = ['Wert' => 0, 'Name' => $this->signal_status2text(0), 'Farbe' => 0xEE0000];
@@ -88,7 +101,7 @@ class NetatmoWeatherDevice extends IPSModule
         $associations[] = ['Wert' => 2, 'Name' => $this->signal_status2text(2), 'Farbe' => 0xFFFF00];
         $associations[] = ['Wert' => 3, 'Name' => $this->signal_status2text(3), 'Farbe' => 0x32CD32];
         $associations[] = ['Wert' => 4, 'Name' => $this->signal_status2text(4), 'Farbe' => 0x228B22];
-        $this->CreateVarProfile('Netatmo.RfSignal', 1, '', 0, 0, 0, 1, 'Intensity', $associations);
+        $this->CreateVarProfile('Netatmo.RfSignal', IPS_INTEGER, '', 0, 0, 0, 1, 'Intensity', $associations);
 
         $associations = [];
         $associations[] = ['Wert' => 0, 'Name' => $this->battery_status2text(0), 'Farbe' => 0xEE0000];
@@ -97,7 +110,7 @@ class NetatmoWeatherDevice extends IPSModule
         $associations[] = ['Wert' => 3, 'Name' => $this->battery_status2text(3), 'Farbe' => 0x32CD32];
         $associations[] = ['Wert' => 4, 'Name' => $this->battery_status2text(4), 'Farbe' => 0x228B22];
         $associations[] = ['Wert' => 5, 'Name' => $this->battery_status2text(5), 'Farbe' => 0x228B22];
-        $this->CreateVarProfile('Netatmo.Battery', 1, '', 0, 0, 0, 1, 'Intensity', $associations);
+        $this->CreateVarProfile('Netatmo.Battery', IPS_INTEGER, '', 0, 0, 0, 1, 'Intensity', $associations);
 
         $this->ConnectParent('{26A55798-5CBC-88F6-5C7B-370B043B24F9}');
 
@@ -109,8 +122,6 @@ class NetatmoWeatherDevice extends IPSModule
     // Inspired by module SymconTest/HookServe
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
-
-        //Never delete this line!
         parent::MessageSink($TimeStamp, $SenderID, $Message, $Data);
 
         if ($Message == IPS_KERNELMESSAGE && $Data[0] == KR_READY) {
