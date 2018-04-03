@@ -834,12 +834,12 @@ class NetatmoWeatherDevice extends IPSModule
         $this->SetValue('BatteryAlarm', $battery_alarm);
 
         if ($with_status_box) {
-			$statusbox_script = $this->ReadPropertyInteger('statusbox_script');
-			if ($statusbox_script > 0) {
-				$html = IPS_RunScriptWaitEx($statusbox_script, [ 'InstanceID' => $this->InstanceID ]);
-			} else {
-				$html = $this->Build_StatusBox($station_data);
-			}
+            $statusbox_script = $this->ReadPropertyInteger('statusbox_script');
+            if ($statusbox_script > 0) {
+                $html = IPS_RunScriptWaitEx($statusbox_script, ['InstanceID' => $this->InstanceID]);
+            } else {
+                $html = $this->Build_StatusBox($station_data);
+            }
             $this->SetValue('StatusBox', $html);
         }
 
@@ -1515,13 +1515,13 @@ class NetatmoWeatherDevice extends IPSModule
         }
         $basename = substr($uri, strlen('/hook/NetatmoWeather/'));
         if ($basename == 'status') {
-			$webhook_script = $this->ReadPropertyInteger('webhook_script');
-			if ($webhook_script > 0) {
-				$html = IPS_RunScriptWaitEx($webhook_script, [ 'InstanceID' => $this->InstanceID ]);
-				echo $html;
-			} else {
-				$this->ProcessHook_Status();
-			}
+            $webhook_script = $this->ReadPropertyInteger('webhook_script');
+            if ($webhook_script > 0) {
+                $html = IPS_RunScriptWaitEx($webhook_script, ['InstanceID' => $this->InstanceID]);
+                echo $html;
+            } else {
+                $this->ProcessHook_Status();
+            }
             return;
         }
         $path = realpath($root . '/' . $basename);
