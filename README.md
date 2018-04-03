@@ -140,6 +140,43 @@ berechnet aus der Windgeschwindigkeit (in km/h) die Windstärke (in bft)
 
 ermittelt aus der Windstärke (in bft) die korespondierende Bezeichnung gemäß Beaufortskala
 
+`string NetatmoWeatherDevice_GetRawData(integer $InstanzID)`
+
+liefert die Zusatzdaten, die nicht in den Variablen gespeichert sind und zu Darstellung der HTML-Box bzw WebHook verwendet werden
+
+Datenstruktur (muss mit json_decode() aufbereitet werden)
+
+- _station_data_: Informationen zu einer Wetterstation
+
+| Attribut        | Datentyp                | Bedeutung                               |
+| :-------------: | :---------------------: | :-------------------------------------: |
+| now             | UNIX-Timestamp          | Zeitpunkt der Abfrage                   |
+| status          | string                  | Status (_ok_ oder ein Fehler)           |
+| last_contact_ts | UNIX-Timestamp          | Zeitpunkt der letzten Datenübertragung  |
+| last_contact    | string                  |  ... als relative Ausgabe               |
+| station_name    | string                  | Benutzerbezeichnung der Station         |
+| modules         | array von _module_data_ | die Module der Station                  |
+
+- _module_data_: Informationen zu einem Modul
+
+| Attribut           | Datentyp                | Bedeutung                               |
+| :----------------: | :---------------------: | :-------------------------------------: |
+| module_type        | string                  | Typ des Modules (_NAMain_, _NAModule1_, _NAModule2_, _NAModule3_, _NAModule4_) |
+| module_type_txt    | string                  |  ... als Text                           |
+| module_type_img    | string                  |  ... als Pfad zum Icon                  |
+| module_name        | string                  | Bezeichnung des Moduls                  |
+| last_measure_ts    | UNIX-Timestamp          | Zeitpunkt der letzten Messung           |
+| last_measure       | string                  |  ... als relative Ausgabe               |
+| wifi_status        | integer                 | Wifi (_nur NAMain_)                     |
+| wifi_status_txt    | string                  |  ... als Text                           |
+| wifi_status_img    | string                  |  ... als Pfad zum Icon                  |
+| rf_status          | integer                 | Funk (nicht _NAMain_)                   |
+| rf_status_txt      | string                  |  ... als Text                           |
+| rf_status_img      | string                  |  ... als Pfad zum Icon                  |
+| battery_status     | integer                 | Status der Batterie (nicht _NAMain_)    |
+| battery_status_txt | string                  |  ... als Text                           |
+| battery_status_img | string                  |  ... als Pfad zum Icon                  |
+
 
 ## 5. Konfiguration:
 
