@@ -42,6 +42,10 @@
 			" ... Battery (a global battery indicator is always present)":
 				" ... Batterie-Status (ein globaler Batterie-Indikator ist immer vorhanden)",
 
+			"alternate script to use for ...": "alternative Scripte zur Verwendung für ...",
+			" ... \"StatusBox\"": " ... \"StatusBox\"",
+			" ... Webhook": " ... Webhook",
+
 			"Konfiguration to update Wunderground (only if filled)":
 				"Konfiguration von Wunderground zum Update (nur wenn gefüllt)",
 			"Wunderground Access-Details from https://www.wunderground.com/personal-weather-station/mypws":

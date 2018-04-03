@@ -41,6 +41,9 @@ class NetatmoWeatherDevice extends IPSModule
 
         $this->RegisterPropertyInteger('minutes2fail', 30);
 
+        $this->RegisterPropertyInteger('statusbox_script', 0);
+        $this->RegisterPropertyInteger('webhook_script', 0);
+
         $this->RegisterPropertyBoolean('with_absolute_pressure', false);
         $this->RegisterPropertyBoolean('with_absolute_humidity', false);
         $this->RegisterPropertyBoolean('with_dewpoint', false);
@@ -556,6 +559,10 @@ class NetatmoWeatherDevice extends IPSModule
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_status_box', 'caption' => ' ... html-box with state of station and modules'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_signal', 'caption' => ' ... Wifi-Signal'];
 
+                $formElements[] = ['type' => 'Label', 'label' => 'alternate script to use for ...'];
+                $formElements[] = ['type' => 'SelectScript', 'name' => 'statusbox_script', 'caption' => ' ... "StatusBox"'];
+                $formElements[] = ['type' => 'SelectScript', 'name' => 'webhook_script', 'caption' => ' ... Webhook'];
+
                 $formElements[] = ['type' => 'Label', 'label' => 'Duration until the connection to netatmo or between stations is marked disturbed'];
                 $formElements[] = ['type' => 'IntervalBox', 'name' => 'minutes2fail', 'caption' => 'Minutes'];
                 break;
@@ -723,7 +730,6 @@ class NetatmoWeatherDevice extends IPSModule
         $with_last_contact = $this->ReadPropertyBoolean('with_last_contact');
         $with_status_box = $this->ReadPropertyBoolean('with_status_box');
         $with_signal = $this->ReadPropertyBoolean('with_signal');
-
         $minutes2fail = $this->ReadPropertyInteger('minutes2fail');
 
         $now = time();
@@ -828,7 +834,12 @@ class NetatmoWeatherDevice extends IPSModule
         $this->SetValue('BatteryAlarm', $battery_alarm);
 
         if ($with_status_box) {
-            $html = $this->Build_StatusBox($station_data);
+			$statusbox_script = $this->ReadPropertyInteger('statusbox_script');
+			if ($statusbox_script > 0) {
+				$html = IPS_RunScriptWaitEx($statusbox_script, [ 'InstanceID' => $this->InstanceID ]);
+			} else {
+				$html = $this->Build_StatusBox($station_data);
+			}
             $this->SetValue('StatusBox', $html);
         }
 
@@ -1504,7 +1515,13 @@ class NetatmoWeatherDevice extends IPSModule
         }
         $basename = substr($uri, strlen('/hook/NetatmoWeather/'));
         if ($basename == 'status') {
-            $this->ProcessHook_Status();
+			$webhook_script = $this->ReadPropertyInteger('webhook_script');
+			if ($webhook_script > 0) {
+				$html = IPS_RunScriptWaitEx($webhook_script, [ 'InstanceID' => $this->InstanceID ]);
+				echo $html;
+			} else {
+				$this->ProcessHook_Status();
+			}
             return;
         }
         $path = realpath($root . '/' . $basename);
