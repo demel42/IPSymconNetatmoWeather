@@ -804,7 +804,7 @@ class NetatmoWeatherDevice extends IPSModule
                 $module_data[] = [
                         'module_type'     => $module['type'],
                         'module_name'     => $module_name,
-                        'time_utc'        => $time_utc,
+                        'last_measure_ts' => $time_utc,
                         'last_measure'    => $last_measure,
                         'rf_status'       => $rf_status,
                         'battery_status'  => $battery_status,
@@ -813,11 +813,12 @@ class NetatmoWeatherDevice extends IPSModule
         }
 
         $station_data = [
-                'now'          => $now,
-                'status'       => $netatmo['status'],
-                'last_contact' => $last_contact,
-                'station_name' => $device['station_name'],
-                'modules'      => $module_data,
+                'now'             => $now,
+                'status'          => $netatmo['status'],
+                'last_contact_ts' => $last_status_store,
+                'last_contact'    => $last_contact,
+                'station_name'    => $device['station_name'],
+                'modules'         => $module_data,
             ];
 
         $this->SetBuffer('Data', json_encode($station_data));
@@ -1369,7 +1370,7 @@ class NetatmoWeatherDevice extends IPSModule
         $html .= "<!DOCTYPE html>\n";
         $html .= "<html>\n";
         $html .= "<head>\n";
-		$html .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n";
+        $html .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n";
         $html .= "<link href=\"https://fonts.googleapis.com/css?family=Open+Sans\" rel=\"stylesheet\">\n";
         $html .= "<title>Status von Netatmo</title>\n";
         $html .= "<style>\n";
@@ -1452,6 +1453,11 @@ class NetatmoWeatherDevice extends IPSModule
         $html .= "</html>\n";
 
         echo $html;
+    }
+
+    public function GetRawData()
+    {
+        return $this->GetBuffer('Data');
     }
 
     // Inspired from module SymconTest/HookServe
