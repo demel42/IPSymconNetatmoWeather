@@ -1457,7 +1457,38 @@ class NetatmoWeatherDevice extends IPSModule
 
     public function GetRawData()
     {
-        return $this->GetBuffer('Data');
+		$img_path = '/hook/NetatmoWeather/imgs/';
+
+        $s = $this->GetBuffer('Data');
+		if ($s) {
+			$station_data = json_decode($s, true);
+			$modules = $station_data['modules'];
+			if (isset($station_data['modules'])) {
+				$_modules = [];
+				$modules = $station_data['modules'];
+				foreach ($modules as $module) {
+					$module_type = $module['module_type'];
+					$module['module_type_txt'] = $this->module_type2text($module_type);
+					$module['module_type_img'] = $img_path . $this->module_type2img($module_type);
+					if ($module_type == 'NAMain') {
+						$wifi_status = $module['wifi_status'];
+						$module['wifi_status_txt'] = $this->wifi_status2text($wifi_status);
+						$module['wifi_status_img'] = $img_path . $this->wifi_status2img($wifi_status);
+					} else {
+						$rf_status = $module['rf_status'];
+						$module['rf_status_txt'] = $this->signal_status2text($rf_status);
+						$module['rf_status_img'] = $img_path . $this->signal_status2img($rf_status);
+						$battery_status = $module['battery_status'];
+						$module['battery_status_txt'] = $this->battery_status2text($battery_status);
+						$module['battery_status_img'] = $img_path . $this->battery_status2img($battery_status);
+					}
+					$_modules[] = $module;
+				}
+				$station_data['modules'] = $_modules;
+			}
+			$s = json_encode($station_data);
+		}
+		return $s;
     }
 
     // Inspired from module SymconTest/HookServe
