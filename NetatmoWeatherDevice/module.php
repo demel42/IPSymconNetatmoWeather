@@ -1252,6 +1252,7 @@ class NetatmoWeatherDevice extends IPSModule
 
         $html = '';
 
+        $html .= "<body>\n";
         $html .= "<style>\n";
         $html .= "body { margin: 1; padding: 0; }\n";
         $html .= "table { border-collapse: collapse; border: 0px solid; margin: 0.5em; width: 100%; }\n";
@@ -1353,6 +1354,7 @@ class NetatmoWeatherDevice extends IPSModule
 
         $html .= "</tdata>\n";
         $html .= "</table>\n";
+        $html .= "</body>\n";
 
         return $html;
     }
@@ -1366,12 +1368,16 @@ class NetatmoWeatherDevice extends IPSModule
 
         $html .= "<!DOCTYPE html>\n";
         $html .= "<html>\n";
-        $html .= "<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n";
+        $html .= "<head>\n";
+		$html .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n";
         $html .= "<link href=\"https://fonts.googleapis.com/css?family=Open+Sans\" rel=\"stylesheet\">\n";
         $html .= "<title>Status von Netatmo</title>\n";
         $html .= "<style>\n";
         $html .= "html { height: 100%; color: #ffffff; background-color: #303030; overflow: hidden; }\n";
         $html .= "body { table-cell; text-align: left; vertical-align: top; height: 100%; }\n";
+        $html .= "</style>\n";
+        $html .= "</head>\n";
+        $html .= "<body>\n";
         $html .= "<style>\n";
         $html .= "body { margin: 1; padding: 0; font-family: 'Open Sans', sans-serif; font-size: 14px; }\n";
         $html .= "table { border-collapse: collapse; border: 0px solid; margin: 0.5em; width: 100%; }\n";
