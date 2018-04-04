@@ -10,14 +10,14 @@ Modul für IP-Symcon ab Version 4.
 2. [Voraussetzungen](#2-voraussetzungen)  
 3. [Installation](#3-installation)  
 4. [Funktionsreferenz](#4-funktionsreferenz)
-5. [Konfiguration](#5-konfiguartion)  
+5. [Konfiguration](#5-konfiguration)  
 6. [Anhang](#6-anhang)  
 
 ## 1. Funktionsumfang
 
 Es werden die Wetter-Daten von einer Netatmo-Wetterstation ausgelesen und gespeichert. Es werden alle Module unterstützt in der maximalen Ausbaustufe: Basis-, Außen- und 3 Innenmodule sowie Wind- und Regenmesser.
 
-Jedes Netatmo-Modul ist eine eigene Instanz.
+Jedes Netatmo-Modul ist eine eigene Instanz, zusätzlich gibt es eine Instanz, die die Station an sich repräsentiert.
 
 Zusätzlich
  - werden einige Status-Information ermittelt, unter anderen Status der Kommunikation mit Netatmo und Wunderground, Batterie- und Modul-Alarme
@@ -90,7 +90,7 @@ Zu den Geräte-Instanzen werden im Rahmen der Konfiguration Modultyp-abhängig V
 
 Die Instanzen können dann in gewohnter Weise im Objektbaum frei positioniert werden.
 
-## 4. PHP-Befehlsreferenz
+## 4. Funktionsreferenz
 
 ### zentrale Funktion
 
@@ -179,7 +179,7 @@ Datenstruktur (muss mit json_decode() aufbereitet werden):
 
 Die gelieferte Struktur ist _station_; kein Array, weil es immer nur um eine bestimmte Station geht.
 
-## 5. Konfiguration:
+## 5. Konfiguration
 
 ### I/O-Modul
 
@@ -251,7 +251,10 @@ stehen je nach Typ des Moduls zur Verfügung
 | with_windangle            | boolean | true         | Windrichtung in Grad                       |
 | with_windchill            | boolean | false        | Windchill (Windkühle)                      |
 | with_winddirection        | boolean | false        | Windrichtung mit Text                      |
-| with_windstrength         | boolean | false        | Windstärke
+| with_windstrength         | boolean | false        | Windstärke                                 |
+|                           |         |              |                                            |
+| statusbox_script          | string  |              | Script zum Füllen der Variable _StatusBox_ |
+| webhook_script            | string  |              | Script zumr Verwundeung im WebHook         |
 |                           |         |              |                                            |
 | Wunderground-Zugangsdaten | string  |              | Station-ID und -Key von https://www.wunderground.com/personal-weather-station/mypws |
 
@@ -260,6 +263,23 @@ Das hier angebbare Minuten-Intervall dient zu Überprüfung der Kommunikation zw
  - dem Basismodul und dem Netatmo-Server
   ist die Zeit überschritten, wird die Variable _Status_ des Basismoduls auf Fehler gesetzt.
   Anmerkung: die Variable _Status_ wird auch auf Fehler gesetzt wenn das IO-Modul einen Fehler feststellt.
+
+HErläuterung zu _statusbox_script_, _webhook_script_:
+mit diesen Scripten kann man eine alternative Darstellung realisieren.
+
+Ein passendes Code-Fragment für ein Script:
+
+```
+$data = NetatmoWeatherDevice_GetRawData($_IPS['InstanceID']);
+if ($data) {
+	$station = json_decode($r,true);
+	...
+	echo $result;
+}
+```
+Die Beschreibung der Struktur siehe _NetatmoWeatherDevice_GetRawData()_.
+
+Beispiel in module.php sind _Build_StatusBox()_ und _ProcessHook_Status()_.
 
 ### Statusvariablen
 
