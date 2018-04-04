@@ -94,53 +94,53 @@ Die Instanzen können dann in gewohnter Weise im Objektbaum frei positioniert we
 
 ### zentrale Funktion
 
-`UpdateData(integer $InstanzID)`
+`UpdateData(int $InstanzID)`
 
 ruft die Daten der Netatmo-Wetterstation ab und aktualisiert optional dien Wundergrund-PWS. Wird automatisch zyklisch durch die Instanz durchgeführt im Abstand wie in der Konfiguration angegeben.
 
 ### Hilfsfunktionen
 
-`float NetatmoWeatherDevice_CalcAbsoluteHumidity(integer $InstanzID, float $Temperatur, float $Humidity)`
+`float NetatmoWeatherDevice_CalcAbsoluteHumidity(int $InstanzID, float $Temperatur, float $Humidity)`
 
 berechnet aus der Temperatur (in °C) und der relativen Luftfeuchtigkeit (in %) die absulte Feuchte (in g/m³)
 
 
-`float NetatmoWeatherDevice_CalcAbsolutePressure(integer $InstanzID, float $Pressure, $Temperatur, integer $Altitude)`
+`float NetatmoWeatherDevice_CalcAbsolutePressure(int $InstanzID, float $Pressure, $Temperatur, int $Altitude)`
 
 berechnet aus dem relativen Luftdruck (in mbar) und der Temperatur (in °C) und Höhe (in m) der absoluten Luftdruck (in mbar)
 ist die Höhe nicht angegeben, wird die Höhe der Netatmo-Wettersttaion verwendet
 
 
-`float NetatmoWeatherDevice_CalcDewpoint(integer $InstanzID, float $Temperatur, float $Humidity)`
+`float NetatmoWeatherDevice_CalcDewpoint(int $InstanzID, float $Temperatur, float $Humidity)`
 
 berechnet aus der Temperatur (in °C) und der relativen Luftfeuchtigkeit (in %) den Taupunkt (in °C)
 
 
-`float NetatmoWeatherDevice_CalcHeatindex(integer $InstanzID, float $Temperatur, float $Humidity)`
+`float NetatmoWeatherDevice_CalcHeatindex(int $InstanzID, float $Temperatur, float $Humidity)`
 
 berechnet aus der Temperatur (in °C) und der relativen Luftfeuchtigkeit (in %) den Hitzeindex (in °C)
 
 
-`float NetatmoWeatherDevice_CalcWindchill(integer $InstanzID, float $Temperatur, float $WindSpeed)`
+`float NetatmoWeatherDevice_CalcWindchill(int $InstanzID, float $Temperatur, float $WindSpeed)`
 
 berechnet aus der Temperatur (in °C) und der Windgeschwindigkeit (in km/h) den Windchill (Windkühle) (in °C)
 
 
-`string NetatmoWeatherDevice_ConvertWindDirection2Text(integer $InstanzID, integer $WindDirection)`
+`string NetatmoWeatherDevice_ConvertWindDirection2Text(int $InstanzID, int $WindDirection)`
 
 ermittelt aus der Windrichtung (in °) die korespondierende Bezeichnung auf der Windrose
 
 
-`integer NetatmoWeatherDevice_ConvertWindSpeed2Strength(integer $InstanzID, float $WindSpeed)`
+`int NetatmoWeatherDevice_ConvertWindSpeed2Strength(int $InstanzID, float $WindSpeed)`
 
 berechnet aus der Windgeschwindigkeit (in km/h) die Windstärke (in bft)
 
 
-`string NetatmoWeatherDevice_ConvertWindStrength2Text(integer $InstanzID, integer $WindStrength)`
+`string NetatmoWeatherDevice_ConvertWindStrength2Text(int $InstanzID, int $WindStrength)`
 
 ermittelt aus der Windstärke (in bft) die korespondierende Bezeichnung gemäß Beaufortskala
 
-`string NetatmoWeatherDevice_GetRawData(integer $InstanzID)`
+`string NetatmoWeatherDevice_GetRawData(int $InstanzID)`
 
 liefert die Zusatzdaten, die nicht in den Variablen gespeichert sind und zu Darstellung der HTML-Box bzw WebHook verwendet werden
 
@@ -237,7 +237,7 @@ stehen je nach Typ des Moduls zur Verfügung
 | longitude                 | float   |              | Längengrad der Station                     |
 | latitude                  | float   |              | Breitengrad der Station                    |
 |                           |         |              |                                            |
-| Intervall                 | integer | 30           | Angabe in Minuten                          |
+| UpdateDataInterval        | integer | 30           | Angabe in Minuten                          |
 |                           |         |              |                                            |
 | with_absolute_humidity    | boolean | false        | absolute Luftfeucht                        |
 | with_absolute_pressure    | boolean | false        | absoluter Luftdruck                        |
@@ -254,7 +254,7 @@ stehen je nach Typ des Moduls zur Verfügung
 | with_windstrength         | boolean | false        | Windstärke                                 |
 |                           |         |              |                                            |
 | statusbox_script          | string  |              | Script zum Füllen der Variable _StatusBox_ |
-| webhook_script            | string  |              | Script zumr Verwundeung im WebHook         |
+| webhook_script            | string  |              | Script zur Verwendung im WebHook           |
 |                           |         |              |                                            |
 | Wunderground-Zugangsdaten | string  |              | Station-ID und -Key von https://www.wunderground.com/personal-weather-station/mypws |
 
