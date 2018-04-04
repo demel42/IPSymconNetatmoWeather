@@ -144,9 +144,9 @@ ermittelt aus der Windstärke (in bft) die korespondierende Bezeichnung gemäß 
 
 liefert die Zusatzdaten, die nicht in den Variablen gespeichert sind und zu Darstellung der HTML-Box bzw WebHook verwendet werden
 
-Datenstruktur (muss mit json_decode() aufbereitet werden)
+Datenstruktur (muss mit json_decode() aufbereitet werden):
 
-- _station_data_: Informationen zu einer Wetterstation
+- _station_: Informationen zu einer Wetterstation
 
 | Attribut        | Datentyp                | Bedeutung                               |
 | :-------------: | :---------------------: | :-------------------------------------: |
@@ -155,9 +155,9 @@ Datenstruktur (muss mit json_decode() aufbereitet werden)
 | last_contact_ts | UNIX-Timestamp          | Zeitpunkt der letzten Datenübertragung  |
 | last_contact    | string                  |  ... als relative Ausgabe               |
 | station_name    | string                  | Benutzerbezeichnung der Station         |
-| modules         | array von _module_data_ | die Module der Station                  |
+| modules         | array von _module_      | die Module der Station                  |
 
-- _module_data_: Informationen zu einem Modul
+- _module_: Informationen zu einem Modul
 
 | Attribut           | Datentyp                | Bedeutung                               |
 | :----------------: | :---------------------: | :-------------------------------------: |
@@ -177,6 +177,7 @@ Datenstruktur (muss mit json_decode() aufbereitet werden)
 | battery_status_txt | string                  |  ... als Text                           |
 | battery_status_img | string                  |  ... als Pfad zum Icon                  |
 
+Die gelieferte Struktur ist _station_; kein Array, weil es immer nur um eine bestimmte Station geht.
 
 ## 5. Konfiguration:
 
