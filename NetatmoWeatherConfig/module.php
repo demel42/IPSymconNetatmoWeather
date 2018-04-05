@@ -91,7 +91,7 @@ class NetatmoWeatherConfig extends IPSModule
         return $instID;
     }
 
-    public function Doit($station_name)
+    public function Doit(string $station_name)
     {
         $SendData = ['DataID' => '{DC5A0AD3-88A5-CAED-3CA9-44C20CC20610}'];
         $data = $this->SendDataToParent(json_encode($SendData));
