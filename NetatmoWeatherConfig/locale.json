@@ -1,8 +1,8 @@
 {
 	"translations": {
 		"de": {
-			"Station-Name only needs to be specified if you have more then one":
-				"Stationsname muss nur angegeben werden, wenn mehr als eine Station vorhanden ist",
+			"Station-Name only needs to be selected if you have more then one":
+				"Stationsname muss nur ausgewählt werden, wenn mehr als eine Station vorhanden ist",
 			"Station-Name": "Stationsname",
 
 			"Import of station": "Importieren der Station",

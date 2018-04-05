@@ -595,7 +595,7 @@ class NetatmoWeatherDevice extends IPSModule
         $formStatus = [];
         $formStatus[] = ['code' => '101', 'icon' => 'inactive', 'caption' => 'Instance getting created'];
         $formStatus[] = ['code' => '102', 'icon' => 'active', 'caption' => 'Instance is active'];
-        $formStatus[] = ['code' => '103', 'icon' => 'inactive', 'caption' => 'Instance is inactive'];
+        $formStatus[] = ['code' => '104', 'icon' => 'inactive', 'caption' => 'Instance is inactive'];
 
         $formStatus[] = ['code' => '201', 'icon' => 'error', 'caption' => 'Instance is inactive (no data)'];
         $formStatus[] = ['code' => '202', 'icon' => 'error', 'caption' => 'Instance is inactive (station missing)'];
