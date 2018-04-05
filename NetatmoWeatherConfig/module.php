@@ -16,42 +16,42 @@ class NetatmoWeatherConfig extends IPSModule
         $this->SetStatus(102);
     }
 
-	public function GetConfigurationForm()
-	{
+    public function GetConfigurationForm()
+    {
         $SendData = ['DataID' => '{DC5A0AD3-88A5-CAED-3CA9-44C20CC20610}'];
         $data = $this->SendDataToParent(json_encode($SendData));
 
         $this->SendDebug(__FUNCTION__, "data=$data", 0);
 
-		$options = [];
+        $options = [];
         if ($data != '') {
             $netatmo = json_decode($data, true);
-			$devices = $netatmo['body']['devices'];
-			foreach ($devices as $device) {
-				$station_name = $device['station_name'];
-				$options[] = [ 'label' => $station_name, 'value' => $station_name ];
-			}
+            $devices = $netatmo['body']['devices'];
+            foreach ($devices as $device) {
+                $station_name = $device['station_name'];
+                $options[] = ['label' => $station_name, 'value' => $station_name];
+            }
         } else {
             $this->SetStatus(201);
-		}
+        }
 
-		$formActions = [];
-		$formActions[] = ['type' => 'Label', 'label' => 'Station-Name only needs to be selected if you have more then one'];
-		$formActions[] = ['type' => 'Select', 'name' => 'station_name', 'caption' => 'Station-Name', 'options' => $options];
-		$formActions[] = ['type' => 'Button', 'label' => 'Import of station', 'onClick' => 'NetatmoWeatherConfig_Doit($id, $station_name);'];
+        $formActions = [];
+        $formActions[] = ['type' => 'Label', 'label' => 'Station-Name only needs to be selected if you have more then one'];
+        $formActions[] = ['type' => 'Select', 'name' => 'station_name', 'caption' => 'Station-Name', 'options' => $options];
+        $formActions[] = ['type' => 'Button', 'label' => 'Import of station', 'onClick' => 'NetatmoWeatherConfig_Doit($id, $station_name);'];
 
-		$formStatus = [];
-		$formStatus[] = ['code' => '101', 'icon' => 'inactive', 'caption' => 'Instance getting created'];
-		$formStatus[] = ['code' => '102', 'icon' => 'active', 'caption' => 'Instance is active'];
-		$formStatus[] = ['code' => '104', 'icon' => 'inactive', 'caption' => 'Instance is inactive'];
+        $formStatus = [];
+        $formStatus[] = ['code' => '101', 'icon' => 'inactive', 'caption' => 'Instance getting created'];
+        $formStatus[] = ['code' => '102', 'icon' => 'active', 'caption' => 'Instance is active'];
+        $formStatus[] = ['code' => '104', 'icon' => 'inactive', 'caption' => 'Instance is inactive'];
 
-		$formStatus[] = ['code' => '201', 'icon' => 'error', 'caption' => 'Instance is inactive (no data)'];
-		$formStatus[] = ['code' => '202', 'icon' => 'error', 'caption' => 'Instance is inactive (station missing)'];
-		$formStatus[] = ['code' => '203', 'icon' => 'error', 'caption' => 'Instance is inactive (no station)'];
-		$formStatus[] = ['code' => '204', 'icon' => 'error', 'caption' => 'Instance is inactive (more then one station)'];
+        $formStatus[] = ['code' => '201', 'icon' => 'error', 'caption' => 'Instance is inactive (no data)'];
+        $formStatus[] = ['code' => '202', 'icon' => 'error', 'caption' => 'Instance is inactive (station missing)'];
+        $formStatus[] = ['code' => '203', 'icon' => 'error', 'caption' => 'Instance is inactive (no station)'];
+        $formStatus[] = ['code' => '204', 'icon' => 'error', 'caption' => 'Instance is inactive (more then one station)'];
 
-		return json_encode(['actions' => $formActions, 'status' => $formStatus]);
-	}
+        return json_encode(['actions' => $formActions, 'status' => $formStatus]);
+    }
 
     private function FindOrCreateInstance($module_id, $module_name, $module_info, $properties, $pos)
     {
