@@ -1,6 +1,9 @@
 <?php
 
 // Constants will be defined with IP-Symcon 5.0 and newer
+if (!defined('IPS_KERNELMESSAGE')) {
+    define('IPS_KERNELMESSAGE', 10100);
+}
 if (!defined('KR_READY')) {
     define('KR_READY', 10103);
 }
@@ -30,13 +33,23 @@ class NetatmoWeatherIO extends IPSModule
         $netatmo_secret = $this->ReadPropertyString('Netatmo_Secret');
 
         if ($netatmo_user != '' && $netatmo_password != '' && $netatmo_client != '' && $netatmo_secret != '') {
-            if (IPS_GetKernelRunlevel() == KR_READY) {
-                $this->UpdateData();
-            }
+			// Inspired by module SymconTest/HookServe
+			// We need to call the RegisterHook function on Kernel READY
+			$this->RegisterMessage(0, IPS_KERNELMESSAGE);
             $this->SetUpdateInterval();
             $this->SetStatus(102);
         } else {
             $this->SetStatus(104);
+        }
+    }
+
+    // Inspired by module SymconTest/HookServe
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+    {
+        parent::MessageSink($TimeStamp, $SenderID, $Message, $Data);
+
+        if ($Message == IPS_KERNELMESSAGE && $Data[0] == KR_READY) {
+			$this->UpdateData();
         }
     }
 
