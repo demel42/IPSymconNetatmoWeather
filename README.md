@@ -264,7 +264,7 @@ Das hier angebbare Minuten-Intervall dient zu Überprüfung der Kommunikation zw
   ist die Zeit überschritten, wird die Variable _Status_ des Basismoduls auf Fehler gesetzt.
   Anmerkung: die Variable _Status_ wird auch auf Fehler gesetzt wenn das IO-Modul einen Fehler feststellt.
 
-HErläuterung zu _statusbox_script_, _webhook_script_:
+Erläuterung zu _statusbox_script_, _webhook_script_:
 mit diesen Scripten kann man eine alternative Darstellung realisieren.
 
 Ein passendes Code-Fragment für ein Script:
