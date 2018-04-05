@@ -201,12 +201,10 @@ Bei einer Angabe von 5m sind die Werte nicht älter als 15m.
 
 ### Konfigurator
 
-#### Variablen
+#### Auswahl
 
-| Eigenschaft               | Typ      | Standardwert | Beschreibung |
-| :-----------------------: | :-----:  | :----------: | :------------------------------------------------------------------: |
-| Stationsname              | string   |              | muss nur angegeben werden, wenn mehr als eine Station angemeldet ist |
-  
+Es werden alle Stationen zu dem konfigurierten Account zur Auswahl angeboten. Es muss allerdings nur eine Auswahl getroffen werden, wenn es mehr als eine Station gibt.
+
 #### Schaltflächen
 
 | Bezeichnung                  | Beschreibung |
