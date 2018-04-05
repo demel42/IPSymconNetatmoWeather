@@ -33,9 +33,9 @@ class NetatmoWeatherIO extends IPSModule
         $netatmo_secret = $this->ReadPropertyString('Netatmo_Secret');
 
         if ($netatmo_user != '' && $netatmo_password != '' && $netatmo_client != '' && $netatmo_secret != '') {
-			// Inspired by module SymconTest/HookServe
-			// We need to call the RegisterHook function on Kernel READY
-			$this->RegisterMessage(0, IPS_KERNELMESSAGE);
+            // Inspired by module SymconTest/HookServe
+            // We need to call the RegisterHook function on Kernel READY
+            $this->RegisterMessage(0, IPS_KERNELMESSAGE);
             $this->SetUpdateInterval();
             $this->SetStatus(102);
         } else {
@@ -49,7 +49,7 @@ class NetatmoWeatherIO extends IPSModule
         parent::MessageSink($TimeStamp, $SenderID, $Message, $Data);
 
         if ($Message == IPS_KERNELMESSAGE && $Data[0] == KR_READY) {
-			$this->UpdateData();
+            $this->UpdateData();
         }
     }
 
