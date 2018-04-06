@@ -6,12 +6,12 @@ Modul für IP-Symcon ab Version 4.
 
 **Inhaltsverzeichnis**
 
-1. [Funktionsumfang](#1-funktionsumfang)  
-2. [Voraussetzungen](#2-voraussetzungen)  
-3. [Installation](#3-installation)  
+1. [Funktionsumfang](#1-funktionsumfang)
+2. [Voraussetzungen](#2-voraussetzungen)
+3. [Installation](#3-installation)
 4. [Funktionsreferenz](#4-funktionsreferenz)
-5. [Konfiguration](#5-konfiguration)  
-6. [Anhang](#6-anhang)  
+5. [Konfiguration](#5-konfiguration)
+6. [Anhang](#6-anhang)
 
 ## 1. Funktionsumfang
 
@@ -43,7 +43,7 @@ Hinweis: Wunderground gibt an, das Daten von Netatmo automatisch übernommen wer
  - IPS 4.x
  - Netatmo Wetterstation und ein entsprechenden Account bei Netatmo.
 
-   Es wird sowohl der "normalen" Benutzer-Account, der bei der Anmeldung der Geräte bei Netatmo erzeugt wird (https://my.netatmo.com) als auch einen Account sowie eine "App" bei Netatmo Connect benötigt, um die Werte abrufen zu können (https://dev.netatmo.com). 
+   Es wird sowohl der "normalen" Benutzer-Account, der bei der Anmeldung der Geräte bei Netatmo erzeugt wird (https://my.netatmo.com) als auch einen Account sowie eine "App" bei Netatmo Connect benötigt, um die Werte abrufen zu können (https://dev.netatmo.com).
 
  - optional ein Account bei Wunderground für eine "Personal-Weather-Station"
    hierzu muss man bei Wunderground ein Konto anlegen und eine eine Wettersttaion einrichten.
@@ -57,24 +57,24 @@ Hinweis: Wunderground gibt an, das Daten von Netatmo automatisch übernommen wer
 Die IP-Symcon (min Ver. 4.x) Konsole öffnen. Im Objektbaum unter Kerninstanzen die Instanz __*Modules*__ durch einen doppelten Mausklick öffnen.
 
 In der _Modules_ Instanz rechts oben auf den Button __*Hinzufügen*__ drücken.
- 
+
 In dem sich öffnenden Fenster folgende URL hinzufügen:
 
 `https://github.com/demel42/NetatmoWeather.git`
-    
-und mit _OK_ bestätigen.    
-        
-Anschließend erscheint ein Eintrag für das Modul in der Liste der Instanz _Modules_    
+
+und mit _OK_ bestätigen.
+
+Anschließend erscheint ein Eintrag für das Modul in der Liste der Instanz _Modules_
 
 ### b. Einrichtung in IPS
 
-In IP-Symcon nun unterhalb von _I/O Instanzen_ die Funktion _Instanz hinzufügen_ (_CTRL+1_) auswählen, als Hersteller _Netatmo_ und als Gerät _NetatmoWeather_ auswählen.
+In IP-Symcon nun unterhalb von _I/O Instanzen_ die Funktion _Instanz hinzufügen_ (_CTRL+1_) auswählen, als Hersteller _Netatmo_ und als Gerät _NetatmoWeather I/O_ auswählen.
 
 In dem Konfigurationsdialog die Netatmo-Zugangsdaten eintragen.
 
-Dann unter _Konfigurator Instanzen_ analog den Konfigurator _NetatmoWeather_ hinzufügen.
+Dann unter _Konfigurator Instanzen_ analog den Konfigurator _NetatmoWeather Konfigurator_ hinzufügen.
 
-Hier kann man in dem Konfigurationsdialog einen Stationsnamen eintragen; das ist aber nur erforderlich, wenn mehr als eine Station mit dem, in der I/O-Instanz angegebenen, Netatmo-Konto verknüpft ist.
+Hier kann man in dem Konfigurationsdialog einen Stationsnamen auswählen; das ist aber nur erforderlich, wenn mehr als eine Station mit dem, in der I/O-Instanz angegebenen, Netatmo-Konto verknüpft ist.
 
 Mit Betätigen der Schaltfläche _Importieren der Station_ werden für jedes Modul, das zu dieser Station im Netatmo registriert ist, eine Geräte-Instanzen unterhalb von _IP-Symcon_ angelegt.
 Der Namen der Instanzen ist der der Netatmo-Module, in derm Feld _Beschreibung_ der Instanzen ist der Modultyp sowie der Namen der Station und des Moduls eingetragen.
@@ -82,7 +82,7 @@ Der Namen der Instanzen ist der der Netatmo-Module, in derm Feld _Beschreibung_ 
 Der Aufruf des Konfigurators kann jederzeit wiederholt werden, es werden dann fehlende Module angelegt.
 
 Die Module werden aufgrund der internen _ID_ der Module identifiziert, d.h. eine Änderung des Modulnamens muss in IPS nachgeführt werden.
-Ein Ersatz eines Moduls wird beim Aufruf des Konfigurators dazuführen, das eine weitere Instanz angelegt wird. 
+Ein Ersatz eines Moduls wird beim Aufruf des Konfigurators dazuführen, das eine weitere Instanz angelegt wird.
 
 Die im Netatmo eingetragenen Höhe der Station sowie die geographische Position wird als Property zu dem virtuellen Modul _Station_ eingetragen.
 
@@ -188,7 +188,8 @@ Die gelieferte Struktur ist _station_; kein Array, weil es immer nur um eine bes
 | Eigenschaft               | Typ      | Standardwert | Beschreibung |
 | :-----------------------: | :-----:  | :----------: | :----------------------------------------------------------------------------------------------------------: |
 | Netatmo-Zugangsdaten      | string   |              | Benutzername und Passwort von https://my.netatmo.com sowie Client-ID und -Secret von https://dev.netatmo.com |
-| Aktualiserungsintervall   | integer  | 5            | Angabe in Minuten |
+|                           |          |              |                                            |
+| UpdateDataInterval        | integer  | 5            | Angabe in Minuten                          |
 
 Hinweis zum Intervall: die Daten werden nur ca. alle 10m von der Wetterstation an Netatmo übertragen, ein minütliches Intervall ist zulässig, macht aber nur begrenzt Sinn.
 Bei einer Angabe von 5m sind die Werte nicht älter als 15m.
@@ -210,7 +211,7 @@ Es werden alle Stationen zu dem konfigurierten Account zur Auswahl angeboten. Es
 | Bezeichnung                  | Beschreibung |
 | :--------------------------: | :------------------------------------------------: |
 | Import der Station           | richtet die Geräte-Instanzen ein |
-  
+
 ### Geräte
 
 #### Properties
@@ -235,8 +236,6 @@ stehen je nach Typ des Moduls zur Verfügung
 | longitude                 | float   |              | Längengrad der Station                     |
 | latitude                  | float   |              | Breitengrad der Station                    |
 |                           |         |              |                                            |
-| UpdateDataInterval        | integer | 30           | Angabe in Minuten                          |
-|                           |         |              |                                            |
 | with_absolute_humidity    | boolean | false        | absolute Luftfeucht                        |
 | with_absolute_pressure    | boolean | false        | absoluter Luftdruck                        |
 | with_battery              | boolean | false        | Batterie-Status                            |
@@ -253,6 +252,8 @@ stehen je nach Typ des Moduls zur Verfügung
 |                           |         |              |                                            |
 | statusbox_script          | string  |              | Script zum Füllen der Variable _StatusBox_ |
 | webhook_script            | string  |              | Script zur Verwendung im WebHook           |
+|                           |         |              |                                            |
+| minutes2fail              | integer | 30           | Dauer, bis die Kommunikation als gestört gilt |
 |                           |         |              |                                            |
 | Wunderground-Zugangsdaten | string  |              | Station-ID und -Key von https://www.wunderground.com/personal-weather-station/mypws |
 
@@ -336,4 +337,9 @@ Netatmo.WindDirection
 
 ## 6. Anhang
 
-GUID: `{0F675628-33AE-88E8-D9C4-9A2D1C7FE394}` 
+GUIDs
+- Modul: `{0F675628-33AE-88E8-D9C4-9A2D1C7FE394}`
+
+- NetatmoWeatherIO: `{26A55798-5CBC-88F6-5C7B-370B043B24F9}`
+- NetatmoWeatherConfig: `{DCA5D76C-A6F8-4762-A6C3-2FF6601DDEC8}`
+- NetatmoWeatherDevice: `{1023DB4A-D491-A0D5-17CD-380D3578D0FA}`
