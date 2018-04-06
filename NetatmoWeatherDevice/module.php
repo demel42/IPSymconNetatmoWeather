@@ -700,10 +700,10 @@ class NetatmoWeatherDevice extends IPSModule
         $msg .= ', gust=' . $windgust . ' km/h';
         $msg .= ' (' . $windgustdir . '°)';
         $msg .= ', pressure=' . $pressure . ' mb';
-        $this->SendDebug(__FUNCTION__, $msg, 0);
+        $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
 
         $url = $wunderground_url . '?ID=' . $wunderground_id . '&PASSWORD=' . $wunderground_key . '&action=updateraw' . $param;
-        $this->SendDebug(__FUNCTION__, "wunderground-url: $url", 0);
+        $this->SendDebug(__FUNCTION__, "wunderground-url: " . utf8_decode($url), 0);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -713,10 +713,23 @@ class NetatmoWeatherDevice extends IPSModule
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
+		$do_abort = false;
+
         if ($httpcode != 200) {
             $err = "got http-code $httpcode from wunderground";
             $this->SendDebug(__FUNCTION__, $err, 0);
-            $this->SetValue('Wunderground', fail);
+			$do_abort = true;
+		}
+
+		$wstatus = trim ($wstatus, "\n");
+		if ($wstatus != "success") {
+            $err = "got from wunderground: " . $wstatus;
+            $this->SendDebug(__FUNCTION__, $err, 0);
+			$do_abort = true;
+		}
+
+		if ($do_abort) {
+            $this->SetValue('Wunderground', false);
             return -1;
         }
 
