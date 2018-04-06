@@ -156,8 +156,6 @@ class NetatmoWeatherConfig extends IPSModule
 
         $this->SetStatus(102);
 
-        $this->SetStatus(102);
-
         $place = $device['place'];
         $station_id = $device['_id'];
         $station_altitude = $place['altitude'];
