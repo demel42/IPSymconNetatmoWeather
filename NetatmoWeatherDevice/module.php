@@ -1134,10 +1134,6 @@ class NetatmoWeatherDevice extends IPSModule
         $this->SendDebug(__FUNCTION__, 'data=' . print_r($jdata, true), 0);
         $buf = $jdata->Buffer;
 
-        $wunderground_url = 'https://weatherstation.wunderground.com/weatherstation/updateweatherstation.php';
-        $wunderground_id = $this->ReadPropertyString('Wunderground_ID');
-        $wunderground_key = $this->ReadPropertyString('Wunderground_Key');
-
         $station_id = $this->ReadPropertyString('station_id');
 
         $module_type = $this->ReadPropertyString('module_type');
