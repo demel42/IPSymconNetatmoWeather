@@ -61,7 +61,7 @@ class NetatmoWeatherDevice extends IPSModule
         $this->RegisterPropertyBoolean('with_battery', false);
 
         $this->CreateVarProfile('Netatmo.Temperatur', IPS_FLOAT, ' °C', -10, 30, 0, 1, 'Temperature');
-        $this->CreateVarProfile('Netatmo.Humidity', IPS_FLOAT, ' %', 10, 100, 0, 0, 'Drops');
+        $this->CreateVarProfile('Netatmo.Humidity', IPS_FLOAT, ' %', 0, 0, 0, 0, 'Drops');
         $this->CreateVarProfile('Netatmo.absHumidity', IPS_FLOAT, ' g/m³', 10, 100, 0, 0, 'Drops');
         $this->CreateVarProfile('Netatmo.Dewpoint', IPS_FLOAT, ' °C', 0, 30, 0, 0, 'Drops');
         $this->CreateVarProfile('Netatmo.Heatindex', IPS_FLOAT, ' °C', 0, 100, 0, 0, 'Temperature');
