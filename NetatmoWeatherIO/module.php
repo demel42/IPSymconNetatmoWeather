@@ -53,15 +53,6 @@ class NetatmoWeatherIO extends IPSModule
         }
     }
 
-    protected function SetValue($Ident, $Value)
-    {
-        if (IPS_GetKernelVersion() >= 5) {
-            parent::SetValue($Ident, $Value);
-        } else {
-            SetValue($this->GetIDForIdent($Ident), $Value);
-        }
-    }
-
     protected function SetUpdateInterval()
     {
         $min = $this->ReadPropertyInteger('UpdateDataInterval');
