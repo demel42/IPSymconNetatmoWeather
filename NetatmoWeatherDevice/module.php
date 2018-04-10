@@ -127,8 +127,12 @@ class NetatmoWeatherDevice extends IPSModule
     {
         parent::MessageSink($TimeStamp, $SenderID, $Message, $Data);
 
+        $module_type = $this->ReadPropertyString('module_type');
+
         if ($Message == IPS_KERNELMESSAGE && $Data[0] == KR_READY) {
-            $this->RegisterHook('/hook/NetatmoWeather');
+			if ($module_type == 'Station') {
+				$this->RegisterHook('/hook/NetatmoWeather');
+			}
         }
     }
 
@@ -1034,8 +1038,12 @@ class NetatmoWeatherDevice extends IPSModule
         $station_name = $station_data['station_name'];
 
         $last_contact = $station_data['last_contact'];
-        $s = $this->seconds2duration($now - $last_contact);
-        $last_contact_pretty = $s != '' ? "vor $s" : '';
+		if ($last_contact > 0) {
+			$s = $this->seconds2duration($now - $last_contact);
+			$last_contact_pretty = $s != '' ? "vor $s" : '';
+		} else {
+			$last_contact_pretty = '';
+		}
 
         $html .= "<table>\n";
         $html .= "<colgroup><col id=\"spalte_caption\"></colgroup>\n";
@@ -1176,8 +1184,12 @@ class NetatmoWeatherDevice extends IPSModule
         $status = $station_data['status'];
 
         $last_contact = $station_data['last_contact'];
-        $s = $this->seconds2duration($now - $last_contact);
-        $last_contact_pretty = $s != '' ? "vor $s" : '';
+		if ($last_contact > 0) {
+			$s = $this->seconds2duration($now - $last_contact);
+			$last_contact_pretty = $s != '' ? "vor $s" : '';
+		} else {
+			$last_contact_pretty = '';
+		}
 
         $s = '<font size="-1">Stand:</font> ';
         $s .= $dt;
