@@ -160,7 +160,7 @@ class NetatmoWeatherDevice extends IPSModule
             case 'Station':
                 // station-global vars
                 $this->MaintainVariable('Status', $this->Translate('State'), IPS_BOOLEAN, '~Alert.Reversed', $vpos++, true);
-                $this->MaintainVariable('LastContact', $this->Translate('last transmission'), IPS_STRING, '', $vpos++, $with_last_contact);
+                $this->MaintainVariable('LastContact', $this->Translate('last transmission'), IPS_INTEGER, '~UnixTimestamp', $vpos++, $with_last_contact);
                 $this->MaintainVariable('Wifi', $this->Translate('Strength of wifi-signal'), IPS_INTEGER, 'Netatmo.Wifi', $vpos++, $with_signal);
                 $this->MaintainVariable('ModuleAlarm', $this->Translate('station or modules stopped don\'t communicate'), IPS_BOOLEAN, 'Netatmo.Alarm', $vpos++, true);
                 $this->MaintainVariable('BatteryAlarm', $this->Translate('Battery of one or more modules ist low or empty'), IPS_BOOLEAN, 'Netatmo.Alarm', $vpos++, true);
@@ -512,22 +512,18 @@ class NetatmoWeatherDevice extends IPSModule
         $station_name = $device['station_name'];
         $module_name = $device['module_name'];
 
-        $time_utc = $device['dashboard_data']['time_utc'];
-        $s = $this->seconds2duration($now - $time_utc);
-        $last_measure = $s != '' ? "vor $s" : '';
+        $last_measure = $device['dashboard_data']['time_utc'];
 
         // letzte Kommunikation der Station mit Netatmo
-        $last_status_store = $device['last_status_store'];
-        if (is_int($last_status_store)) {
-            $sec = $now - $last_status_store;
-            $s = $this->seconds2duration($sec);
-            $last_contact = $s != '' ? "vor $s" : '';
+        $last_contact = $device['last_status_store'];
+        if (is_int($last_contact)) {
+            $sec = $now - $last_contact;
             $min = floor($sec / 60);
             if ($min > $minutes2fail) {
                 $station_status = false;
             }
         } else {
-            $last_contact = $last_status_store;
+            $last_contact = 0;
         }
 
         $wifi_status = $this->map_wifi_status($device['wifi_status']);
@@ -535,7 +531,6 @@ class NetatmoWeatherDevice extends IPSModule
         $module_data[] = [
                 'module_type'  => $device['type'],
                 'module_name'  => $module_name,
-                'time_utc'     => $time_utc,
                 'last_measure' => $last_measure,
                 'wifi_status'  => $wifi_status,
             ];
@@ -559,9 +554,7 @@ class NetatmoWeatherDevice extends IPSModule
                 }
                 $module_name = $module['module_name'];
 
-                $time_utc = $module['dashboard_data']['time_utc'];
-                $s = $this->seconds2duration($now - $time_utc);
-                $last_measure = $s != '' ? "vor $s" : '';
+                $last_measure = $module['dashboard_data']['time_utc'];
 
                 $last_message = $module['last_message'];
                 if (is_int($last_message)) {
@@ -578,8 +571,8 @@ class NetatmoWeatherDevice extends IPSModule
                 $module_data[] = [
                         'module_type'     => $module['type'],
                         'module_name'     => $module_name,
-                        'last_measure_ts' => $time_utc,
                         'last_measure'    => $last_measure,
+						'last_message'    => $last_message,
                         'rf_status'       => $rf_status,
                         'battery_status'  => $battery_status,
                     ];
@@ -587,9 +580,8 @@ class NetatmoWeatherDevice extends IPSModule
         }
 
         $station_data = [
-                'now'             => $now,
+                'last_query'      => $now,
                 'status'          => $netatmo['status'],
-                'last_contact_ts' => $last_status_store,
                 'last_contact'    => $last_contact,
                 'station_name'    => $device['station_name'],
                 'modules'         => $module_data,
@@ -638,9 +630,7 @@ class NetatmoWeatherDevice extends IPSModule
         $Pressure = $device['dashboard_data']['Pressure'];							// mbar
         $AbsolutePressure = $device['dashboard_data']['AbsolutePressure'];			// mbar
 
-        $time_utc = $device['dashboard_data']['time_utc'];
-        $s = $this->seconds2duration($now - $time_utc);
-        $last_measure = $s != '' ? "vor $s" : '';
+        $last_measure = $device['dashboard_data']['time_utc'];
 
         $msg = "base-module \"$module_name\": Temperature=$Temperature, CO2=$CO2, Humidity=$Humidity, Noise=$Noise, Pressure=$Pressure, AbsolutePressure=$AbsolutePressure";
         $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
@@ -669,7 +659,7 @@ class NetatmoWeatherDevice extends IPSModule
             $this->SetValue('Heatindex', $heatindex);
         }
         if ($with_last_measure) {
-            $this->SetValue('LastMeasure', $time_utc);
+            $this->SetValue('LastMeasure', $last_measure);
         }
 
         return $statuscode;
@@ -708,10 +698,7 @@ class NetatmoWeatherDevice extends IPSModule
 
             $module_name = $module['module_name'];
 
-            $time_utc = $module['dashboard_data']['time_utc'];
-
-            $s = $this->seconds2duration($now - $time_utc);
-            $last_measure = $s != '' ? "vor $s" : '';
+            $last_measure = $module['dashboard_data']['time_utc'];
 
             $last_message = $module['last_message'];
 
@@ -743,7 +730,7 @@ class NetatmoWeatherDevice extends IPSModule
                         $this->SetValue('Dewpoint', $dewpoint);
                     }
                     if ($with_last_measure) {
-                        $this->SetValue('LastMeasure', $time_utc);
+                        $this->SetValue('LastMeasure', $last_measure);
                     }
                     if ($with_signal) {
                         $this->SetValue('RfSignal', $rf_status);
@@ -781,7 +768,7 @@ class NetatmoWeatherDevice extends IPSModule
                         $this->SetValue('GustDirection', $dir);
                     }
                     if ($with_last_measure) {
-                        $this->SetValue('LastMeasure', $time_utc);
+                        $this->SetValue('LastMeasure', $last_measure);
                     }
                     if ($with_signal) {
                         $this->SetValue('RfSignal', $rf_status);
@@ -803,7 +790,7 @@ class NetatmoWeatherDevice extends IPSModule
                     $this->SetValue('Rain_1h', $sum_rain_1);
                     $this->SetValue('Rain_24h', $sum_rain_24);
                     if ($with_last_measure) {
-                        $this->SetValue('LastMeasure', $time_utc);
+                        $this->SetValue('LastMeasure', $last_measure);
                     }
                     if ($with_signal) {
                         $this->SetValue('RfSignal', $rf_status);
@@ -837,7 +824,7 @@ class NetatmoWeatherDevice extends IPSModule
                         $this->SetValue('Heatindex', $heatindex);
                     }
                     if ($with_last_measure) {
-                        SetValue($this->GetIDForIdent('LastMeasure'), $time_utc);
+                        SetValue($this->GetIDForIdent('LastMeasure'), $last_measure);
                     }
                     if ($with_signal) {
                         SetValue($this->GetIDForIdent('RfSignal'), $rf_status);
@@ -1026,6 +1013,8 @@ class NetatmoWeatherDevice extends IPSModule
     {
         $img_path = '/hook/NetatmoWeather/imgs/';
 
+		$now = time();
+
         $html = '';
 
         $html .= "<body>\n";
@@ -1040,10 +1029,13 @@ class NetatmoWeatherDevice extends IPSModule
         $html .= "#spalte_battery { width: 50px; }\n";
         $html .= "</style>\n";
 
-        $dt = date('d.m.Y H:i:s', $station_data['now']);
+        $dt = date('d.m.Y H:i:s', $station_data['last_query']);
         $status = $station_data['status'];
         $station_name = $station_data['station_name'];
+
         $last_contact = $station_data['last_contact'];
+		$s = $this->seconds2duration($now - $last_contact);
+		$last_contact_pretty = $s != '' ? "vor $s" : '';
 
         $html .= "<table>\n";
         $html .= "<colgroup><col id=\"spalte_caption\"></colgroup>\n";
@@ -1066,7 +1058,7 @@ class NetatmoWeatherDevice extends IPSModule
 
         $html .= "<tr>\n";
         $html .= "<td>letzte Kommunikation:</td>\n";
-        $html .= "<th>$last_contact</th>\n";
+        $html .= "<th>$last_contact_pretty</th>\n";
         $html .= "</tr>\n";
 
         $html .= "</tdata>\n";
@@ -1079,6 +1071,7 @@ class NetatmoWeatherDevice extends IPSModule
         $html .= "<colgroup><col></colgroup>\n";
         $html .= "<colgroup><col></colgroup>\n";
         $html .= "<colgroup><col></colgroup>\n";
+        $html .= "<colgroup><col></colgroup>\n";
         $html .= "<colgroup><col id=\"spalte_signal\"></colgroup>\n";
         $html .= "<colgroup><col id=\"spalte_battry\"></colgroup>\n";
 
@@ -1088,6 +1081,7 @@ class NetatmoWeatherDevice extends IPSModule
         $html .= "<th></th>\n";
         $html .= "<th>Modultyp</th>\n";
         $html .= "<th>Name</th>\n";
+        $html .= "<th>letzte Messung</th>\n";
         $html .= "<th>letzte Meldung</th>\n";
         $html .= "<th style='padding: 0; text-align: left'>Signal</th>\n";
         $html .= "<th style='padding: 0; text-align: left'>Batterie</th>\n";
@@ -1100,21 +1094,31 @@ class NetatmoWeatherDevice extends IPSModule
             $module_type_img = $img_path . $this->module_type2img($module_type);
             $module_name = $module['module_name'];
             $module_type = $module['module_type'];
+
             $last_measure = $module['last_measure'];
+			$s = $this->seconds2duration($now - $last_measure);
+			$last_measure_pretty = $s != '' ? "vor $s" : '';
 
             $html .= "<tr>\n";
             $html .= "<td><img src=$module_type_img width='20' height='20' title='$module_type_text'</td>\n";
             $html .= "<td>$module_type_text</td>\n";
             $html .= "<td>$module_name</td>\n";
-            $html .= "<td>$last_measure</td>\n";
+            $html .= "<td>$last_measure_pretty</td>\n";
 
             if ($module_type == 'NAMain') {
+                $html .= "<td>&nbsp;</td>\n";
+
                 $wifi_status = $module['wifi_status'];
                 $wifi_status_text = $this->wifi_status2text($wifi_status);
                 $wifi_status_img = $img_path . $this->wifi_status2img($wifi_status);
                 $html .= "<td><img src=$wifi_status_img width='30' height='20' title='$wifi_status_text'></td>\n";
                 $html .= "<td>&nbsp;</td>\n";
             } else {
+				$last_message = $module['last_message'];
+				$s = $this->seconds2duration($now - $last_message);
+				$last_message_pretty = $s != '' ? "vor $s" : '';
+				$html .= "<td>$last_message_pretty</td>\n";
+
                 $rf_status = $module['rf_status'];
                 $rf_status_text = $this->signal_status2text($rf_status);
                 $rf_status_img = $img_path . $this->signal_status2img($rf_status);
@@ -1140,6 +1144,8 @@ class NetatmoWeatherDevice extends IPSModule
         $s = $this->GetBuffer('Data');
         $station_data = json_decode($s, true);
 
+		$now = time();
+
         $html = '';
 
         $html .= "<!DOCTYPE html>\n";
@@ -1164,15 +1170,21 @@ class NetatmoWeatherDevice extends IPSModule
         $html .= "#spalte_battery { width: 30px; }\n";
         $html .= "</style>\n";
 
-        $this->SendDebug(__FUNCTION__, 'station_data=$' . print_r($station_data, true), 0);
+        $this->SendDebug(__FUNCTION__, 'station_data=' . print_r($station_data, true), 0);
 
-        $dt = date('d.m. H:i', $station_data['now']);
+        $dt = date('d.m. H:i', $station_data['last_query']);
+        $status = $station_data['status'];
+
+        $last_contact = $station_data['last_contact'];
+		$s = $this->seconds2duration($now - $last_contact);
+		$last_contact_pretty = $s != '' ? "vor $s" : '';
+
         $s = '<font size="-1">Stand:</font> ';
         $s .= $dt;
         $s .= '&emsp;';
         $s .= '<font size="-1">Status:</font> ';
-        $s .= $station_data['status'];
-        $s .= ' <font size="-2">(' . $station_data['last_contact'] . ')</font>';
+        $s .= $status;
+        $s .= ' <font size="-2">(' . $last_contact_pretty . ')</font>';
         $html .= "<center>$s</center>\n";
 
         if (isset($station_data['modules'])) {
@@ -1194,12 +1206,15 @@ class NetatmoWeatherDevice extends IPSModule
                 $module_type_text = $this->module_type2text($module_type);
                 $module_type_img = $img_path . $this->module_type2img($module_type);
                 $module_name = $module['module_name'];
-                $last_measure = $module['last_measure'];
+
+				$last_measure = $module['last_measure'];
+				$s = $this->seconds2duration($now - $last_measure);
+				$last_measure_pretty = $s != '' ? "vor $s" : '';
 
                 $html .= "<tr>\n";
                 $html .= "<td><img src=$module_type_img width='20' height='20' title='$module_type_text'</td>\n";
                 $html .= "<td>$module_name</td>\n";
-                $html .= "<td>$last_measure</td>\n";
+                $html .= "<td>$last_measure_pretty</td>\n";
 
                 if ($module_type == 'NAMain') {
                     $wifi_status = $module['wifi_status'];

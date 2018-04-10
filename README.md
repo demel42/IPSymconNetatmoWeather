@@ -150,10 +150,9 @@ Datenstruktur (muss mit json_decode() aufbereitet werden):
 
 | Attribut        | Datentyp                | Bedeutung                               |
 | :-------------: | :---------------------: | :-------------------------------------: |
-| now             | UNIX-Timestamp          | Zeitpunkt der Abfrage                   |
+| last_query      | UNIX-Timestamp          | Zeitpunkt der Abfrage                   |
 | status          | string                  | Status (_ok_ oder ein Fehler)           |
-| last_contact_ts | UNIX-Timestamp          | Zeitpunkt der letzten Datenübertragung  |
-| last_contact    | string                  |  ... als relative Ausgabe               |
+| last_contact    | UNIX-Timestamp          | Zeitpunkt der letzten Datenübertragung  |
 | station_name    | string                  | Benutzerbezeichnung der Station         |
 | modules         | array von _module_      | die Module der Station                  |
 
@@ -165,8 +164,8 @@ Datenstruktur (muss mit json_decode() aufbereitet werden):
 | module_type_txt    | string                  |  ... als Text                           |
 | module_type_img    | string                  |  ... als Pfad zum Icon                  |
 | module_name        | string                  | Bezeichnung des Moduls                  |
-| last_measure_ts    | UNIX-Timestamp          | Zeitpunkt der letzten Messung           |
-| last_measure       | string                  |  ... als relative Ausgabe               |
+| last_measure       | UNIX-Timestamp          | Zeitpunkt der letzten Messung           |
+| last_message       | UNIX-Timestamp          | Zeitpunkt der letzten Meldung des Moduls bei der Basis |
 | wifi_status        | integer                 | Wifi (_nur NAMain_)                     |
 | wifi_status_txt    | string                  |  ... als Text                           |
 | wifi_status_img    | string                  |  ... als Pfad zum Icon                  |
