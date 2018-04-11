@@ -143,6 +143,8 @@ class NetatmoWeatherDevice extends IPSModule
         $wunderground_id = $this->ReadPropertyString('Wunderground_ID');
         $wunderground_key = $this->ReadPropertyString('Wunderground_Key');
 
+        $station_id = $this->ReadPropertyString('station_id');
+        $module_id = $this->ReadPropertyString('module_id');
         $module_type = $this->ReadPropertyString('module_type');
 
         $with_absolute_pressure = $this->ReadPropertyBoolean('with_absolute_pressure');
@@ -238,12 +240,18 @@ class NetatmoWeatherDevice extends IPSModule
         }
 
         if ($module_type == 'Station') {
+			$module_info = $this->module_type2text($module_type) . ' (' . $station_id . ')';
+
             // Inspired by module SymconTest/HookServe
             // Only call this in READY state. On startup the WebHook instance might not be available yet
             if (IPS_GetKernelRunlevel() == KR_READY) {
                 $this->RegisterHook('/hook/NetatmoWeather');
             }
-        }
+        } else {
+			$module_info = $this->module_type2text($module_type) . ' (' . $module_id . ')';
+		}
+
+		$this->SetSummary($module_info);
 
         $this->SetStatus(102);
     }
@@ -597,9 +605,6 @@ class NetatmoWeatherDevice extends IPSModule
         $this->SetValue('ModuleAlarm', $module_alarm);
         $this->SetValue('BatteryAlarm', $battery_alarm);
 
-		$module_info = $this->Translate('station') . ' (' . $station_name . ')';
-		$this->SetSummary($module_info);
-
         if ($with_status_box) {
             $statusbox_script = $this->ReadPropertyInteger('statusbox_script');
             if ($statusbox_script > 0) {
@@ -669,10 +674,6 @@ class NetatmoWeatherDevice extends IPSModule
         if ($with_last_measure) {
             $this->SetValue('LastMeasure', $last_measure);
         }
-
-		$module_type_text = $this->module_type2text('NAMain');
-		$module_info = $module_type_text . ' (' . $module_name . ')';
-		$this->SetSummary($module_info);
 
         return $statuscode;
     }
@@ -853,10 +854,6 @@ class NetatmoWeatherDevice extends IPSModule
             }
 
             $module_type_text = $this->module_type2text($module_type);
-
-			$module_info = $module_type_text . ' (' . $module_name . ')';
-			$this->SetSummary($module_info);
-
             $msg = "  module_type=$module_type($module_type_text), module_name=$module_name, last_measure=$last_measure, rf_status=$rf_status, battery_status=$battery_status";
             $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
         }
@@ -1364,6 +1361,7 @@ class NetatmoWeatherDevice extends IPSModule
     private function module_type2text($val)
     {
         $val2txt = [
+            'Station'    => 'station',
             'NAMain'     => 'base module',
             'NAModule1'  => 'outdoor module',
             'NAModule2'  => 'wind gauge',
