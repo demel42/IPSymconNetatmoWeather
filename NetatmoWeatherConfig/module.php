@@ -81,7 +81,6 @@ class NetatmoWeatherConfig extends IPSModule
             IPS_SetPosition($instID, $pos);
         }
 
-        $this->SetSummary($module_info);
         IPS_ApplyChanges($instID);
 
         return $instID;

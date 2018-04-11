@@ -597,6 +597,9 @@ class NetatmoWeatherDevice extends IPSModule
         $this->SetValue('ModuleAlarm', $module_alarm);
         $this->SetValue('BatteryAlarm', $battery_alarm);
 
+		$module_info = $this->Translate('station') . ' (' . $station_name . ')';
+		$this->SetSummary($module_info);
+
         if ($with_status_box) {
             $statusbox_script = $this->ReadPropertyInteger('statusbox_script');
             if ($statusbox_script > 0) {
@@ -625,6 +628,7 @@ class NetatmoWeatherDevice extends IPSModule
 
         $statuscode = 102;
 
+        $station_name = $device['station_name'];
         $module_name = $device['module_name'];
 
         $Temperature = $device['dashboard_data']['Temperature'];					// °C
@@ -666,6 +670,10 @@ class NetatmoWeatherDevice extends IPSModule
             $this->SetValue('LastMeasure', $last_measure);
         }
 
+		$module_type_text = $this->module_type2text('NAMain');
+		$module_info = $module_type_text . ' (' . $module_name . ')';
+		$this->SetSummary($module_info);
+
         return $statuscode;
     }
 
@@ -689,6 +697,8 @@ class NetatmoWeatherDevice extends IPSModule
         $now = time();
 
         $statuscode = 102;
+
+		$station_name = $device['station_name'];
 
         $module_found = false;
         $modules = $netatmo['body']['modules'];
@@ -843,6 +853,10 @@ class NetatmoWeatherDevice extends IPSModule
             }
 
             $module_type_text = $this->module_type2text($module_type);
+
+			$module_info = $module_type_text . ' (' . $module_name . ')';
+			$this->SetSummary($module_info);
+
             $msg = "  module_type=$module_type($module_type_text), module_name=$module_name, last_measure=$last_measure, rf_status=$rf_status, battery_status=$battery_status";
             $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
         }
@@ -1350,15 +1364,15 @@ class NetatmoWeatherDevice extends IPSModule
     private function module_type2text($val)
     {
         $val2txt = [
-            'NAMain'     => 'Basismodul',
-            'NAModule1'  => 'Außenmodul',
-            'NAModule2'  => 'Windmesser',
-            'NAModule3'  => 'Regenmesser',
-            'NAModule4'  => 'Innenmodul',
+            'NAMain'     => 'base module',
+            'NAModule1'  => 'outdoor module',
+            'NAModule2'  => 'wind gauge',
+            'NAModule3'  => 'rain gauge',
+            'NAModule4'  => 'indoor module',
         ];
 
         if ($val >= 0 && $val < count($val2txt)) {
-            $txt = $val2txt[$val];
+            $txt = $this->Translate($val2txt[$val]);
         } else {
             $txt = '';
         }
