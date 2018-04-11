@@ -338,7 +338,9 @@ Netatmo.WindDirection
 
 GUIDs
 - Modul: `{0F675628-33AE-88E8-D9C4-9A2D1C7FE394}`
-
 - NetatmoWeatherIO: `{26A55798-5CBC-88F6-5C7B-370B043B24F9}`
 - NetatmoWeatherConfig: `{DCA5D76C-A6F8-4762-A6C3-2FF6601DDEC8}`
 - NetatmoWeatherDevice: `{1023DB4A-D491-A0D5-17CD-380D3578D0FA}`
+- Nachrichten:
+  - `{DC5A0AD3-88A5-CAED-3CA9-44C20CC20610}`: an NetatmoWeatherIO
+  - `{2D42552F-2545-9145-D3C8-A299E3FDC6EA}`: an NetatmoWeatherConfig, NetatmoWeatherDevice
