@@ -62,15 +62,15 @@ class NetatmoWeatherIO extends IPSModule
 
     protected function SendData($data)
     {
-        $this->SendDebug(__FUNCTION__, 'SendData(): data=' . print_r($data, true), 0);
+        $this->SendDebug(__FUNCTION__, 'data=' . print_r($data, true), 0);
         $this->SendDataToChildren(json_encode(['DataID' => '{2D42552F-2545-9145-D3C8-A299E3FDC6EA}', 'Buffer' => $data]));
     }
 
-    public function ForwardData($JSONString)
+    public function ForwardData($data)
     {
-        $data = $this->GetBuffer('LastData');
-        $this->SendDebug(__FUNCTION__, 'ForwardData(): data=' . print_r($data, true), 0);
-        return $data;
+        $last_data = $this->GetBuffer('LastData');
+        $this->SendDebug(__FUNCTION__, 'last_data=' . print_r($last_data, true), 0);
+        return $last_data;
     }
 
     public function UpdateData()

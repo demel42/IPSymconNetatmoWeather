@@ -372,11 +372,20 @@ class NetatmoWeatherDevice extends IPSModule
 
     protected function SetValue($Ident, $Value)
     {
+		@$varID = $this->GetIDForIdent($Ident);
+		if ($varID == false) {
+			$this->SendDebug(__FUNCTION__, 'missing variable ' . $Ident, 0);
+			return;
+		}
+
         if (IPS_GetKernelVersion() >= 5) {
-            parent::SetValue($Ident, $Value);
+            $ret = parent::SetValue($Ident, $Value);
         } else {
-            SetValue($this->GetIDForIdent($Ident), $Value);
+			$ret = SetValue($varID, $Value);
         }
+		if ($ret == false) {
+			echo "fehlerhafter Datentyp: $Ident=\"$Value\"";
+		}
     }
 
     private function update_Wunderground($netatmo, $device)
