@@ -240,7 +240,7 @@ class NetatmoWeatherDevice extends IPSModule
         }
 
         if ($module_type == 'Station') {
-			$module_info = $this->module_type2text($module_type) . ' (' . $station_id . ')';
+            $module_info = $this->module_type2text($module_type) . ' (' . $station_id . ')';
 
             // Inspired by module SymconTest/HookServe
             // Only call this in READY state. On startup the WebHook instance might not be available yet
@@ -248,10 +248,10 @@ class NetatmoWeatherDevice extends IPSModule
                 $this->RegisterHook('/hook/NetatmoWeather');
             }
         } else {
-			$module_info = $this->module_type2text($module_type) . ' (' . $module_id . ')';
-		}
+            $module_info = $this->module_type2text($module_type) . ' (' . $module_id . ')';
+        }
 
-		$this->SetSummary($module_info);
+        $this->SetSummary($module_info);
 
         $this->SetStatus(102);
     }
