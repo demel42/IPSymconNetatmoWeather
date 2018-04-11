@@ -1040,7 +1040,7 @@ class NetatmoWeatherDevice extends IPSModule
         $html .= "tbody th { text-align: left; }\n";
         $html .= "#spalte_caption { width: 200px; }\n";
         $html .= "#spalte_type { width: 25px; }\n";
-        $html .= "#spalte_signal { width: 50px; }\n";
+        $html .= "#spalte_signal { width: 60px; }\n";
         $html .= "#spalte_battery { width: 50px; }\n";
         $html .= "</style>\n";
 
