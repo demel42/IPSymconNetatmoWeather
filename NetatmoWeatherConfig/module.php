@@ -31,12 +31,9 @@ class NetatmoWeatherConfig extends IPSModule
                 $station_name = $device['station_name'];
                 $options[] = ['label' => $station_name, 'value' => $station_name];
             }
-        } else {
-            $this->SetStatus(201);
         }
 
         $formActions = [];
-        $formActions[] = ['type' => 'Label', 'label' => 'Station-Name only needs to be selected if you have more then one'];
         $formActions[] = ['type' => 'Select', 'name' => 'station_name', 'caption' => 'Station-Name', 'options' => $options];
         $formActions[] = ['type' => 'Button', 'label' => 'Import of station', 'onClick' => 'NetatmoWeatherConfig_Doit($id, $station_name);'];
 
@@ -48,7 +45,6 @@ class NetatmoWeatherConfig extends IPSModule
         $formStatus[] = ['code' => '201', 'icon' => 'error', 'caption' => 'Instance is inactive (no data)'];
         $formStatus[] = ['code' => '202', 'icon' => 'error', 'caption' => 'Instance is inactive (station missing)'];
         $formStatus[] = ['code' => '203', 'icon' => 'error', 'caption' => 'Instance is inactive (no station)'];
-        $formStatus[] = ['code' => '204', 'icon' => 'error', 'caption' => 'Instance is inactive (more then one station)'];
 
         return json_encode(['actions' => $formActions, 'status' => $formStatus]);
     }
@@ -98,6 +94,7 @@ class NetatmoWeatherConfig extends IPSModule
 
         $this->SendDebug(__FUNCTION__, "data=$data", 0);
 
+		$err = '';
         $statuscode = 0;
         $do_abort = false;
 
@@ -118,39 +115,23 @@ class NetatmoWeatherConfig extends IPSModule
                 if (!$station_found) {
                     $err = "station \"$station_name\" don't exists";
                     $statuscode = 202;
+					$do_abort = true;
                 }
             } else {
-                switch (count($devices)) {
-                    case 1:
-                        $device = $devices[0];
-                        $station_name = $device['station_name'];
-                        break;
-                    case 0:
-                        $err = 'data contains no station';
-                        $statuscode = 203;
-                        break;
-                    default:
-                        $err = 'data contains to many station';
-                        $statuscode = 204;
-                        break;
-                }
-            }
-            if ($statuscode) {
-                echo "statuscode=$statuscode, err=$err";
-                $this->SendDebug(__FUNCTION__, $err, 0);
-                $this->SetStatus($statuscode);
+				$err = 'no station selected';
+				$statuscode = 203;
                 $do_abort = true;
             }
         } else {
             $err = 'no data';
             $statuscode = 201;
-            echo "statuscode=$statuscode, err=$err";
-            $this->SendDebug(__FUNCTION__, $err, 0);
-            $this->SetStatus($statuscode);
             $do_abort = true;
         }
 
         if ($do_abort) {
+            echo "statuscode=$statuscode, err=$err";
+            $this->SendDebug(__FUNCTION__, $err, 0);
+            $this->SetStatus($statuscode);
             return -1;
         }
 

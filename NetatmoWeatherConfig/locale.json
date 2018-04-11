@@ -13,8 +13,7 @@
 
 			"Instance is inactive (no data)": "Instanz ist inaktiv (keine Daten)",
 			"Instance is inactive (station missing)": "Instanz ist inaktiv (Station ist unbekannt)",
-			"Instance is inactive (no station)": "Instanz ist inaktiv (keine Station vorhanden)",
-			"Instance is inactive (more then one station)": "Instanz ist inaktiv (mehr als eine Station vorhanden)"
+			"Instance is inactive (no station)": "Instanz ist inaktiv (keine Station)",
 		}
 	}
 }
