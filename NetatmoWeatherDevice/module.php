@@ -597,8 +597,8 @@ class NetatmoWeatherDevice extends IPSModule
         $this->SetValue('ModuleAlarm', $module_alarm);
         $this->SetValue('BatteryAlarm', $battery_alarm);
 
-		$module_info = $this->Translate('station') . ' (' . $station_name . ')';
-		$this->SetSummary($module_info);
+        $module_info = $this->Translate('station') . ' (' . $station_name . ')';
+        $this->SetSummary($module_info);
 
         if ($with_status_box) {
             $statusbox_script = $this->ReadPropertyInteger('statusbox_script');
@@ -670,9 +670,9 @@ class NetatmoWeatherDevice extends IPSModule
             $this->SetValue('LastMeasure', $last_measure);
         }
 
-		$module_type_text = $this->module_type2text('NAMain');
-		$module_info = $module_type_text . ' (' . $module_name . ')';
-		$this->SetSummary($module_info);
+        $module_type_text = $this->module_type2text('NAMain');
+        $module_info = $module_type_text . ' (' . $module_name . ')';
+        $this->SetSummary($module_info);
 
         return $statuscode;
     }
@@ -698,7 +698,7 @@ class NetatmoWeatherDevice extends IPSModule
 
         $statuscode = 102;
 
-		$station_name = $device['station_name'];
+        $station_name = $device['station_name'];
 
         $module_found = false;
         $modules = $netatmo['body']['modules'];
@@ -854,8 +854,8 @@ class NetatmoWeatherDevice extends IPSModule
 
             $module_type_text = $this->module_type2text($module_type);
 
-			$module_info = $module_type_text . ' (' . $module_name . ')';
-			$this->SetSummary($module_info);
+            $module_info = $module_type_text . ' (' . $module_name . ')';
+            $this->SetSummary($module_info);
 
             $msg = "  module_type=$module_type($module_type_text), module_name=$module_name, last_measure=$last_measure, rf_status=$rf_status, battery_status=$battery_status";
             $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
