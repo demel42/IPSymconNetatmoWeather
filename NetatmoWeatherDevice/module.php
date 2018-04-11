@@ -699,7 +699,7 @@ class NetatmoWeatherDevice extends IPSModule
 
         $statuscode = 102;
 
-		$station_name = $device['station_name'];
+        $station_name = $device['station_name'];
 
         $module_found = false;
         $modules = $netatmo['body']['modules'];
