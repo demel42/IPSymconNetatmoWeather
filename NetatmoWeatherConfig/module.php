@@ -94,7 +94,7 @@ class NetatmoWeatherConfig extends IPSModule
 
         $this->SendDebug(__FUNCTION__, "data=$data", 0);
 
-		$err = '';
+        $err = '';
         $statuscode = 0;
         $do_abort = false;
 
@@ -115,11 +115,11 @@ class NetatmoWeatherConfig extends IPSModule
                 if (!$station_found) {
                     $err = "station \"$station_name\" don't exists";
                     $statuscode = 202;
-					$do_abort = true;
+                    $do_abort = true;
                 }
             } else {
-				$err = 'no station selected';
-				$statuscode = 203;
+                $err = 'no station selected';
+                $statuscode = 203;
                 $do_abort = true;
             }
         } else {
