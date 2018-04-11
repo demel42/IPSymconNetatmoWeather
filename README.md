@@ -74,7 +74,7 @@ In dem Konfigurationsdialog die Netatmo-Zugangsdaten eintragen.
 
 Dann unter _Konfigurator Instanzen_ analog den Konfigurator _NetatmoWeather Konfigurator_ hinzufügen.
 
-Hier kann man in dem Konfigurationsdialog einen Stationsnamen auswählen; das ist aber nur erforderlich, wenn mehr als eine Station mit dem, in der I/O-Instanz angegebenen, Netatmo-Konto verknüpft ist.
+Hier werden alle Stationen, die mit dem, in der I/O-Instanz angegebenen, Netatmo-Konto verknüpft sind, angeboten; aus denen wählt man eine aus.
 
 Mit Betätigen der Schaltfläche _Importieren der Station_ werden für jedes Modul, das zu dieser Station im Netatmo registriert ist, eine Geräte-Instanzen unterhalb von _IP-Symcon_ angelegt.
 Der Namen der Instanzen ist der der Netatmo-Module, in derm Feld _Beschreibung_ der Instanzen ist der Modultyp sowie der Namen der Station und des Moduls eingetragen.
