@@ -239,19 +239,33 @@ class NetatmoWeatherDevice extends IPSModule
                 break;
         }
 
-        if ($module_type == 'Station') {
-            $module_info = $this->module_type2text($module_type) . ' (' . $station_id . ')';
+        switch ($module_type) {
+            case 'Station':
+				$module_info = $this->module_type2text($module_type) . ' (' . $station_id . ')';
+                break;
+            case 'NAMain':
+				$module_info = $this->module_type2text($module_type);
+                break;
+            case 'NAModule1':
+            case 'NAModule2':
+            case 'NAModule3':
+            case 'NAModule4':
+				$module_info = $this->module_type2text($module_type) . ' (' . $module_id . ')';
+                break;
+            default:
+				$module_info = 'unsupported module ' . $module_type;
+                break;
+        }
 
+        $this->SetSummary($module_info);
+
+        if ($module_type == 'Station') {
             // Inspired by module SymconTest/HookServe
             // Only call this in READY state. On startup the WebHook instance might not be available yet
             if (IPS_GetKernelRunlevel() == KR_READY) {
                 $this->RegisterHook('/hook/NetatmoWeather');
             }
-        } else {
-            $module_info = $this->module_type2text($module_type) . ' (' . $module_id . ')';
         }
-
-        $this->SetSummary($module_info);
 
         $this->SetStatus(102);
     }
@@ -384,7 +398,7 @@ class NetatmoWeatherDevice extends IPSModule
             $ret = SetValue($varID, $Value);
         }
         if ($ret == false) {
-            echo "fehlerhafter Datentyp: $Ident=\"$Value\"";
+            $this->SendDebug(__FUNCTION__, 'mismatch of value "' . $Value . '" to variable ' . $Ident, 0);
         }
     }
 
