@@ -241,19 +241,19 @@ class NetatmoWeatherDevice extends IPSModule
 
         switch ($module_type) {
             case 'Station':
-				$module_info = $this->module_type2text($module_type) . ' (' . $station_id . ')';
+                $module_info = $this->module_type2text($module_type) . ' (' . $station_id . ')';
                 break;
             case 'NAMain':
-				$module_info = $this->module_type2text($module_type);
+                $module_info = $this->module_type2text($module_type);
                 break;
             case 'NAModule1':
             case 'NAModule2':
             case 'NAModule3':
             case 'NAModule4':
-				$module_info = $this->module_type2text($module_type) . ' (' . $module_id . ')';
+                $module_info = $this->module_type2text($module_type) . ' (' . $module_id . ')';
                 break;
             default:
-				$module_info = 'unsupported module ' . $module_type;
+                $module_info = 'unsupported module ' . $module_type;
                 break;
         }
 
