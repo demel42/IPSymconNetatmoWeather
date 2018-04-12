@@ -398,7 +398,7 @@ class NetatmoWeatherDevice extends IPSModule
             $ret = SetValue($varID, $Value);
         }
         if ($ret == false) {
-            $this->SendDebug(__FUNCTION__, 'mismatch of value "' . $Value . '" to variable ' . $Ident, 0);
+            $this->SendDebug(__FUNCTION__, 'mismatch of value "' . $Value . '" for variable ' . $Ident, 0);
         }
     }
 
