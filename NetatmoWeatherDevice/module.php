@@ -1061,7 +1061,7 @@ class NetatmoWeatherDevice extends IPSModule
         $html .= "table { border-collapse: collapse; border: 0px solid; margin: 0.5em; width: 100%; }\n";
         $html .= "th, td { padding: 1; }\n";
         $html .= "tbody th { text-align: left; }\n";
-        $html .= "#spalte_caption { width: 200px; }\n";
+        $html .= "#spalte_caption { width: 250px; }\n";
         $html .= "#spalte_type { width: 25px; }\n";
         $html .= "#spalte_signal { width: 60px; }\n";
         $html .= "#spalte_battery { width: 50px; }\n";
@@ -1080,42 +1080,30 @@ class NetatmoWeatherDevice extends IPSModule
         }
 
         $html .= "<table>\n";
-        $html .= "<colgroup><col id=\"spalte_caption\"></colgroup>\n";
+        $html .= "<colgroup><col id='spalte_caption'></colgroup>\n";
         $html .= "<tdata>\n";
 
         $html .= "<tr>\n";
-        $html .= "<td>Stationsname:</td>\n";
-        $html .= "<th>$station_name</th>\n";
+        $html .= "<td>Stand:</td>\n";
+        $html .= "<td>$dt</td>\n";
         $html .= "</tr>\n";
 
         $html .= "<tr>\n";
-        $html .= "<td>Status:</td>\n";
-        $html .= "<th>$status</th>\n";
-        $html .= "</tr>\n";
-
-        $html .= "<tr>\n";
-        $html .= "<td>&nbsp;&nbsp;... aktualisiert:</td>\n";
-        $html .= "<th>$dt</th>\n";
-        $html .= "</tr>\n";
-
-        $html .= "<tr>\n";
-        $html .= "<td>letzte Kommunikation:</td>\n";
-        $html .= "<th>$last_contact_pretty</th>\n";
+        $html .= "<td>letzte Übertragung an Netatmo:</td>\n";
+        $html .= "<td>$last_contact_pretty</td>\n";
         $html .= "</tr>\n";
 
         $html .= "</tdata>\n";
         $html .= "</table>\n";
         $html .= "<table>\n";
 
-        $html .= "<br>\n";
-
-        $html .= "<colgroup><col id=\"spalte_type\"></colgroup>\n";
+        $html .= "<colgroup><col id='spalte_type'></colgroup>\n";
         $html .= "<colgroup><col></colgroup>\n";
         $html .= "<colgroup><col></colgroup>\n";
         $html .= "<colgroup><col></colgroup>\n";
         $html .= "<colgroup><col></colgroup>\n";
-        $html .= "<colgroup><col id=\"spalte_signal\"></colgroup>\n";
-        $html .= "<colgroup><col id=\"spalte_battry\"></colgroup>\n";
+        $html .= "<colgroup><col id='spalte_signal'></colgroup>\n";
+        $html .= "<colgroup><col id='spalte_battry'></colgroup>\n";
 
         $html .= "<tdata>\n";
 
@@ -1193,8 +1181,8 @@ class NetatmoWeatherDevice extends IPSModule
         $html .= "<!DOCTYPE html>\n";
         $html .= "<html>\n";
         $html .= "<head>\n";
-        $html .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n";
-        $html .= "<link href=\"https://fonts.googleapis.com/css?family=Open+Sans\" rel=\"stylesheet\">\n";
+        $html .= "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>\n";
+        $html .= "<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>\n";
         $html .= "<title>Status von Netatmo</title>\n";
         $html .= "<style>\n";
         $html .= "html { height: 100%; color: #ffffff; background-color: #303030; overflow: hidden; }\n";
@@ -1237,11 +1225,11 @@ class NetatmoWeatherDevice extends IPSModule
             // Tabelle
             $html .= "<table>\n";
             // Spaltenbreite
-            $html .= "<colgroup><col id=\"spalte_type\"></colgroup>\n";
+            $html .= "<colgroup><col id='spalte_type'></colgroup>\n";
             $html .= "<colgroup><col></colgroup>\n";
             $html .= "<colgroup><col></colgroup>\n";
-            $html .= "<colgroup><col id=\"spalte_signal\"></colgroup>\n";
-            $html .= "<colgroup><col id=\"spalte_battry\"></colgroup>\n";
+            $html .= "<colgroup><col id='spalte_signal'></colgroup>\n";
+            $html .= "<colgroup><col id='spalte_battry'></colgroup>\n";
             $html .= "<tdata>\n";
 
             $img_path = '/hook/NetatmoWeather/imgs/';
