@@ -141,8 +141,6 @@ class NetatmoWeatherIO extends IPSModule
         // Anfrage mit Token
         $netatmo_data_url = $netatmo_netatmo_data_url . '?access_token=' . $token;
 
-        $this->SendDebug(__FUNCTION__, "netatmo-data-url=$netatmo_data_url", 0);
-
         $do_abort = false;
         $data = $this->do_HttpRequest($netatmo_data_url);
         if ($data != '') {
@@ -184,6 +182,9 @@ class NetatmoWeatherIO extends IPSModule
 
     private function do_HttpRequest($url, $postdata = '')
     {
+        $this->SendDebug(__FUNCTION__, 'http-' . ($postdata != '' ? 'post' : 'get') . ': url=' . $url, 0);
+        $time_start = microtime(true);
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         if ($postdata != '') {
@@ -197,6 +198,9 @@ class NetatmoWeatherIO extends IPSModule
         $cdata = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
+
+        $duration = floor((microtime(true) - $time_start) * 100) / 100;
+        $this->SendDebug(__FUNCTION__, ' => httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
 
         $statuscode = 0;
         $err = '';
@@ -226,7 +230,7 @@ class NetatmoWeatherIO extends IPSModule
         }
 
         if ($statuscode) {
-            echo "statuscode=$statuscode, err=$err";
+            echo " => statuscode=$statuscode, err=$err";
             $this->SendDebug(__FUNCTION__, $err, 0);
             $this->SetStatus($statuscode);
         }
