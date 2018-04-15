@@ -249,8 +249,8 @@ stehen je nach Typ des Moduls zur Verfügung
 | with_winddirection        | boolean | false        | Windrichtung mit Text                      |
 | with_windstrength         | boolean | false        | Windstärke                                 |
 |                           |         |              |                                            |
-| statusbox_script          | string  |              | Script zum Füllen der Variable _StatusBox_ |
-| webhook_script            | string  |              | Script zur Verwendung im WebHook           |
+| statusbox_script          | integer | 0            | Script zum Füllen der Variable _StatusBox_ |
+| webhook_script            | integer | 0            | Script zur Verwendung im WebHook           |
 |                           |         |              |                                            |
 | minutes2fail              | integer | 30           | Dauer, bis die Kommunikation als gestört gilt |
 |                           |         |              |                                            |
