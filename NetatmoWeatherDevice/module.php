@@ -1089,7 +1089,7 @@ class NetatmoWeatherDevice extends IPSModule
         $html .= "<tdata>\n";
 
         $html .= "<tr>\n";
-        $html .= "<td>Stand:</td>\n";
+        $html .= "<td>Zeitpunkt der Datenabfrage:</td>\n";
         $html .= "<td>$dt</td>\n";
         $html .= "</tr>\n";
 
