@@ -233,7 +233,7 @@ class NetatmoWeatherDevice extends IPSModule
                 $this->MaintainVariable('GustDirection', $this->Translate('Direction of gusts of last 5m'), IPS_STRING, 'Netatmo.WindDirection', $vpos++, $with_winddirection);
                 $this->MaintainVariable('WindMaxSpeed', $this->Translate('Today\'s windspeed-maximum'), IPS_FLOAT, 'Netatmo.WindSpeed', $vpos++, $with_minmax);
                 $this->MaintainVariable('WindMaxStrength', $this->Translate('Today\'s windstrength-maximum'), IPS_INTEGER, 'Netatmo.WindStrength', $vpos++, $with_minmax && $with_windstrength);
-                $this->MaintainVariable('WindMaxAngle', $this->Translate('Direction of today\'s wind-maximum'), IPS_INTEGER, 'Netatmo.WindAngle', $vpos++, $with_minmax);
+                $this->MaintainVariable('WindMaxAngle', $this->Translate('Direction of today\'s wind-maximum'), IPS_INTEGER, 'Netatmo.WindAngle', $vpos++, $with_minmax && $with_windangle);
                 $this->MaintainVariable('WindMaxDirection', $this->Translate('Direction of today\'s wind-maximum'), IPS_STRING, 'Netatmo.WindDirection', $vpos++, $with_minmax && $with_winddirection);
                 $this->MaintainVariable('WindMaxTimestamp', $this->Translate('Time of today\'s wind-maximum'), IPS_INTEGER, '~UnixTimestampTime', $vpos++, $with_minmax);
                 $this->MaintainVariable('LastMeasure', $this->Translate('last measurement'), IPS_INTEGER, '~UnixTimestamp', $vpos++, $with_last_measure);
