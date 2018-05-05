@@ -295,6 +295,11 @@ folgende Variable werden angelegt, zum Teil optional
 | Dewpoint                | float          | Taupunkt                                        | with_dewpoint          | B,A,I     |
 | GustAngle               | integer        | Richtung der Böen der letzten 5m                | with_windangle         | W         |
 | GustDirection           | string         | Richtung der Böen der letzten 5m                | with_winddirection     | W         |
+| GustMaxAngle            | integer        | Richtung der stärksten heutigen Böe             | with_minmax + with_windangle    | W         |
+| GustMaxDirection        | string         | Richtung der stärksten heutigen Böe             | with_minmax + with_winddirection | W         |
+| GustMaxSpeed            | float          | Geschwindigkeit der stärksten heutigen Böe      |                        | W         |
+| GustMaxStrength         | integer        | Stärke der stärksten heutigen Böe               | with_minmax + with_windstrength | W         |
+| GustMaxTimestamp        | UNIX-Timestamp | Zeitpunkt der stärksten heutigen Böe            | with_minmax            | W         |
 | GustSpeed               | float          | Geschwindigkeit der Böen der letzten 5m         |                        | W         |
 | GustStrength            | integer        | Stärke der Böen der letzten 5m                  | with_windstrength      | W         |
 | Heatindex               | float          | Hitzeindex                                      | with_heatindex         | B,A,I     |
@@ -321,11 +326,6 @@ folgende Variable werden angelegt, zum Teil optional
 | WindAngle               | integer        | Windrichtung                                    | with_windangle         | W         |
 | Windchill               | float          | Windchill                                       | with_windchill         | A         |
 | WindDirection           | string         | Windrichtung                                    | with_winddirection     | W         |
-| WindMaxAngle            | integer        | Richtung des heutigen Wind-Maximums             | with_minmax + with_windangle    | W         |
-| WindMaxDirection        | string         | Richtung des heutigen Wind-Maximums             | with_minmax + with_winddirection | W         |
-| WindMaxSpeed            | float          | heutiges Windgeschwindigkeit-Maximum            |                        | W         |
-| WindMaxStrength         | integer        | heutiges Windstärke-Maximum                     | with_minmax + with_windstrength | W         |
-| WindMaxTimestamp        | UNIX-Timestamp | Zeitpunkt des maximale Windes                   | with_minmax            | W         |
 | WindSpeed               | float          | Windgeschwindigkeit                             |                        | W         |
 | WindStrength            | integer        | Windstärke                                      | with_windstrength      | W         |
 | Wunderground            | boolean        | Status der Übertragung an Wunderground          | wunderground_id        | B         |

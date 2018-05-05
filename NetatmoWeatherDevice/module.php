@@ -226,16 +226,16 @@ class NetatmoWeatherDevice extends IPSModule
                 $this->MaintainVariable('WindSpeed', $this->Translate('Windspeed'), IPS_FLOAT, 'Netatmo.WindSpeed', $vpos++, true);
                 $this->MaintainVariable('WindStrength', $this->Translate('Windstrength'), IPS_INTEGER, 'Netatmo.WindStrength', $vpos++, $with_windstrength);
                 $this->MaintainVariable('WindAngle', $this->Translate('Winddirection'), IPS_INTEGER, 'Netatmo.WindAngle', $vpos++, $with_windangle);
-                $this->MaintainVariable('WindDirection', $this->Translate('WindDirection'), IPS_STRING, 'Netatmo.WindDirection', $vpos++, $with_winddirection);
+                $this->MaintainVariable('WindDirection', $this->Translate('Winddirection'), IPS_STRING, 'Netatmo.WindDirection', $vpos++, $with_winddirection);
                 $this->MaintainVariable('GustSpeed', $this->Translate('Speed of gusts of last 5m'), IPS_FLOAT, 'Netatmo.WindSpeed', $vpos++, true);
-                $this->MaintainVariable('GustStrength', $this->Translate('Strenth of gusts'), IPS_INTEGER, 'Netatmo.WindStrength', $vpos++, $with_windstrength);
+                $this->MaintainVariable('GustStrength', $this->Translate('Strength of gusts of last 5m'), IPS_INTEGER, 'Netatmo.WindStrength', $vpos++, $with_windstrength);
                 $this->MaintainVariable('GustAngle', $this->Translate('Direction of gusts of last 5m'), IPS_INTEGER, 'Netatmo.WindAngle', $vpos++, $with_windangle);
                 $this->MaintainVariable('GustDirection', $this->Translate('Direction of gusts of last 5m'), IPS_STRING, 'Netatmo.WindDirection', $vpos++, $with_winddirection);
-                $this->MaintainVariable('WindMaxSpeed', $this->Translate('Today\'s windspeed-maximum'), IPS_FLOAT, 'Netatmo.WindSpeed', $vpos++, $with_minmax);
-                $this->MaintainVariable('WindMaxStrength', $this->Translate('Today\'s windstrength-maximum'), IPS_INTEGER, 'Netatmo.WindStrength', $vpos++, $with_minmax && $with_windstrength);
-                $this->MaintainVariable('WindMaxAngle', $this->Translate('Direction of today\'s wind-maximum'), IPS_INTEGER, 'Netatmo.WindAngle', $vpos++, $with_minmax && $with_windangle);
-                $this->MaintainVariable('WindMaxDirection', $this->Translate('Direction of today\'s wind-maximum'), IPS_STRING, 'Netatmo.WindDirection', $vpos++, $with_minmax && $with_winddirection);
-                $this->MaintainVariable('WindMaxTimestamp', $this->Translate('Time of today\'s wind-maximum'), IPS_INTEGER, '~UnixTimestampTime', $vpos++, $with_minmax);
+                $this->MaintainVariable('GustMaxSpeed', $this->Translate('Speed of today\'s strongest gust'), IPS_FLOAT, 'Netatmo.WindSpeed', $vpos++, $with_minmax);
+                $this->MaintainVariable('GustMaxStrength', $this->Translate('Strength of today\'s strongest gust'), IPS_INTEGER, 'Netatmo.WindStrength', $vpos++, $with_minmax && $with_windstrength);
+                $this->MaintainVariable('GustMaxAngle', $this->Translate('Direction of today\'s strongest gust'), IPS_INTEGER, 'Netatmo.WindAngle', $vpos++, $with_minmax && $with_windangle);
+                $this->MaintainVariable('GustMaxDirection', $this->Translate('Direction of today\'s strongest gust'), IPS_STRING, 'Netatmo.WindDirection', $vpos++, $with_minmax && $with_winddirection);
+                $this->MaintainVariable('GustMaxTimestamp', $this->Translate('Time of today\'s strongest gust'), IPS_INTEGER, '~UnixTimestampTime', $vpos++, $with_minmax);
                 $this->MaintainVariable('LastMeasure', $this->Translate('last measurement'), IPS_INTEGER, '~UnixTimestamp', $vpos++, $with_last_measure);
                 $this->MaintainVariable('RfSignal', $this->Translate('Signal-strength'), IPS_INTEGER, 'Netatmo.RfSignal', $vpos++, $with_signal);
                 $this->MaintainVariable('Battery', $this->Translate('Battery-Status'), IPS_INTEGER, 'Netatmo.Battery', $vpos++, $with_battery);
@@ -353,7 +353,7 @@ class NetatmoWeatherDevice extends IPSModule
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_windstrength', 'caption' => ' ... Windstrength'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_windangle', 'caption' => ' ... Winddirection with degree'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_winddirection', 'caption' => ' ... Winddirection with label'];
-                $formElements[] = ['type' => 'CheckBox', 'name' => 'with_minmax', 'caption' => ' ... Max of wind'];
+                $formElements[] = ['type' => 'CheckBox', 'name' => 'with_minmax', 'caption' => ' ... Strongest gust of today'];
                 break;
             case 'NAModule3':
                 break;
@@ -901,19 +901,19 @@ class NetatmoWeatherDevice extends IPSModule
                         $this->SetValue('GustDirection', $dir);
                     }
                     if ($with_minmax) {
-                        $this->SetValue('WindMaxSpeed', $wind_max);
+                        $this->SetValue('GustMaxSpeed', $wind_max);
                         if ($with_windangle) {
-                            $this->SetValue('WindMaxAngle', $wind_max_angle);
+                            $this->SetValue('GustMaxAngle', $wind_max_angle);
                         }
                         if ($with_windstrength) {
                             $windstrength = $this->ConvertWindSpeed2Strength($wind_max);
-                            $this->SetValue('WindMaxStrength', $windstrength);
+                            $this->SetValue('GustMaxStrength', $windstrength);
                         }
                         if ($with_winddirection) {
                             $dir = $this->ConvertWindDirection2Text($wind_max_angle) . ' (' . $wind_max_angle . '°)';
-                            $this->SetValue('WindMaxDirection', $dir);
+                            $this->SetValue('GustMaxDirection', $dir);
                         }
-                        $this->SetValue('WindMaxTimestamp', $wind_max_date);
+                        $this->SetValue('GustMaxTimestamp', $wind_max_date);
                     }
                     if ($with_last_measure) {
                         $this->SetValue('LastMeasure', $last_measure);
