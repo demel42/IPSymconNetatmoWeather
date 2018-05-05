@@ -53,6 +53,9 @@ class NetatmoWeatherDevice extends IPSModule
         $this->RegisterPropertyBoolean('with_windangle', false);
         $this->RegisterPropertyBoolean('with_winddirection', true);
 
+        $this->RegisterPropertyBoolean('with_minmax', false);
+        $this->RegisterPropertyBoolean('with_trend', false);
+
         $this->RegisterPropertyBoolean('with_last_contact', false);
         $this->RegisterPropertyBoolean('with_status_box', false);
 
@@ -87,8 +90,8 @@ class NetatmoWeatherDevice extends IPSModule
         $this->CreateVarProfile('Netatmo.CO2', IPS_INTEGER, ' ppm', 250, 2000, 0, 1, 'Gauge', $associations);
 
         $associations = [];
-        $associations[] = ['Wert' => false, 'Name' => 'Nein', 'Farbe' => -1];
-        $associations[] = ['Wert' => true, 'Name' => 'Ja', 'Farbe' => 0xEE0000];
+        $associations[] = ['Wert' => false, 'Name' => $this->Translate('No'), 'Farbe' => -1];
+        $associations[] = ['Wert' => true, 'Name' => $this->Translate('Yes'), 'Farbe' => 0xEE0000];
         $this->CreateVarProfile('Netatmo.Alarm', IPS_BOOLEAN, '', 0, 0, 0, 1, 'Alert', $associations);
 
         $associations = [];
@@ -114,6 +117,12 @@ class NetatmoWeatherDevice extends IPSModule
         $associations[] = ['Wert' => 4, 'Name' => $this->battery_status2text(4), 'Farbe' => 0x228B22];
         $associations[] = ['Wert' => 5, 'Name' => $this->battery_status2text(5), 'Farbe' => 0x228B22];
         $this->CreateVarProfile('Netatmo.Battery', IPS_INTEGER, '', 0, 0, 0, 1, 'Intensity', $associations);
+
+        $associations = [];
+        $associations[] = ['Wert' => -1, 'Name' => $this->Translate('down'), 'Farbe' => -1];
+        $associations[] = ['Wert' => 0, 'Name' => $this->Translate('stable'), 'Farbe' => -1];
+        $associations[] = ['Wert' => 1, 'Name' => $this->Translate('up'), 'Farbe' => -1];
+        $this->CreateVarProfile('Netatmo.Trend', IPS_INTEGER, '', 0, 0, 0, 1, '', $associations);
 
         $this->ConnectParent('{26A55798-5CBC-88F6-5C7B-370B043B24F9}');
 
@@ -155,6 +164,8 @@ class NetatmoWeatherDevice extends IPSModule
         $with_windstrength = $this->ReadPropertyBoolean('with_windstrength');
         $with_windangle = $this->ReadPropertyBoolean('with_windangle');
         $with_winddirection = $this->ReadPropertyBoolean('with_winddirection');
+        $with_minmax = $this->ReadPropertyBoolean('with_minmax');
+        $with_trend = $this->ReadPropertyBoolean('with_trend');
         $with_last_contact = $this->ReadPropertyBoolean('with_last_contact');
         $with_status_box = $this->ReadPropertyBoolean('with_status_box');
         $with_last_measure = $this->ReadPropertyBoolean('with_last_measure');
@@ -168,7 +179,7 @@ class NetatmoWeatherDevice extends IPSModule
                 $this->MaintainVariable('Status', $this->Translate('State'), IPS_BOOLEAN, '~Alert.Reversed', $vpos++, true);
                 $this->MaintainVariable('LastContact', $this->Translate('last transmission'), IPS_INTEGER, '~UnixTimestamp', $vpos++, $with_last_contact);
                 $this->MaintainVariable('Wifi', $this->Translate('Strength of wifi-signal'), IPS_INTEGER, 'Netatmo.Wifi', $vpos++, $with_signal);
-                $this->MaintainVariable('ModuleAlarm', $this->Translate('station or modules stopped don\'t communicate'), IPS_BOOLEAN, 'Netatmo.Alarm', $vpos++, true);
+                $this->MaintainVariable('ModuleAlarm', $this->Translate('station or modules don\'t communicate'), IPS_BOOLEAN, 'Netatmo.Alarm', $vpos++, true);
                 $this->MaintainVariable('BatteryAlarm', $this->Translate('Battery of one or more modules ist low or empty'), IPS_BOOLEAN, 'Netatmo.Alarm', $vpos++, true);
                 $this->MaintainVariable('StatusBox', $this->Translate('State of station and modules'), IPS_STRING, '~HTMLBox', $vpos++, $with_status_box);
                 $with_wunderground = $wunderground_id != '' && $wunderground_key != '';
@@ -185,6 +196,12 @@ class NetatmoWeatherDevice extends IPSModule
                 $this->MaintainVariable('Noise', $this->Translate('Noise'), IPS_INTEGER, 'Netatmo.Noise', $vpos++, true);
                 $this->MaintainVariable('Pressure', $this->Translate('Air pressure'), IPS_FLOAT, 'Netatmo.Pressure', $vpos++, true);
                 $this->MaintainVariable('AbsolutePressure', $this->Translate('absolute pressure'), IPS_FLOAT, 'Netatmo.Pressure', $vpos++, $with_absolute_pressure);
+                $this->MaintainVariable('TemperatureMax', $this->Translate('Today\'s temperature-maximum'), IPS_FLOAT, 'Netatmo.Temperatur', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureMaxTimestamp', $this->Translate('Time of today\'s temperature-maximum'), IPS_INTEGER, '~UnixTimestampTime', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureMin', $this->Translate('Today\'s temperature-minimum'), IPS_FLOAT, 'Netatmo.Temperatur', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureMinTimestamp', $this->Translate('Time of today\'s temperature-minimum'), IPS_INTEGER, '~UnixTimestampTime', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureTrend', $this->Translate('Trend of temperature'), IPS_INTEGER, 'Netatmo.Trend', $vpos++, $with_trend);
+                $this->MaintainVariable('PressureTrend', $this->Translate('Trend of air pressure'), IPS_INTEGER, 'Netatmo.Trend', $vpos++, $with_trend);
                 $this->MaintainVariable('LastMeasure', $this->Translate('last measurement'), IPS_INTEGER, '~UnixTimestamp', $vpos++, $with_last_measure);
                 break;
             case 'NAModule1':
@@ -195,6 +212,11 @@ class NetatmoWeatherDevice extends IPSModule
                 $this->MaintainVariable('Dewpoint', $this->Translate('Dewpoint'), IPS_FLOAT, 'Netatmo.Dewpoint', $vpos++, $with_dewpoint);
                 $this->MaintainVariable('Windchill', $this->Translate('Windchill'), IPS_FLOAT, 'Netatmo.Temperatur', $vpos++, $with_windchill);
                 $this->MaintainVariable('Heatindex', $this->Translate('Heatindex'), IPS_FLOAT, 'Netatmo.Heatindex', $vpos++, $with_heatindex);
+                $this->MaintainVariable('TemperatureMax', $this->Translate('Today\'s temperature-maximum'), IPS_FLOAT, 'Netatmo.Temperatur', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureMaxTimestamp', $this->Translate('Time of today\'s temperature-maximum'), IPS_INTEGER, '~UnixTimestampTime', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureMin', $this->Translate('Today\'s temperature-minimum'), IPS_FLOAT, 'Netatmo.Temperatur', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureMinTimestamp', $this->Translate('Time of today\'s temperature-minimum'), IPS_INTEGER, '~UnixTimestampTime', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureTrend', $this->Translate('Trend of temperature'), IPS_INTEGER, 'Netatmo.Trend', $vpos++, $with_trend);
                 $this->MaintainVariable('LastMeasure', $this->Translate('last measurement'), IPS_INTEGER, '~UnixTimestamp', $vpos++, $with_last_measure);
                 $this->MaintainVariable('RfSignal', $this->Translate('Signal-strength'), IPS_INTEGER, 'Netatmo.RfSignal', $vpos++, $with_signal);
                 $this->MaintainVariable('Battery', $this->Translate('Battery-Status'), IPS_INTEGER, 'Netatmo.Battery', $vpos++, $with_battery);
@@ -209,6 +231,11 @@ class NetatmoWeatherDevice extends IPSModule
                 $this->MaintainVariable('GustStrength', $this->Translate('Strenth of gusts'), IPS_INTEGER, 'Netatmo.WindStrength', $vpos++, $with_windstrength);
                 $this->MaintainVariable('GustAngle', $this->Translate('Direction of gusts of last 5m'), IPS_INTEGER, 'Netatmo.WindAngle', $vpos++, $with_windangle);
                 $this->MaintainVariable('GustDirection', $this->Translate('Direction of gusts of last 5m'), IPS_STRING, 'Netatmo.WindDirection', $vpos++, $with_winddirection);
+				$this->MaintainVariable('WindMaxSpeed', $this->Translate('Today\'s windspeed-maximum'), IPS_FLOAT, 'Netatmo.WindSpeed', $vpos++, $with_minmax);
+                $this->MaintainVariable('WindMaxStrength', $this->Translate('Today\'s windstrength-maximum'), IPS_INTEGER, 'Netatmo.WindStrength', $vpos++, $with_minmax && $with_windstrength);
+				$this->MaintainVariable('WindMaxAngle', $this->Translate('Direction of today\'s wind-maximum'), IPS_INTEGER, 'Netatmo.WindAngle', $vpos++, $with_minmax);
+                $this->MaintainVariable('WindMaxDirection', $this->Translate('Direction of today\'s wind-maximum'), IPS_STRING, 'Netatmo.WindDirection', $vpos++, $with_minmax && $with_winddirection);
+				$this->MaintainVariable('WindMaxTimestamp', $this->Translate('Time of today\'s wind-maximum'), IPS_INTEGER, '~UnixTimestampTime', $vpos++, $with_minmax);
                 $this->MaintainVariable('LastMeasure', $this->Translate('last measurement'), IPS_INTEGER, '~UnixTimestamp', $vpos++, $with_last_measure);
                 $this->MaintainVariable('RfSignal', $this->Translate('Signal-strength'), IPS_INTEGER, 'Netatmo.RfSignal', $vpos++, $with_signal);
                 $this->MaintainVariable('Battery', $this->Translate('Battery-Status'), IPS_INTEGER, 'Netatmo.Battery', $vpos++, $with_battery);
@@ -216,8 +243,8 @@ class NetatmoWeatherDevice extends IPSModule
             case 'NAModule3':
                 // Regenmesser
                 $this->MaintainVariable('Rain', $this->Translate('Rainfall'), IPS_FLOAT, 'Netatmo.Rainfall', $vpos++, true);
-                $this->MaintainVariable('Rain_1h', $this->Translate('Rainfall of last 1h'), IPS_FLOAT, 'Netatmo.Rainfall', $vpos++, true);
-                $this->MaintainVariable('Rain_24h', $this->Translate('Rainfall of last 24h'), IPS_FLOAT, 'Netatmo.Rainfall', $vpos++, true);
+                $this->MaintainVariable('Rain_1h', $this->Translate('Rainfall of last hour'), IPS_FLOAT, 'Netatmo.Rainfall', $vpos++, true);
+                $this->MaintainVariable('Rain_24h', $this->Translate('Rainfall of today'), IPS_FLOAT, 'Netatmo.Rainfall', $vpos++, true);
                 $this->MaintainVariable('LastMeasure', $this->Translate('last measurement'), IPS_INTEGER, '~UnixTimestamp', $vpos++, $with_last_measure);
                 $this->MaintainVariable('RfSignal', $this->Translate('Signal-strength'), IPS_INTEGER, 'Netatmo.RfSignal', $vpos++, $with_signal);
                 $this->MaintainVariable('Battery', $this->Translate('Battery-Status'), IPS_INTEGER, 'Netatmo.Battery', $vpos++, $with_battery);
@@ -230,6 +257,11 @@ class NetatmoWeatherDevice extends IPSModule
                 $this->MaintainVariable('AbsoluteHumidity', $this->Translate('absolute humidity'), IPS_FLOAT, 'Netatmo.absHumidity', $vpos++, $with_absolute_humidity);
                 $this->MaintainVariable('Dewpoint', $this->Translate('Dewpoint'), IPS_FLOAT, 'Netatmo.Dewpoint', $vpos++, $with_dewpoint);
                 $this->MaintainVariable('Heatindex', $this->Translate('Heatindex'), IPS_FLOAT, 'Netatmo.Heatindex', $vpos++, $with_heatindex);
+                $this->MaintainVariable('TemperatureMax', $this->Translate('Today\'s temperature-maximum'), IPS_FLOAT, 'Netatmo.Temperatur', $vpos++, $with_minmax);
+				$this->MaintainVariable('TemperatureMaxTimestamp', $this->Translate('Time of today\'s temperature-maximum'), IPS_INTEGER, '~UnixTimestampTime', $vpos++, $with_minmax);
+				$this->MaintainVariable('TemperatureMin', $this->Translate('Today\'s temperature-minimum'), IPS_FLOAT, 'Netatmo.Temperatur', $vpos++, $with_minmax);
+				$this->MaintainVariable('TemperatureMinTimestamp', $this->Translate('Time of today\'s temperature-minimum'), IPS_INTEGER, '~UnixTimestampTime', $vpos++, $with_minmax);
+				$this->MaintainVariable('TemperatureTrend', $this->Translate('Trend of temperature'), IPS_INTEGER, 'Netatmo.Trend', $vpos++, $with_trend);
                 $this->MaintainVariable('LastMeasure', $this->Translate('last measurement'), IPS_INTEGER, '~UnixTimestamp', $vpos++, $with_last_measure);
                 $this->MaintainVariable('RfSignal', $this->Translate('Signal-strength'), IPS_INTEGER, 'Netatmo.RfSignal', $vpos++, $with_signal);
                 $this->MaintainVariable('Battery', $this->Translate('Battery-Status'), IPS_INTEGER, 'Netatmo.Battery', $vpos++, $with_battery);
@@ -304,6 +336,8 @@ class NetatmoWeatherDevice extends IPSModule
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_absolute_humidity', 'caption' => ' ... absolute Humidity'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_dewpoint', 'caption' => ' ... Dewpoint'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_heatindex', 'caption' => ' ... Heatindex'];
+                $formElements[] = ['type' => 'CheckBox', 'name' => 'with_minmax', 'caption' => ' ... Min/Max of temperature'];
+                $formElements[] = ['type' => 'CheckBox', 'name' => 'with_trend', 'caption' => ' ... Trend of temperature and pressure'];
                 break;
             case 'NAModule1':
                 $formElements[] = ['type' => 'Label', 'label' => 'optional weather data'];
@@ -311,12 +345,15 @@ class NetatmoWeatherDevice extends IPSModule
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_dewpoint', 'caption' => ' ... Dewpoint'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_windchill', 'caption' => ' ... Windchill'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_heatindex', 'caption' => ' ... Heatindex'];
+                $formElements[] = ['type' => 'CheckBox', 'name' => 'with_minmax', 'caption' => ' ... Min/Max of temperature'];
+                $formElements[] = ['type' => 'CheckBox', 'name' => 'with_trend', 'caption' => ' ... Trend of temperature'];
                 break;
             case 'NAModule2':
                 $formElements[] = ['type' => 'Label', 'label' => 'optional weather data'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_windstrength', 'caption' => ' ... Windstrength'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_windangle', 'caption' => ' ... Winddirection with degree'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_winddirection', 'caption' => ' ... Winddirection with label'];
+                $formElements[] = ['type' => 'CheckBox', 'name' => 'with_minmax', 'caption' => ' ... Max of wind'];
                 break;
             case 'NAModule3':
                 break;
@@ -325,6 +362,8 @@ class NetatmoWeatherDevice extends IPSModule
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_absolute_humidity', 'caption' => ' ... absolute Humidity'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_dewpoint', 'caption' => ' ... Dewpoint'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_heatindex', 'caption' => ' ... Heatindex'];
+                $formElements[] = ['type' => 'CheckBox', 'name' => 'with_minmax', 'caption' => ' ... Min/Max of temperature'];
+                $formElements[] = ['type' => 'CheckBox', 'name' => 'with_trend', 'caption' => ' ... Trend of temperature'];
                 break;
         }
 
@@ -425,27 +464,27 @@ class NetatmoWeatherDevice extends IPSModule
         $windgustdir = '';
         $windgust = '';
 
-        $pressure = $device['dashboard_data']['AbsolutePressure'];
-        $time_utc = $device['dashboard_data']['time_utc'];
+        $pressure = $dashboard['AbsolutePressure'];
+        $time_utc = $dashboard['time_utc'];
 
         $modules = $netatmo['body']['modules'];
         foreach ($modules as $i => $value) {
             $module = $modules[$i];
             switch ($module['type']) {
                 case 'NAModule1':
-                    $temp = $module['dashboard_data']['Temperature'];
-                    $humidity = $module['dashboard_data']['Humidity'];
+                    $temp = $dashboard['Temperature'];
+                    $humidity = $dashboard['Humidity'];
                     break;
                 case 'NAModule2':
-                    $winddir = $module['dashboard_data']['WindAngle'];
-                    $windspeed = $module['dashboard_data']['WindStrength'];
-                    $windgustdir = $module['dashboard_data']['GustAngle'];
-                    $windgust = $module['dashboard_data']['GustStrength'];
+                    $winddir = $dashboard['WindAngle'];
+                    $windspeed = $dashboard['WindStrength'];
+                    $windgustdir = $dashboard['GustAngle'];
+                    $windgust = $dashboard['GustStrength'];
                     break;
                 case 'NAModule3':
-                    $rain = $module['dashboard_data']['Rain'];
-                    $sum_rain_1 = $module['dashboard_data']['sum_rain_1'];
-                    $sum_rain_24 = $module['dashboard_data']['sum_rain_24'];
+                    $rain = $dashboard['Rain'];
+					$sum_rain_1 = $this->getData($dashboard, 'sum_rain_1', 0);
+					$sum_rain_24 = $this->getData($dashboard, 'sum_rain_24', 0);
                     break;
                 case 'NAModule4':
                     break;
@@ -552,7 +591,9 @@ class NetatmoWeatherDevice extends IPSModule
         $station_name = $device['station_name'];
         $module_name = $device['module_name'];
 
-        $last_measure = $device['dashboard_data']['time_utc'];
+		$dashboard = $device['dashboard_data'];
+
+        $last_measure = $dashboard['time_utc'];
 
         // letzte Kommunikation der Station mit Netatmo
         $last_contact = $device['last_status_store'];
@@ -594,7 +635,7 @@ class NetatmoWeatherDevice extends IPSModule
                 }
                 $module_name = $module['module_name'];
 
-                $last_measure = $module['dashboard_data']['time_utc'];
+                $last_measure = $dashboard['time_utc'];
 
                 $last_message = $module['last_message'];
                 if (is_int($last_message)) {
@@ -655,6 +696,8 @@ class NetatmoWeatherDevice extends IPSModule
         $with_absolute_humidity = $this->ReadPropertyBoolean('with_absolute_humidity');
         $with_dewpoint = $this->ReadPropertyBoolean('with_dewpoint');
         $with_heatindex = $this->ReadPropertyBoolean('with_heatindex');
+        $with_minmax = $this->ReadPropertyBoolean('with_minmax');
+        $with_trend = $this->ReadPropertyBoolean('with_trend');
         $with_last_measure = $this->ReadPropertyBoolean('with_last_measure');
 
         $now = time();
@@ -664,14 +707,23 @@ class NetatmoWeatherDevice extends IPSModule
         $station_name = $device['station_name'];
         $module_name = $device['module_name'];
 
-        $Temperature = $device['dashboard_data']['Temperature'];					// °C
-        $CO2 = $device['dashboard_data']['CO2'];									// ppm
-        $Humidity = $device['dashboard_data']['Humidity'];							// %
-        $Noise = $device['dashboard_data']['Noise'];								// dB
-        $Pressure = $device['dashboard_data']['Pressure'];							// mbar
-        $AbsolutePressure = $device['dashboard_data']['AbsolutePressure'];			// mbar
+		$dashboard = $device['dashboard_data'];
 
-        $last_measure = $device['dashboard_data']['time_utc'];
+        $Temperature = $dashboard['Temperature'];
+        $CO2 = $dashboard['CO2'];
+        $Humidity = $dashboard['Humidity'];
+		$Noise = $this->getData($dashboard, 'Noise', 0);
+        $Pressure = $dashboard['Pressure'];
+        $AbsolutePressure = $dashboard['AbsolutePressure'];
+
+		$min_temp = $dashboard['min_temp'];
+		$date_min_temp = $dashboard['date_min_temp'];
+		$max_temp = $dashboard['max_temp'];
+		$date_max_temp = $dashboard['date_max_temp'];
+		$temp_trend = $dashboard['temp_trend'];
+		$pressure_trend = $dashboard['pressure_trend'];
+
+        $last_measure = $dashboard['time_utc'];
 
         $msg = "base-module \"$module_name\": Temperature=$Temperature, CO2=$CO2, Humidity=$Humidity, Noise=$Noise, Pressure=$Pressure, AbsolutePressure=$AbsolutePressure";
         $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
@@ -699,6 +751,20 @@ class NetatmoWeatherDevice extends IPSModule
             $heatindex = $this->CalcHeatindex($Temperature, $Humidity);
             $this->SetValue('Heatindex', $heatindex);
         }
+
+		if ($with_minmax) {
+			$this->SetValue('TemperatureMax', $max_temp);
+			$this->SetValue('TemperatureMaxTimestamp', $date_max_temp);
+			$this->SetValue('TemperatureMin', $min_temp);
+			$this->SetValue('TemperatureMinTimestamp', $date_min_temp);
+		}
+		if ($with_trend) {
+            $trend = $this->map_trend($temp_trend);
+            $this->SetValue('TemperatureTrend', $trend);
+            $trend = $this->map_trend($pressure_trend);
+            $this->SetValue('PressureTrend', $trend);
+		}
+
         if ($with_last_measure) {
             $this->SetValue('LastMeasure', $last_measure);
         }
@@ -719,6 +785,8 @@ class NetatmoWeatherDevice extends IPSModule
         $with_windstrength = $this->ReadPropertyBoolean('with_windstrength');
         $with_windangle = $this->ReadPropertyBoolean('with_windangle');
         $with_winddirection = $this->ReadPropertyBoolean('with_winddirection');
+        $with_minmax = $this->ReadPropertyBoolean('with_minmax');
+        $with_trend = $this->ReadPropertyBoolean('with_trend');
         $with_last_measure = $this->ReadPropertyBoolean('with_last_measure');
         $with_signal = $this->ReadPropertyBoolean('with_signal');
         $with_battery = $this->ReadPropertyBoolean('with_battery');
@@ -741,7 +809,9 @@ class NetatmoWeatherDevice extends IPSModule
 
             $module_name = $module['module_name'];
 
-            $last_measure = $module['dashboard_data']['time_utc'];
+            $dashboard = $module['dashboard_data'];
+
+            $last_measure = $dashboard['time_utc'];
 
             $last_message = $module['last_message'];
 
@@ -751,8 +821,14 @@ class NetatmoWeatherDevice extends IPSModule
             switch ($module_type) {
                 case 'NAModule1':
                     // Außenmodul
-                    $Temperature = $module['dashboard_data']['Temperature'];		// °C
-                    $Humidity = $module['dashboard_data']['Humidity'];				// %
+                    $Temperature = $dashboard['Temperature'];
+                    $Humidity = $dashboard['Humidity'];
+
+					$min_temp = $dashboard['min_temp'];
+					$date_min_temp = $dashboard['date_min_temp'];
+					$max_temp = $dashboard['max_temp'];
+					$date_max_temp = $dashboard['date_max_temp'];
+					$temp_trend = $dashboard['temp_trend'];
 
                     $this->SetValue('Temperature', $Temperature);
                     $this->SetValue('Humidity', $Humidity);
@@ -772,6 +848,16 @@ class NetatmoWeatherDevice extends IPSModule
                         $dewpoint = $this->CalcDewpoint($Temperature, $Humidity);
                         $this->SetValue('Dewpoint', $dewpoint);
                     }
+					if ($with_minmax) {
+						$this->SetValue('TemperatureMax', $max_temp);
+						$this->SetValue('TemperatureMaxTimestamp', $date_max_temp);
+						$this->SetValue('TemperatureMin', $min_temp);
+						$this->SetValue('TemperatureMinTimestamp', $date_min_temp);
+					}
+					if ($with_trend) {
+						$trend = $this->map_trend($temp_trend);
+						$this->SetValue('TemperatureTrend', $trend);
+					}
                     if ($with_last_measure) {
                         $this->SetValue('LastMeasure', $last_measure);
                     }
@@ -787,10 +873,14 @@ class NetatmoWeatherDevice extends IPSModule
                     break;
                 case 'NAModule2':
                     // Windmesser
-                    $WindSpeed = $module['dashboard_data']['WindStrength'];			// km/h
-                    $WindAngle = $module['dashboard_data']['WindAngle'];			// angles
-                    $GustSpeed = $module['dashboard_data']['GustStrength'];			// km/h
-                    $GustAngle = $module['dashboard_data']['GustAngle'];			// angles
+                    $WindSpeed = $dashboard['WindStrength'];
+                    $WindAngle = $dashboard['WindAngle'];
+                    $GustSpeed = $dashboard['GustStrength'];
+                    $GustAngle = $dashboard['GustAngle'];
+
+					$wind_max = $dashboard['max_wind_str'];
+					$wind_max_angle = $dashboard['max_wind_angle'];
+					$wind_max_date = $dashboard['date_max_wind_str'];
 
                     $this->SetValue('WindSpeed', $WindSpeed);
                     $this->SetValue('GustSpeed', $GustSpeed);
@@ -810,6 +900,21 @@ class NetatmoWeatherDevice extends IPSModule
                         $dir = $this->ConvertWindDirection2Text($GustAngle) . ' (' . $GustAngle . '°)';
                         $this->SetValue('GustDirection', $dir);
                     }
+					if ($with_minmax) {
+						$this->SetValue('WindMaxSpeed', $wind_max);
+						if ($with_windangle) {
+							$this->SetValue('WindMaxAngle', $wind_max_angle);
+						}
+						if ($with_windstrength) {
+							$windstrength = $this->ConvertWindSpeed2Strength($wind_max);
+							$this->SetValue('WindMaxStrength', $windstrength);
+						}
+						if ($with_winddirection) {
+							$dir = $this->ConvertWindDirection2Text($wind_max_angle) . ' (' . $wind_max_angle . '°)';
+							$this->SetValue('WindMaxDirection', $dir);
+						}
+						$this->SetValue('WindMaxTimestamp', $wind_max_date);
+					}
                     if ($with_last_measure) {
                         $this->SetValue('LastMeasure', $last_measure);
                     }
@@ -825,9 +930,9 @@ class NetatmoWeatherDevice extends IPSModule
                     break;
                 case 'NAModule3':
                     // Regenmesser
-                    $Rain = $module['dashboard_data']['Rain'];						// mm
-                    $sum_rain_1 = $module['dashboard_data']['sum_rain_1'];			// mm
-                    $sum_rain_24 = $module['dashboard_data']['sum_rain_24'];		// mm
+                    $Rain = $dashboard['Rain'];
+					$sum_rain_1 = $this->getData($dashboard, 'sum_rain_1', 0);
+					$sum_rain_24 = $this->getData($dashboard, 'sum_rain_24', 0);
 
                     $this->SetValue('Rain', $Rain);
                     $this->SetValue('Rain_1h', $sum_rain_1);
@@ -847,16 +952,22 @@ class NetatmoWeatherDevice extends IPSModule
                     break;
                 case 'NAModule4':
                     // Innenmodul
-                    $Temperature = $module['dashboard_data']['Temperature'];		// °C
-                    $Humidity = $module['dashboard_data']['Humidity'];				// %
-                    $CO2 = $module['dashboard_data']['CO2'];						// ppm
+                    $Temperature = $dashboard['Temperature'];
+                    $Humidity = $dashboard['Humidity'];
+                    $CO2 = $dashboard['CO2'];
 
-                    SetValue($this->GetIDForIdent('Temperature'), $Temperature);
-                    SetValue($this->GetIDForIdent('CO2'), $CO2);
-                    SetValue($this->GetIDForIdent('Humidity'), $Humidity);
+					$min_temp = $dashboard['min_temp'];
+					$date_min_temp = $dashboard['date_min_temp'];
+					$max_temp = $dashboard['max_temp'];
+					$date_max_temp = $dashboard['date_max_temp'];
+					$temp_trend = $dashboard['temp_trend'];
+
+                    $this->SetValue('Temperature', $Temperature);
+                    $this->SetValue('CO2', $CO2);
+                    $this->SetValue('Humidity', $Humidity);
                     if ($with_absolute_humidity) {
                         $abs_humidity = $this->CalcAbsoluteHumidity($Temperature, $Humidity);
-                        SetValue($this->GetIDForIdent('AbsoluteHumidity'), $abs_humidity);
+                        $this->SetValue('AbsoluteHumidity', $abs_humidity);
                     }
                     if ($with_dewpoint) {
                         $dewpoint = $this->CalcDewpoint($Temperature, $Humidity);
@@ -866,14 +977,24 @@ class NetatmoWeatherDevice extends IPSModule
                         $heatindex = $this->CalcHeatindex($Temperature, $Humidity);
                         $this->SetValue('Heatindex', $heatindex);
                     }
+					if ($with_minmax) {
+						$this->SetValue('TemperatureMax', $max_temp);
+						$this->SetValue('TemperatureMaxTimestamp', $date_max_temp);
+						$this->SetValue('TemperatureMin', $min_temp);
+						$this->SetValue('TemperatureMinTimestamp', $date_min_temp);
+					}
+					if ($with_trend) {
+						$trend = $this->map_trend($temp_trend);
+						$this->SetValue('TemperatureTrend', $trend);
+					}
                     if ($with_last_measure) {
-                        SetValue($this->GetIDForIdent('LastMeasure'), $last_measure);
+                        $this->SetValue('LastMeasure', $last_measure);
                     }
                     if ($with_signal) {
-                        SetValue($this->GetIDForIdent('RfSignal'), $rf_status);
+                        $this->SetValue('RfSignal', $rf_status);
                     }
                     if ($with_battery) {
-                        SetValue($this->GetIDForIdent('Battery'), $battery_status);
+                        $this->SetValue('Battery', $battery_status);
                     }
 
                     $msg = "indoor module \"$module_name\": Temperature=$Temperature, Humidity=$Humidity, CO2=$CO2";
@@ -903,13 +1024,14 @@ class NetatmoWeatherDevice extends IPSModule
                 $modules = $netatmo['body']['modules'];
                 foreach ($modules as $i => $value) {
                     $module = $modules[$i];
+					$dashboard = $module['dashboard_data'];
                     switch ($module['type']) {
                         case 'NAModule1':
-                            $temp = $module['dashboard_data']['Temperature'];
+                            $temp = $dashboard['Temperature'];
                             break;
                         case 'NAModule2':
                             $type = 'wind';
-                            $windspeed = $module['dashboard_data']['WindStrength'];
+                            $windspeed = $dashboard['WindStrength'];
                             break;
                         default:
                             break;
@@ -1373,6 +1495,11 @@ class NetatmoWeatherDevice extends IPSModule
         return 'text/plain';
     }
 
+    private function getData($data, $var, $dflt)
+	{
+		return isset($data[$var]) ? $data[$var] : $dflt;
+	}
+	
     // Modul-Typ
     private function module_type2text($val)
     {
@@ -1385,7 +1512,7 @@ class NetatmoWeatherDevice extends IPSModule
             'NAModule4'  => 'indoor module',
         ];
 
-        if ($val >= 0 && $val < count($val2txt)) {
+        if (isset($val2txt[$val])) {
             $txt = $this->Translate($val2txt[$val]);
         } else {
             $txt = '';
@@ -1404,7 +1531,7 @@ class NetatmoWeatherDevice extends IPSModule
             'NAModule4'  => 'module_ext.png',
         ];
 
-        if ($val >= 0 && $val < count($val2img)) {
+        if (isset($val2img[$val])) {
             $img = $val2img[$val];
         } else {
             $img = '';
@@ -1435,14 +1562,14 @@ class NetatmoWeatherDevice extends IPSModule
     private function wifi_status2text($status)
     {
         $status2txt = [
-            'schwach',
-            'mittel',
-            'gut',
-            'hoch',
+            'bad',
+            'average',
+            'good',
+            'high'
         ];
 
         if ($status >= 0 && $status < count($status2txt)) {
-            $txt = $status2txt[$status];
+            $txt = $this->Translate($status2txt[$status]);
         } else {
             $txt = '';
         }
@@ -1482,7 +1609,7 @@ class NetatmoWeatherDevice extends IPSModule
             // "low"
             $val = 1;
         } else {
-            // "verylow"
+            // "empty"
             $val = 0;
         }
 
@@ -1492,15 +1619,15 @@ class NetatmoWeatherDevice extends IPSModule
     private function signal_status2text($status)
     {
         $status2txt = [
-            'minimal',
-            'schwach',
-            'mittel',
-            'hoch',
-            'voll',
+            'empty',
+            'low',
+            'medium',
+            'high',
+            'full',
         ];
 
         if ($status >= 0 && $status < count($status2txt)) {
-            $txt = $status2txt[$status];
+            $txt = $this->Translate($status2txt[$status]);
         } else {
             $txt = '';
         }
@@ -1546,7 +1673,7 @@ class NetatmoWeatherDevice extends IPSModule
         }
 
         if ($battery_vp < $vp_map[0]) {
-            // "very low"
+            // "empty"
             $val = 0;
         } elseif ($battery_vp < $vp_map[1]) {
             // "low"
@@ -1571,16 +1698,16 @@ class NetatmoWeatherDevice extends IPSModule
     private function battery_status2text($status)
     {
         $status2txt = [
-            'leer',
-            'schwach',
-            'mittel',
-            'hoch',
-            'voll',
-            'max',
+            'empty',
+            'low',
+            'medium',
+            'high',
+            'full',
+            'max'
         ];
 
         if ($status >= 0 && $status < count($status2txt)) {
-            $txt = $status2txt[$status];
+            $txt = $this->Translate($status2txt[$status]);
         } else {
             $txt = '';
         }
@@ -1644,6 +1771,27 @@ class NetatmoWeatherDevice extends IPSModule
             $o = '';
         }
         return number_format($o, 4, '.', '');
+    }
+
+    private function map_trend($trend)
+    {
+        switch ($trend) {
+            case 'down':
+                $t = -1;
+                break;
+            case 'stable':
+                $t = 0;
+                break;
+            case 'up':
+                $t = 1;
+                break;
+            default:
+                $t = '';
+				echo __FUNCTION__ . ": unknown trend \"" . $trend . "\"\n";
+                break;
+        }
+
+        return $t;
     }
 
     // Sekunden in Menschen-lesbares Format umwandeln
@@ -1737,7 +1885,7 @@ class NetatmoWeatherDevice extends IPSModule
                     break;
                 }
             }
-            echo 'altitude=' . $altitude . "\n";
+            $this->SendDebug(__FUNCTION__, 'altitude=' . $altitude, 0);
         }
 
         // Temperaturgradient (geschätzt)
@@ -1764,13 +1912,13 @@ class NetatmoWeatherDevice extends IPSModule
     {
         $dir2txt = [
             'N',
-            'NNO',
-            'NO',
-            'ONO',
-            'O',
-            'OSO',
-            'SO',
-            'SSO',
+            'NNE',
+            'NE',
+            'ENE',
+            'E',
+            'ESE',
+            'SE',
+            'SSE',
             'S',
             'SSW',
             'SW',
@@ -1783,7 +1931,7 @@ class NetatmoWeatherDevice extends IPSModule
 
         $idx = floor((($dir + 11.25) % 360) / 22.5);
         if ($idx >= 0 && $idx < count($dir2txt)) {
-            $txt = $dir2txt[$idx];
+            $txt = $this->Translate($dir2txt[$idx]);
         } else {
             $txt = '';
         }
@@ -1810,19 +1958,19 @@ class NetatmoWeatherDevice extends IPSModule
     public function ConvertWindStrength2Text(int $bft)
     {
         $bft2txt = [
-            'Windstille',
-            'leiser Zug',
-            'leichte Brise',
-            'schwache Brise',
-            'mäßige Brise',
-            'frische Brise',
-            'starker Wind',
-            'steifer Wind',
-            'stürmischer Wind',
-            'Sturm',
-            'schwerer Sturm',
-            'orkanartiger Sturm',
-            'Orkan'
+            'Calm',
+            'Light air',
+            'Light breeze',
+            'Gentle breeze',
+            'Moderate breeze',
+            'Fresh breeze',
+            'Strong breeze',
+            'High wind',
+            'Gale',
+            'Strong gale',
+            'Storm',
+            'Hurricane force',
+            'Violent storm'
         ];
 
         if ($bft >= 0 && $bft < count($bft2txt)) {

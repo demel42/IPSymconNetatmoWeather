@@ -32,8 +32,8 @@ Die Angabe der Netatmo-Zugangsdaten ist obligatorisch damit die Instanz aktivier
 Weiterhin können die relevanten Wetterdaten in eine persönliche Wetterstation von Wunderground übertragen werden.
 Übertragen wird:
  - Innenmodul: Luftdruck
- - Aussenmodul: Temperatur, Luftfeuchtigkeit und der daraus berechnete Taupunkt
- - Regenmodul: 1h und 24h-Wert
+ - Aussenmodut: Temperatur, Luftfeuchtigkeit und der daraus berechnete Taupunkt
+ - Regenmodul: 1h-Wert und Gesamtmenge von heute (ab Mitternacht)
  - Windmesser: Windgeschwindigkeit und -richtung sowie Geschwindigkeit und Richtung von Böen
 
 Hinweis: Wunderground gibt an, das Daten von Netatmo automatisch übernommen werden, meine Erfahrung ist aber, das das sehr unzuverlässig funktioniert (immer wieder lange Phasen ohne übertragung oder die Station taucht plötzlich unter anderem Namen auf) und zudem erfolgt meiner Beobachtung nach die Übertragung nur einmal am Tag.
@@ -241,9 +241,11 @@ stehen je nach Typ des Moduls zur Verfügung
 | with_dewpoint             | boolean | false        | Taupunkt                                   |
 | with_heatindex            | boolean | false        | Hitzeindex                                 |
 | with_last_contact         | boolean | false        | letzte Übertragung an Netatmo              |
+| with_minmax               | boolean | false        | Ausgabe von Min/Max-Wert (Temperatur, Wind) |
 | with_last_measure         | boolean | false        | Messzeitpunkt                              |
 | with_signal               | boolean | false        | Wifi-/RF-Signalstärke                      |
 | with_status_box           | boolean | false        | HTML-Box mit Status der Station und Module |
+| with_trend                | boolean | false        | Ausgabe des Trend (Temperatur, Luftdruck)  |
 | with_windangle            | boolean | true         | Windrichtung in Grad                       |
 | with_windchill            | boolean | false        | Windchill (Windkühle)                      |
 | with_winddirection        | boolean | false        | Windrichtung mit Text                      |
@@ -283,39 +285,51 @@ Beispiel in module.php sind _Build_StatusBox()_ und _ProcessHook_Status()_.
 
 folgende Variable werden angelegt, zum Teil optional
 
-| Name             | Typ     | Beschreibung                                    | Option                 | Module    |
-| :--------------: | :-----: | :---------------------------------------------: | :--------------------: | :-------: |
-| AbsoluteHumidity | float   | absolute Luftfeuchtigkeit                       | with_absolute_humidity | B,A,I     |
-| AbsolutePressure | float   | absoluter Luftdruck                             | with_absolute_pressure | B         |
-| BatteryAlarm     | boolean | Batterie-Zustand eines oder mehrere Module      |                        | B         |
-| Battery          | integer | Batterie-Status                                 | with_battery           | A,W,R,I   |
-| CO2              | integer | CO2                                             |                        | B,I       |
-| Dewpoint         | float   | Taupunkt                                        | with_dewpoint          | B,A,I     |
-| GustAngle        | integer | Richtung der Böen der letzten 5m                | with_windangle         | W         |
-| GustDirection    | string  | Richtung der Böen der letzten 5m                | with_winddirection     | W         |
-| GustSpeed        | float   | Geschwindigkeit der Böen der letzten 5m         |                        | W         |
-| GustStrength     | integer | Strenth of gusts                                | with_windstrength      | W         |
-| Heatindex        | float   | Hitzeindex                                      | with_heatindex         | B,A,I     |
-| Humidity         | float   | Luftfeuchtigkeit                                |                        | B,A,I     |
-| LastContact      | string  | letzte Übertragung                              | with_last_contact      | B         |
-| LastMeasure      | integer | letzte Messung                                  | with_last_measure      | B,A,W,R,I |
-| ModuleAlarm      | boolean | Station oder Module kommunizieren nicht         |                        | B         |
-| Noise            | integer | Lärm                                            |                        | B         |
-| Pressure         | float   | Luftdruck                                       |                        | B         |
-| Rain_1h          | float   | Regenmenge der letzten 1h                       |                        | R         |
-| Rain_24h         | float   | Regenmenge der letzten 24h                      |                        | R         |
-| Rain             | float   | Regenmenge                                      |                        | R         |
-| RfSignal         | integer | Signal-Stärke                                   | with_signal            | A,W,R,I   |
-| Status           | boolean | Status                                          |                        | B         |
-| StatusBox        | string  | Status der Station und der Module               | with_status_box        | B         |
-| Temperature      | float   | Temperatur                                      |                        | B,A,I     |
-| Wifi             | integer | Strength of wifi-signal                         | with_signal            | B         |
-| WindAngle        | integer | Windrichtung                                    | with_windangle         | W         |
-| Windchill        | float   | Windchill                                       | with_windchill         | A         |
-| WindDirection    | string  | Windrichtung                                    | with_winddirection     | W         |
-| WindSpeed        | float   | Windgeschwindigkeit                             |                        | W         |
-| WindStrength     | integer | Windstärke                                      | with_windstrength      | W         |
-| Wunderground     | boolean | Status der Übertragung an Wunderground          | wunderground_id        | B         |
+| Name                    | Typ            | Beschreibung                                    | Option                 | Module    |
+| :---------------------: | :------------: | :---------------------------------------------: | :--------------------: | :-------: |
+| AbsoluteHumidity        | float          | absolute Luftfeuchtigkeit                       | with_absolute_humidity | B,A,I     |
+| AbsolutePressure        | float          | absoluter Luftdruck                             | with_absolute_pressure | B         |
+| BatteryAlarm            | boolean        | Batterie-Zustand eines oder mehrere Module      |                        | B         |
+| Battery                 | integer        | Batterie-Status                                 | with_battery           | A,W,R,I   |
+| CO2                     | integer        | CO2                                             |                        | B,I       |
+| Dewpoint                | float          | Taupunkt                                        | with_dewpoint          | B,A,I     |
+| GustAngle               | integer        | Richtung der Böen der letzten 5m                | with_windangle         | W         |
+| GustDirection           | string         | Richtung der Böen der letzten 5m                | with_winddirection     | W         |
+| GustSpeed               | float          | Geschwindigkeit der Böen der letzten 5m         |                        | W         |
+| GustStrength            | integer        | Stärke der Böen der letzten 5m                  | with_windstrength      | W         |
+| Heatindex               | float          | Hitzeindex                                      | with_heatindex         | B,A,I     |
+| Humidity                | float          | Luftfeuchtigkeit                                |                        | B,A,I     |
+| LastContact             | UNIX-Timestamp | letzte Übertragung                              | with_last_contact      | B         |
+| LastMeasure             | UNIX-Timestamp | letzte Messung                                  | with_last_measure      | B,A,W,R,I |
+| ModuleAlarm             | boolean        | Station oder Module kommunizieren nicht         |                        | B         |
+| Noise                   | integer        | Lärm                                            |                        | B         |
+| Pressure                | float          | Luftdruck                                       |                        | B         |
+| PressureTrend           | integer        | Trend des Luftdrucks                            | with_trend             | B         |
+| Rain_1h                 | float          | Regenmenge der letzten Stunde                   |                        | R         |
+| Rain_24h                | float          | Regenmenge von heute                            |                        | R         |
+| Rain                    | float          | Regenmenge                                      |                        | R         |
+| RfSignal                | integer        | Signal-Stärke                                   | with_signal            | A,W,R,I   |
+| Status                  | boolean        | Status                                          |                        | B         |
+| StatusBox               | string         | Status der Station und der Module               | with_status_box        | B         |
+| Temperature             | float          | Temperatur                                      |                        | B,A,I     |
+| TemperatureMax          | float          | heutiges Temperatur-Maximum                     | with_minmax            | B,A,I     |
+| TemperatureMaxTimestamp | UNIX-Timestamp | Zeitpunkt des heutigen Temperatur-Maximums      | with_minmax            | B,A,I     |
+| TemperatureMin          | float          | heutiges Temperatur-Minimum                     | with_minmax            | B,A,I     |
+| TemperatureMinTimestamp | UNIX-Timestamp | Zeitpunkt des heutigen Temperatur-Minimums      | with_minmax            | B,A,I     |
+| TemperatureTrend        | integer        | Trend der Temperatur                            | with_trend             | B,A,I     |
+| Wifi                    | integer        | Stärke des Wifi-Signals                         | with_signal            | B         |
+| WindAngle               | integer        | Windrichtung                                    | with_windangle         | W         |
+| Windchill               | float          | Windchill                                       | with_windchill         | A         |
+| WindDirection           | string         | Windrichtung                                    | with_winddirection     | W         |
+| WindMaxAngle            | integer        | Richtung des heutigen Wind-Maximums             | with_minmax + with_windangle    | W         |
+| WindMaxDirection        | string         | Richtung des heutigen Wind-Maximums             | with_minmax + with_winddirection | W         |
+| WindMaxSpeed            | float          | heutiges Windgeschwindigkeit-Maximum            |                        | W         |
+| WindMaxStrength         | integer        | heutiges Windstärke-Maximum                     | with_minmax + with_windstrength | W         |
+| WindMaxTimestamp        | UNIX-Timestamp | Zeitpunkt des maximale Windes                   | with_minmax            | W         |
+| WindSpeed               | float          | Windgeschwindigkeit                             |                        | W         |
+| WindStrength            | integer        | Windstärke                                      | with_windstrength      | W         |
+| Wunderground            | boolean        | Status der Übertragung an Wunderground          | wunderground_id        | B         |
+
 
 _Module_: B=Basis, A=Außen, W=Wind, R=Regen, I=Innen
 
@@ -326,7 +340,7 @@ Es werden folgende Variableprofile angelegt:
 Netatmo.Alarm
 
 * Integer<br>
-Netatmo.Battery, Netatmo.CO2, Netatmo.Noise, Netatmo.RfSignal, Netatmo.Wifi, Netatmo.WindAngle, Netatmo.WindStrength
+Netatmo.Battery, Netatmo.CO2, Netatmo.Noise, Netatmo.RfSignal, Netatmo.Trend, Netatmo.Wifi, Netatmo.WindAngle, Netatmo.WindStrength
 
 * Float<br>
 Netatmo.absHumidity, Netatmo.Dewpoint, Netatmo.Heatindex, Netatmo.Humidity, Netatmo.Pressure, Netatmo.Rainfall, Netatmo.Temperatur, Netatmo.WindSpeed
