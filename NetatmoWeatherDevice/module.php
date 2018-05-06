@@ -464,12 +464,15 @@ class NetatmoWeatherDevice extends IPSModule
         $windgustdir = '';
         $windgust = '';
 
+        $dashboard = $device['dashboard_data'];
+
         $pressure = $dashboard['AbsolutePressure'];
         $time_utc = $dashboard['time_utc'];
 
         $modules = $netatmo['body']['modules'];
         foreach ($modules as $i => $value) {
             $module = $modules[$i];
+            $dashboard = $module['dashboard_data'];
             switch ($module['type']) {
                 case 'NAModule1':
                     $temp = $dashboard['Temperature'];
@@ -634,6 +637,8 @@ class NetatmoWeatherDevice extends IPSModule
                     continue;
                 }
                 $module_name = $module['module_name'];
+
+				$dashboard = $module['dashboard_data'];
 
                 $last_measure = $dashboard['time_utc'];
 
