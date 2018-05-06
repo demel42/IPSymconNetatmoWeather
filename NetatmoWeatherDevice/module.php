@@ -638,7 +638,7 @@ class NetatmoWeatherDevice extends IPSModule
                 }
                 $module_name = $module['module_name'];
 
-				$dashboard = $module['dashboard_data'];
+                $dashboard = $module['dashboard_data'];
 
                 $last_measure = $dashboard['time_utc'];
 
