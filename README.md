@@ -235,7 +235,7 @@ stehen je nach Typ des Moduls zur Verfügung
 | longitude                 | float   |              | Längengrad der Station                     |
 | latitude                  | float   |              | Breitengrad der Station                    |
 |                           |         |              |                                            |
-| with_absolute_humidity    | boolean | false        | absolute Luftfeucht                        |
+| with_absolute_humidity    | boolean | false        | absolute Luftfeuchtigkeit                  |
 | with_absolute_pressure    | boolean | false        | absoluter Luftdruck                        |
 | with_battery              | boolean | false        | Batterie-Status                            |
 | with_dewpoint             | boolean | false        | Taupunkt                                   |
