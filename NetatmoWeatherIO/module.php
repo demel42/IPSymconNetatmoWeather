@@ -230,8 +230,8 @@ class NetatmoWeatherIO extends IPSModule
         }
 
         if ($statuscode) {
-            echo " => statuscode=$statuscode, err=$err";
-            $this->SendDebug(__FUNCTION__, $err, 0);
+			echo "url=$url => statuscode=$statuscode, err=$err";
+			$this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
             $this->SetStatus($statuscode);
         }
 
