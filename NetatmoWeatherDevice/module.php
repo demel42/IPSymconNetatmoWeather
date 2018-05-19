@@ -883,9 +883,9 @@ class NetatmoWeatherDevice extends IPSModule
                     $GustSpeed = $dashboard['GustStrength'];
                     $GustAngle = $dashboard['GustAngle'];
 
-                    $wind_max = $dashboard['max_wind_str'];
-                    $wind_max_angle = $dashboard['max_wind_angle'];
-                    $wind_max_date = $dashboard['date_max_wind_str'];
+                    $wind_max = $this->getData($dashboard, 'max_wind_str', 0);
+                    $wind_max_angle = $this->getData($dashboard, 'max_wind_angle', 0);
+                    $wind_max_date = $this->getData($dashboard, 'date_max_wind_str', 0);
 
                     $this->SetValue('WindSpeed', $WindSpeed);
                     $this->SetValue('GustSpeed', $GustSpeed);
