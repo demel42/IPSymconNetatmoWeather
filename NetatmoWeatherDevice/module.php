@@ -829,11 +829,11 @@ class NetatmoWeatherDevice extends IPSModule
                     $Temperature = $dashboard['Temperature'];
                     $Humidity = $dashboard['Humidity'];
 
-					$min_temp = $this->getData($dashboard, 'min_temp', 0);
-					$date_min_temp = $this->getData($dashboard, 'date_min_temp', 0);
-					$max_temp = $this->getData($dashboard, 'max_temp', 0);
-					$date_max_temp = $this->getData($dashboard, 'date_max_temp', 0);
-					$temp_trend = $this->getData($dashboard, 'temp_trend', '');
+                    $min_temp = $this->getData($dashboard, 'min_temp', 0);
+                    $date_min_temp = $this->getData($dashboard, 'date_min_temp', 0);
+                    $max_temp = $this->getData($dashboard, 'max_temp', 0);
+                    $date_max_temp = $this->getData($dashboard, 'date_max_temp', 0);
+                    $temp_trend = $this->getData($dashboard, 'temp_trend', '');
 
                     $this->SetValue('Temperature', $Temperature);
                     $this->SetValue('Humidity', $Humidity);
@@ -961,11 +961,11 @@ class NetatmoWeatherDevice extends IPSModule
                     $Humidity = $dashboard['Humidity'];
                     $CO2 = $dashboard['CO2'];
 
-					$min_temp = $this->getData($dashboard, 'min_temp', 0);
-					$date_min_temp = $this->getData($dashboard, 'date_min_temp', 0);
-					$max_temp = $this->getData($dashboard, 'max_temp', 0);
-					$date_max_temp = $this->getData($dashboard, 'date_max_temp', 0);
-					$temp_trend = $this->getData($dashboard, 'temp_trend', '');
+                    $min_temp = $this->getData($dashboard, 'min_temp', 0);
+                    $date_min_temp = $this->getData($dashboard, 'date_min_temp', 0);
+                    $max_temp = $this->getData($dashboard, 'max_temp', 0);
+                    $date_max_temp = $this->getData($dashboard, 'date_max_temp', 0);
+                    $temp_trend = $this->getData($dashboard, 'temp_trend', '');
 
                     $this->SetValue('Temperature', $Temperature);
                     $this->SetValue('CO2', $CO2);
