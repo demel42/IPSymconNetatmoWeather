@@ -92,39 +92,39 @@ trait NetatmoWeatherCommon
         return 'text/plain';
     }
 
-	private function LogMessage($Message, $Severity)
-	{
-		if (IPS_GetKernelVersion() >= 5) {
-			switch ($Severity) {
-				case KL_NOTIFY:
-				case KL_WARNING:
-				case KL_ERROR:
-				case KL_DEBUG:
-					$this->LogMessage($Message, $Severity);
-					break;
-				default:
-					echo __CLASS__ . '::' . __FUNCTION__ . ': unknown severity ' . $Severity;
-					break;
-			}
-		} else {
-			switch ($Severity) {
-				case KL_NOTIFY:
-					IPS_LogMessage(__CLASS__ . '::' . __FUNCTION__, 'INFO: ' . $Message);
-					break;
-				case KL_WARNING:
-					IPS_LogMessage(__CLASS__ . '::' . __FUNCTION__, 'WARNUNG: ' . $Message);
-					break;
-				case KL_ERROR:
-					echo $Message;
-					break;
-				case KL_DEBUG:
-					break;
-				default:
-					echo __CLASS__ . '::' . __FUNCTION__ . ': unknown severity ' . $Severity;
-					break;
-			}
-		}
-	}
+    private function LogMessage($Message, $Severity)
+    {
+        if (IPS_GetKernelVersion() >= 5) {
+            switch ($Severity) {
+                case KL_NOTIFY:
+                case KL_WARNING:
+                case KL_ERROR:
+                case KL_DEBUG:
+                    $this->LogMessage($Message, $Severity);
+                    break;
+                default:
+                    echo __CLASS__ . '::' . __FUNCTION__ . ': unknown severity ' . $Severity;
+                    break;
+            }
+        } else {
+            switch ($Severity) {
+                case KL_NOTIFY:
+                    IPS_LogMessage(__CLASS__ . '::' . __FUNCTION__, 'INFO: ' . $Message);
+                    break;
+                case KL_WARNING:
+                    IPS_LogMessage(__CLASS__ . '::' . __FUNCTION__, 'WARNUNG: ' . $Message);
+                    break;
+                case KL_ERROR:
+                    echo $Message;
+                    break;
+                case KL_DEBUG:
+                    break;
+                default:
+                    echo __CLASS__ . '::' . __FUNCTION__ . ': unknown severity ' . $Severity;
+                    break;
+            }
+        }
+    }
 
     private function GetArrayElem($data, $var, $dflt)
     {
