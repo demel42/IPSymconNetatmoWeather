@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
+
 // Constants will be defined with IP-Symcon 5.0 and newer
 if (!defined('IPS_KERNELMESSAGE')) {
     define('IPS_KERNELMESSAGE', 10100);
@@ -23,6 +25,8 @@ if (!defined('IPS_STRING')) {
 
 class NetatmoWeatherDevice extends IPSModule
 {
+    use NetatmoWeatherCommon;
+
     public function Create()
     {
         parent::Create();
@@ -423,24 +427,6 @@ class NetatmoWeatherDevice extends IPSModule
         return json_encode(['elements' => $formElements, 'status' => $formStatus]);
     }
 
-    protected function SetValue($Ident, $Value)
-    {
-        @$varID = $this->GetIDForIdent($Ident);
-        if ($varID == false) {
-            $this->SendDebug(__FUNCTION__, 'missing variable ' . $Ident, 0);
-            return;
-        }
-
-        if (IPS_GetKernelVersion() >= 5) {
-            $ret = parent::SetValue($Ident, $Value);
-        } else {
-            $ret = SetValue($varID, $Value);
-        }
-        if ($ret == false) {
-            $this->SendDebug(__FUNCTION__, 'mismatch of value "' . $Value . '" for variable ' . $Ident, 0);
-        }
-    }
-
     private function update_Wunderground($netatmo, $device)
     {
         $wunderground_url = 'https://weatherstation.wunderground.com/weatherstation/updateweatherstation.php';
@@ -486,8 +472,8 @@ class NetatmoWeatherDevice extends IPSModule
                     break;
                 case 'NAModule3':
                     $rain = $dashboard['Rain'];
-                    $sum_rain_1 = $this->getData($dashboard, 'sum_rain_1', 0);
-                    $sum_rain_24 = $this->getData($dashboard, 'sum_rain_24', 0);
+                    $sum_rain_1 = $this->GetArrayElem($dashboard, 'sum_rain_1', 0);
+                    $sum_rain_24 = $this->GetArrayElem($dashboard, 'sum_rain_24', 0);
                     break;
                 case 'NAModule4':
                     break;
@@ -717,16 +703,16 @@ class NetatmoWeatherDevice extends IPSModule
         $Temperature = $dashboard['Temperature'];
         $CO2 = $dashboard['CO2'];
         $Humidity = $dashboard['Humidity'];
-        $Noise = $this->getData($dashboard, 'Noise', 0);
+        $Noise = $this->GetArrayElem($dashboard, 'Noise', 0);
         $Pressure = $dashboard['Pressure'];
         $AbsolutePressure = $dashboard['AbsolutePressure'];
 
-        $min_temp = $this->getData($dashboard, 'min_temp', 0);
-        $date_min_temp = $this->getData($dashboard, 'date_min_temp', 0);
-        $max_temp = $this->getData($dashboard, 'max_temp', 0);
-        $date_max_temp = $this->getData($dashboard, 'date_max_temp', 0);
-        $temp_trend = $this->getData($dashboard, 'temp_trend', '');
-        $pressure_trend = $this->getData($dashboard, 'pressure_trend', '');
+        $min_temp = $this->GetArrayElem($dashboard, 'min_temp', 0);
+        $date_min_temp = $this->GetArrayElem($dashboard, 'date_min_temp', 0);
+        $max_temp = $this->GetArrayElem($dashboard, 'max_temp', 0);
+        $date_max_temp = $this->GetArrayElem($dashboard, 'date_max_temp', 0);
+        $temp_trend = $this->GetArrayElem($dashboard, 'temp_trend', '');
+        $pressure_trend = $this->GetArrayElem($dashboard, 'pressure_trend', '');
 
         $last_measure = $dashboard['time_utc'];
 
@@ -829,11 +815,11 @@ class NetatmoWeatherDevice extends IPSModule
                     $Temperature = $dashboard['Temperature'];
                     $Humidity = $dashboard['Humidity'];
 
-                    $min_temp = $this->getData($dashboard, 'min_temp', 0);
-                    $date_min_temp = $this->getData($dashboard, 'date_min_temp', 0);
-                    $max_temp = $this->getData($dashboard, 'max_temp', 0);
-                    $date_max_temp = $this->getData($dashboard, 'date_max_temp', 0);
-                    $temp_trend = $this->getData($dashboard, 'temp_trend', '');
+                    $min_temp = $this->GetArrayElem($dashboard, 'min_temp', 0);
+                    $date_min_temp = $this->GetArrayElem($dashboard, 'date_min_temp', 0);
+                    $max_temp = $this->GetArrayElem($dashboard, 'max_temp', 0);
+                    $date_max_temp = $this->GetArrayElem($dashboard, 'date_max_temp', 0);
+                    $temp_trend = $this->GetArrayElem($dashboard, 'temp_trend', '');
 
                     $this->SetValue('Temperature', $Temperature);
                     $this->SetValue('Humidity', $Humidity);
@@ -883,9 +869,9 @@ class NetatmoWeatherDevice extends IPSModule
                     $GustSpeed = $dashboard['GustStrength'];
                     $GustAngle = $dashboard['GustAngle'];
 
-                    $wind_max = $this->getData($dashboard, 'max_wind_str', 0);
-                    $wind_max_angle = $this->getData($dashboard, 'max_wind_angle', 0);
-                    $wind_max_date = $this->getData($dashboard, 'date_max_wind_str', 0);
+                    $wind_max = $this->GetArrayElem($dashboard, 'max_wind_str', 0);
+                    $wind_max_angle = $this->GetArrayElem($dashboard, 'max_wind_angle', 0);
+                    $wind_max_date = $this->GetArrayElem($dashboard, 'date_max_wind_str', 0);
 
                     $this->SetValue('WindSpeed', $WindSpeed);
                     $this->SetValue('GustSpeed', $GustSpeed);
@@ -936,8 +922,8 @@ class NetatmoWeatherDevice extends IPSModule
                 case 'NAModule3':
                     // Regenmesser
                     $Rain = $dashboard['Rain'];
-                    $sum_rain_1 = $this->getData($dashboard, 'sum_rain_1', 0);
-                    $sum_rain_24 = $this->getData($dashboard, 'sum_rain_24', 0);
+                    $sum_rain_1 = $this->GetArrayElem($dashboard, 'sum_rain_1', 0);
+                    $sum_rain_24 = $this->GetArrayElem($dashboard, 'sum_rain_24', 0);
 
                     $this->SetValue('Rain', $Rain);
                     $this->SetValue('Rain_1h', $sum_rain_1);
@@ -961,11 +947,11 @@ class NetatmoWeatherDevice extends IPSModule
                     $Humidity = $dashboard['Humidity'];
                     $CO2 = $dashboard['CO2'];
 
-                    $min_temp = $this->getData($dashboard, 'min_temp', 0);
-                    $date_min_temp = $this->getData($dashboard, 'date_min_temp', 0);
-                    $max_temp = $this->getData($dashboard, 'max_temp', 0);
-                    $date_max_temp = $this->getData($dashboard, 'date_max_temp', 0);
-                    $temp_trend = $this->getData($dashboard, 'temp_trend', '');
+                    $min_temp = $this->GetArrayElem($dashboard, 'min_temp', 0);
+                    $date_min_temp = $this->GetArrayElem($dashboard, 'date_min_temp', 0);
+                    $max_temp = $this->GetArrayElem($dashboard, 'max_temp', 0);
+                    $date_max_temp = $this->GetArrayElem($dashboard, 'date_max_temp', 0);
+                    $temp_trend = $this->GetArrayElem($dashboard, 'temp_trend', '');
 
                     $this->SetValue('Temperature', $Temperature);
                     $this->SetValue('CO2', $CO2);
@@ -1131,51 +1117,6 @@ class NetatmoWeatherDevice extends IPSModule
 
         if ($module_type == 'Station') {
             $this->update_Wunderground($netatmo, $device);
-        }
-    }
-
-    // Variablenprofile erstellen
-    private function CreateVarProfile($Name, $ProfileType, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits, $Icon, $Asscociations = '')
-    {
-        if (!IPS_VariableProfileExists($Name)) {
-            IPS_CreateVariableProfile($Name, $ProfileType);
-            IPS_SetVariableProfileText($Name, '', $Suffix);
-            IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
-            IPS_SetVariableProfileDigits($Name, $Digits);
-            IPS_SetVariableProfileIcon($Name, $Icon);
-            if ($Asscociations != '') {
-                foreach ($Asscociations as $a) {
-                    $w = isset($a['Wert']) ? $a['Wert'] : '';
-                    $n = isset($a['Name']) ? $a['Name'] : '';
-                    $i = isset($a['Icon']) ? $a['Icon'] : '';
-                    $f = isset($a['Farbe']) ? $a['Farbe'] : 0;
-                    IPS_SetVariableProfileAssociation($Name, $w, $n, $i, $f);
-                }
-            }
-        }
-    }
-
-    // Inspired from module SymconTest/HookServe
-    private function RegisterHook($WebHook)
-    {
-        $ids = IPS_GetInstanceListByModuleID('{015A6EB8-D6E5-4B93-B496-0D3F77AE9FE1}');
-        if (count($ids) > 0) {
-            $hooks = json_decode(IPS_GetProperty($ids[0], 'Hooks'), true);
-            $found = false;
-            foreach ($hooks as $index => $hook) {
-                if ($hook['Hook'] == $WebHook) {
-                    if ($hook['TargetID'] == $this->InstanceID) {
-                        return;
-                    }
-                    $hooks[$index]['TargetID'] = $this->InstanceID;
-                    $found = true;
-                }
-            }
-            if (!$found) {
-                $hooks[] = ['Hook' => $WebHook, 'TargetID' => $this->InstanceID];
-            }
-            IPS_SetProperty($ids[0], 'Hooks', json_encode($hooks));
-            IPS_ApplyChanges($ids[0]);
         }
     }
 
@@ -1480,29 +1421,6 @@ class NetatmoWeatherDevice extends IPSModule
         }
         header('Content-Type: ' . $this->GetMimeType(pathinfo($path, PATHINFO_EXTENSION)));
         readfile($path);
-    }
-
-    // Inspired from module SymconTest/HookServe
-    private function GetMimeType($extension)
-    {
-        $lines = file(IPS_GetKernelDirEx() . 'mime.types');
-        foreach ($lines as $line) {
-            $type = explode("\t", $line, 2);
-            if (count($type) == 2) {
-                $types = explode(' ', trim($type[1]));
-                foreach ($types as $ext) {
-                    if ($ext == $extension) {
-                        return $type[0];
-                    }
-                }
-            }
-        }
-        return 'text/plain';
-    }
-
-    private function getData($data, $var, $dflt)
-    {
-        return isset($data[$var]) ? $data[$var] : $dflt;
     }
 
     // Modul-Typ

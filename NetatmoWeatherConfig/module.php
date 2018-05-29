@@ -1,7 +1,11 @@
 <?php
 
+require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
+
 class NetatmoWeatherConfig extends IPSModule
 {
+    use NetatmoWeatherCommon;
+
     public function Create()
     {
         parent::Create();

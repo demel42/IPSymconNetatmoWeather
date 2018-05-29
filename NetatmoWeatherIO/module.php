@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
+
 // Constants will be defined with IP-Symcon 5.0 and newer
 if (!defined('IPS_KERNELMESSAGE')) {
     define('IPS_KERNELMESSAGE', 10100);
@@ -9,6 +11,8 @@ if (!defined('KR_READY')) {
 }
 class NetatmoWeatherIO extends IPSModule
 {
+    use NetatmoWeatherCommon;
+
     public function Create()
     {
         parent::Create();
@@ -109,7 +113,7 @@ class NetatmoWeatherIO extends IPSModule
                 $params = json_decode($response, true);
                 if ($params['access_token'] == '') {
                     $statuscode = 204;
-                    $err = "no 'access_token' in response from netatmo";
+                    $err = "no 'access_token' in response";
                     echo "statuscode=$statuscode, err=$err";
                     $this->SendDebug(__FUNCTION__, $err, 0);
                     $this->SetStatus($statuscode);
@@ -149,7 +153,7 @@ class NetatmoWeatherIO extends IPSModule
             $netatmo = json_decode($data, true);
             $status = $netatmo['status'];
             if ($status != 'ok') {
-                $err = "got status \"$status\" from netamo";
+                $err = "got status \"$status\"";
                 $statuscode = 204;
             } else {
                 $devices = $netatmo['body']['devices'];
@@ -208,22 +212,22 @@ class NetatmoWeatherIO extends IPSModule
         if ($httpcode != 200) {
             if ($httpcode == 400 || $httpcode == 401) {
                 $statuscode = 201;
-                $err = "got http-code $httpcode (unauthorized) from netatmo";
+                $err = "got http-code $httpcode (unauthorized)";
             } elseif ($httpcode >= 500 && $httpcode <= 599) {
                 $statuscode = 202;
-                $err = "got http-code $httpcode (server error) from netatmo";
+                $err = "got http-code $httpcode (server error)";
             } else {
                 $statuscode = 203;
-                $err = "got http-code $httpcode from netatmo";
+                $err = "got http-code $httpcode";
             }
         } elseif ($cdata == '') {
             $statuscode = 204;
-            $err = 'no data from netatmo';
+            $err = 'no data';
         } else {
             $jdata = json_decode($cdata, true);
             if ($jdata == '') {
                 $statuscode = 204;
-                $err = 'malformed response from netatmo';
+                $err = 'malformed response';
             } else {
                 $data = $cdata;
             }
