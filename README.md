@@ -40,7 +40,7 @@ Hinweis: Wunderground gibt an, das Daten von Netatmo automatisch übernommen wer
 
 ## 2. Voraussetzungen
 
- - IPS 4.x
+ - IP-Symcon ab Version 4.4
  - Netatmo Wetterstation und ein entsprechenden Account bei Netatmo.
 
    Es wird sowohl der "normalen" Benutzer-Account, der bei der Anmeldung der Geräte bei Netatmo erzeugt wird (https://my.netatmo.com) als auch einen Account sowie eine "App" bei Netatmo Connect benötigt, um die Werte abrufen zu können (https://dev.netatmo.com).
@@ -54,7 +54,7 @@ Hinweis: Wunderground gibt an, das Daten von Netatmo automatisch übernommen wer
 
 ### a. Laden des Moduls
 
-Die IP-Symcon (min Ver. 4.x) Konsole öffnen. Im Objektbaum unter Kerninstanzen die Instanz __*Modules*__ durch einen doppelten Mausklick öffnen.
+Die Konsole von IP-Symcon öffnen. Im Objektbaum unter Kerninstanzen die Instanz __*Modules*__ durch einen doppelten Mausklick öffnen.
 
 In der _Modules_ Instanz rechts oben auf den Button __*Hinzufügen*__ drücken.
 
