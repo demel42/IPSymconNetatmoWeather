@@ -639,6 +639,8 @@ class NetatmoWeatherDevice extends IPSModule
 
                 $rf_status = $this->map_rf_status($module['rf_status']);
                 $battery_status = $this->map_battery_status($module['type'], $module['battery_vp']);
+				if ($battery_status < 3)
+					$battery_alarm = true;
 
                 $module_data[] = [
                         'module_type'     => $module['type'],
