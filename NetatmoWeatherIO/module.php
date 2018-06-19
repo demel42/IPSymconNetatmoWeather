@@ -210,7 +210,7 @@ class NetatmoWeatherIO extends IPSModule
         $err = '';
         $data = '';
         if ($httpcode != 200) {
-            if ($httpcode == 400 || $httpcode == 401) {
+            if ($httpcode == 401) {
                 $statuscode = 201;
                 $err = "got http-code $httpcode (unauthorized)";
             } elseif ($httpcode >= 500 && $httpcode <= 599) {
