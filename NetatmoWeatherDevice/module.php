@@ -754,9 +754,11 @@ class NetatmoWeatherDevice extends IPSModule
         }
         if ($with_trend) {
             $trend = $this->map_trend($temp_trend);
-            $this->SetValue('TemperatureTrend', $trend);
+			if (is_int($trend))
+				$this->SetValue('TemperatureTrend', $trend);
             $trend = $this->map_trend($pressure_trend);
-            $this->SetValue('PressureTrend', $trend);
+			if (is_int($trend))
+				$this->SetValue('PressureTrend', $trend);
         }
 
         if ($with_last_measure) {
@@ -850,7 +852,8 @@ class NetatmoWeatherDevice extends IPSModule
                     }
                     if ($with_trend) {
                         $trend = $this->map_trend($temp_trend);
-                        $this->SetValue('TemperatureTrend', $trend);
+						if (is_int($trend))
+							$this->SetValue('TemperatureTrend', $trend);
                     }
                     if ($with_last_measure) {
                         $this->SetValue('LastMeasure', $last_measure);
@@ -979,7 +982,8 @@ class NetatmoWeatherDevice extends IPSModule
                     }
                     if ($with_trend) {
                         $trend = $this->map_trend($temp_trend);
-                        $this->SetValue('TemperatureTrend', $trend);
+						if (is_int($trend))
+							$this->SetValue('TemperatureTrend', $trend);
                     }
                     if ($with_last_measure) {
                         $this->SetValue('LastMeasure', $last_measure);
