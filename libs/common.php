@@ -130,7 +130,7 @@ trait NetatmoWeatherCommon
                 case KL_WARNING:
                 case KL_ERROR:
                 case KL_DEBUG:
-                    $this->LogMessage($Message, $Severity);
+                    parent::LogMessage($Message, $Severity);
                     break;
                 default:
                     echo __CLASS__ . '::' . __FUNCTION__ . ': unknown severity ' . $Severity;
