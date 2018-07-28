@@ -191,8 +191,8 @@ Die gelieferte Struktur ist _station_; kein Array, weil es immer nur um eine bes
 | Eigenschaft               | Typ      | Standardwert | Beschreibung |
 | :-----------------------: | :-----:  | :----------: | :----------------------------------------------------------------------------------------------------------: |
 | Netatmo-Zugangsdaten      | string   |              | Benutzername und Passwort von https://my.netatmo.com sowie Client-ID und -Secret von https://dev.netatmo.com |
-|                           |          |              |                                            |
-| UpdateDataInterval        | integer  | 5            | Angabe in Minuten                          |
+|                           |          |              | |
+| Aktualisiere Daten ...    | integer  | 5            | Aktualisierungsintervall, Angabe in Minuten |
 
 Hinweis zum Intervall: die Daten werden nur ca. alle 10m von der Wetterstation an Netatmo übertragen, ein minütliches Intervall ist zulässig, macht aber nur begrenzt Sinn.
 Bei einer Angabe von 5m sind die Werte nicht älter als 15m.
