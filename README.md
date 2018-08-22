@@ -369,7 +369,7 @@ GUIDs
 ## 7. Versions-Historie
 
 - 1.1 @ 22.08.2018 16:59<br>
-  - Anpassungen IPS 5, Abspaltung Brach _ips_4.4_
+  - Anpassungen IPS 5, Abspaltung Branch _ips_4.4_
   - Versionshistorie dazu
   - define's der Variablentypen
   - Schaltfläche mit Link zu README.md in den Konfigurationsdialogen
