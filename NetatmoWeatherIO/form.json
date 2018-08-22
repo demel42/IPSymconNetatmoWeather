@@ -15,8 +15,10 @@
 			],
 	"actions":
 			[
-				{ "type": "Button", "label": "Update Weatherdata", "onClick": "NetatmoWeatherIO_UpdateData($id);" }
-			],		
+				{ "type": "Button", "label": "Update Weatherdata", "onClick": "NetatmoWeatherIO_UpdateData($id);" },
+				{ "type": "Label", "label": "____________________________________________________________________________________________________" },
+				{ "type": "Button", "label": "Module description", "onClick": "echo 'https://github.com/demel42/IPSymconNetatmoWeather/blob/master/README.md';" }
+			],
 	"status":
 			[
 				{ "code": 101, "icon": "inactive", "caption": "Instance getting created" },

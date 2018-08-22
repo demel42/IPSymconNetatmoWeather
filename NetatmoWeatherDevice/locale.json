@@ -30,6 +30,8 @@
 				"Dauer bis die Verbindung zu Netatmo oder zwischen den Stationen als gestört gilt",
 			"Minutes": "Minuten",
 
+			"Module description": "Modulbeschreibung",
+
 			"station data": "Angaben zur Station",
 			"Altitude" : "Höhe",
 			"Longitude" : "Längengrad",

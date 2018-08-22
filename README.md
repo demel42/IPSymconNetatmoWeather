@@ -1,7 +1,7 @@
 # IPSymconNetatmoWeather
 
-[![IPS-Version](https://img.shields.io/badge/Symcon_Version-4.4+-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
-![Module-Version](https://img.shields.io/badge/Modul_Version-1.0-blue.svg)
+[![IPS-Version](https://img.shields.io/badge/Symcon_Version-5.0+-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
+![Module-Version](https://img.shields.io/badge/Modul_Version-1.1-blue.svg)
 ![Code](https://img.shields.io/badge/Code-PHP-blue.svg)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 [![StyleCI](https://github.styleci.io/repos/123791865/shield?branch=master)](https://github.styleci.io/repos/123791865)
@@ -16,6 +16,7 @@
 4. [Funktionsreferenz](#4-funktionsreferenz)
 5. [Konfiguration](#5-konfiguration)
 6. [Anhang](#6-anhang)
+7. [Versions-Historie](#7-versions-historie)
 
 ## 1. Funktionsumfang
 
@@ -44,7 +45,7 @@ Hinweis: Wunderground gibt an, das Daten von Netatmo automatisch übernommen wer
 
 ## 2. Voraussetzungen
 
- - IP-Symcon ab Version 4.4
+ - IP-Symcon ab Version 5, Version 4.4 mit Branch _ips_4.4_ (nur noch Fehlerkorrekturen)
  - Netatmo Wetterstation und ein entsprechenden Account bei Netatmo.
 
    Es wird sowohl der "normalen" Benutzer-Account, der bei der Anmeldung der Geräte bei Netatmo erzeugt wird (https://my.netatmo.com) als auch einen Account sowie eine "App" bei Netatmo Connect benötigt, um die Werte abrufen zu können (https://dev.netatmo.com).
@@ -66,7 +67,7 @@ In dem sich öffnenden Fenster folgende URL hinzufügen:
 
 `https://github.com/demel42/IPSymconNetatmoWeather.git`
 
-und mit _OK_ bestätigen.
+und mit _OK_ bestätigen. Ggfs. auf anderen Branch (Module-Eintrag editieren, _Zweig_ auswählen) wechseln.
 
 Anschließend erscheint ein Eintrag für das Modul in der Liste der Instanz _Modules_
 
@@ -363,3 +364,14 @@ GUIDs
 - Nachrichten:
   - `{DC5A0AD3-88A5-CAED-3CA9-44C20CC20610}`: an NetatmoWeatherIO
   - `{2D42552F-2545-9145-D3C8-A299E3FDC6EA}`: an NetatmoWeatherConfig, NetatmoWeatherDevice
+
+## 7. Versions-Historie
+
+- 1.1 @ 22.08.2018 16:59<br>
+  Anpassungen IPS 5, Abspaltung Brach _ips_4.4_,
+  Versionshistorie dazu,
+  define's der Variablentypen,
+  Schaltfläche mit Link zu README.md in den Konfigurationsdialogen
+
+- 1.0 @ 03.04.2018 17:59<br>
+  Initiale Version

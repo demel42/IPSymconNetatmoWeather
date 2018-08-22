@@ -40,6 +40,12 @@ class NetatmoWeatherConfig extends IPSModule
         $formActions = [];
         $formActions[] = ['type' => 'Select', 'name' => 'station_name', 'caption' => 'Station-Name', 'options' => $options];
         $formActions[] = ['type' => 'Button', 'label' => 'Import of station', 'onClick' => 'NetatmoWeatherConfig_Doit($id, $station_name);'];
+        $formActions[] = ['type' => 'Label', 'label' => '____________________________________________________________________________________________________'];
+        $formActions[] = [
+                            'type'    => 'Button',
+                            'caption' => 'Module description',
+                            'onClick' => 'echo "https://github.com/demel42/IPSymconNetatmoWeather/blob/master/README.md";'
+                        ];
 
         $formStatus = [];
         $formStatus[] = ['code' => '101', 'icon' => 'inactive', 'caption' => 'Instance getting created'];
@@ -90,7 +96,7 @@ class NetatmoWeatherConfig extends IPSModule
         return $instID;
     }
 
-    public function Doit(string $station_name)
+    public function Doit(?string $station_name)
     {
         $SendData = ['DataID' => '{DC5A0AD3-88A5-CAED-3CA9-44C20CC20610}'];
         $data = $this->SendDataToParent(json_encode($SendData));
