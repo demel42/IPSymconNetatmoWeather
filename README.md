@@ -45,7 +45,8 @@ Hinweis: Wunderground gibt an, das Daten von Netatmo automatisch übernommen wer
 
 ## 2. Voraussetzungen
 
- - IP-Symcon ab Version 5, Version 4.4 mit Branch _ips_4.4_ (nur noch Fehlerkorrekturen)
+ - IP-Symcon ab Version 5<br>
+   Version 4.4 mit Branch _ips_4.4_ (nur noch Fehlerkorrekturen)
  - Netatmo Wetterstation und ein entsprechenden Account bei Netatmo.
 
    Es wird sowohl der "normalen" Benutzer-Account, der bei der Anmeldung der Geräte bei Netatmo erzeugt wird (https://my.netatmo.com) als auch einen Account sowie eine "App" bei Netatmo Connect benötigt, um die Werte abrufen zu können (https://dev.netatmo.com).
@@ -67,7 +68,7 @@ In dem sich öffnenden Fenster folgende URL hinzufügen:
 
 `https://github.com/demel42/IPSymconNetatmoWeather.git`
 
-und mit _OK_ bestätigen. Ggfs. auf anderen Branch (Module-Eintrag editieren, _Zweig_ auswählen) wechseln.
+und mit _OK_ bestätigen. Ggfs. auf anderen Branch wechseln (Modul-Eintrag editieren, _Zweig_ auswählen).
 
 Anschließend erscheint ein Eintrag für das Modul in der Liste der Instanz _Modules_
 
@@ -368,10 +369,10 @@ GUIDs
 ## 7. Versions-Historie
 
 - 1.1 @ 22.08.2018 16:59<br>
-  Anpassungen IPS 5, Abspaltung Brach _ips_4.4_,
-  Versionshistorie dazu,
-  define's der Variablentypen,
-  Schaltfläche mit Link zu README.md in den Konfigurationsdialogen
+  - Anpassungen IPS 5, Abspaltung Brach _ips_4.4_
+  - Versionshistorie dazu
+  - define's der Variablentypen
+  - Schaltfläche mit Link zu README.md in den Konfigurationsdialogen
 
 - 1.0 @ 03.04.2018 17:59<br>
   Initiale Version
