@@ -12,11 +12,11 @@ if (!defined('KR_READY')) {
 
 if (!defined('vtBoolean')) {
     define('vtBoolean', 0);
-	define('vtInteger', 1);
-	define('vtFloat', 2);
-	define('vtString', 3);
-	define('vtArray', 8);
-	define('vtObject', 9);
+    define('vtInteger', 1);
+    define('vtFloat', 2);
+    define('vtString', 3);
+    define('vtArray', 8);
+    define('vtObject', 9);
 }
 
 if (!defined('otCategory')) {
