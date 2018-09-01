@@ -271,7 +271,7 @@ class NetatmoWeatherDevice extends IPSModule
                 $this->MaintainVariable('Battery', $this->Translate('Battery-Status'), IPS_INTEGER, 'Netatmo.Battery', $vpos++, $with_battery);
                 break;
             default:
-                $this->SendDebug(__FUNCTION__, "unknown module_type '$module_type'", 0);
+                $this->SendDebug(__FUNCTION__, 'unknown module_type "' . $module_type . '"', 0);
                 break;
         }
 
@@ -1118,8 +1118,7 @@ class NetatmoWeatherDevice extends IPSModule
                 $statuscode = $this->eval_NAModule($netatmo, $device);
                 break;
             default:
-                echo 'unknown module_type ' . $module_type;
-                $this->SendDebug(__FUNCTION__, 'unknown module_type ' . $module_type, 0);
+                $this->SendDebug(__FUNCTION__, 'unknown module_type "' . $module_type . '"', 0);
                 $statuscode = 102;
                 break;
         }
@@ -1721,7 +1720,7 @@ class NetatmoWeatherDevice extends IPSModule
                 break;
             default:
                 $t = '';
-                echo __FUNCTION__ . ': unknown trend "' . $trend . "\"\n";
+                $this->SendDebug(__FUNCTION__, 'unknown trend "' . $trend . '"', 0);
                 break;
         }
 
