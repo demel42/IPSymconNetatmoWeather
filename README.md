@@ -16,6 +16,7 @@
 4. [Funktionsreferenz](#4-funktionsreferenz)
 5. [Konfiguration](#5-konfiguration)
 6. [Anhang](#6-anhang)
+7. [Versions-Historie](#7-versions-historie)
 
 ## 1. Funktionsumfang
 
@@ -363,3 +364,15 @@ GUIDs
 - Nachrichten:
   - `{DC5A0AD3-88A5-CAED-3CA9-44C20CC20610}`: an NetatmoWeatherIO
   - `{2D42552F-2545-9145-D3C8-A299E3FDC6EA}`: an NetatmoWeatherConfig, NetatmoWeatherDevice
+
+## 7. Versions-Historie
+
+- 1.2-4.4 @ 01.09.2018 15:09<br>
+  - Fehlermeldung 'unknown trend' erscheint nicht mehr im Log (ist nur ein Hinweis, das von Netatmo kein Trend geliefert wurde)
+
+- 1.1-4.4 @ 22.08.2018 16:59<br>
+  - Anpassungen IPS 5, Abspaltung Branch _ips_4.4_
+  - Versionshistorie dazu
+
+- 1.0 @ 03.04.2018 17:59<br>
+  Initiale Version
