@@ -368,6 +368,9 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.2 @ 01.09.2018 15:09<br>
+  - Fehlermeldung 'unknown trend' erscheint nicht mehr im Log (ist nur ein Hinweis, das von Netatmo kein Trend geliefert wurde)
+
 - 1.1 @ 22.08.2018 16:59<br>
   - Anpassungen IPS 5, Abspaltung Branch _ips_4.4_
   - Versionshistorie dazu
