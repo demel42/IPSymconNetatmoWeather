@@ -1,7 +1,7 @@
 # IPSymconNetatmoWeather
 
 [![IPS-Version](https://img.shields.io/badge/Symcon_Version-5.0-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
-![Module-Version](https://img.shields.io/badge/Modul_Version-1.2-blue.svg)
+![Module-Version](https://img.shields.io/badge/Modul_Version-1.3-blue.svg)
 ![Code](https://img.shields.io/badge/Code-PHP-blue.svg)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 [![StyleCI](https://github.styleci.io/repos/123791865/shield?branch=master)](https://github.styleci.io/repos/123791865)
@@ -100,7 +100,7 @@ Die Instanzen können dann in gewohnter Weise im Objektbaum frei positioniert we
 
 ### zentrale Funktion
 
-`UpdateData(int $InstanzID)`
+`NetatmoWeatherIO_UpdateData(int $InstanzID)`
 
 ruft die Daten der Netatmo-Wetterstation ab und aktualisiert optional dien Wundergrund-PWS. Wird automatisch zyklisch durch die Instanz durchgeführt im Abstand wie in der Konfiguration angegeben.
 
@@ -367,6 +367,9 @@ GUIDs
   - `{2D42552F-2545-9145-D3C8-A299E3FDC6EA}`: an NetatmoWeatherConfig, NetatmoWeatherDevice
 
 ## 7. Versions-Historie
+
+- 1.3 @ 10.09.2018 15:43<br>
+  - Schreibfehler in der DOkumentation
 
 - 1.2 @ 01.09.2018 15:09<br>
   - Fehlermeldung 'unknown trend' erscheint nicht mehr im Log (ist nur ein Hinweis, das von Netatmo kein Trend geliefert wurde)
