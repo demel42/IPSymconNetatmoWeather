@@ -102,7 +102,7 @@ Die Instanzen können dann in gewohnter Weise im Objektbaum frei positioniert we
 
 `NetatmoWeatherIO_UpdateData(int $InstanzID)`
 
-ruft die Daten der Netatmo-Wetterstation ab und aktualisiert optional dien Wundergrund-PWS. Wird automatisch zyklisch durch die Instanz durchgeführt im Abstand wie in der Konfiguration angegeben.
+ruft die Daten der Netatmo-Wetterstation ab und aktualisiert optional die Wundergrund-PWS. Wird automatisch zyklisch durch die Instanz durchgeführt im Abstand wie in der Konfiguration angegeben.
 
 ### Hilfsfunktionen
 
