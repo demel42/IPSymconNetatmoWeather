@@ -537,7 +537,7 @@ class NetatmoWeatherDevice extends IPSModule
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        $duration = floor((microtime(true) - $time_start) * 100) / 100;
+        $duration = round(microtime(true) - $time_start, 2);
         $this->SendDebug(__FUNCTION__, ' => httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
 
         $do_abort = false;
