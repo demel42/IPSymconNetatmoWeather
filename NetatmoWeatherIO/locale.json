@@ -13,10 +13,10 @@
 			"Client ID": "Client ID",
 			"Client Secret": "Client Secret",
 
-			"Update Weatherdata every X minutes": "Aktualisiere Wetterdaten alle X Minuten",
+			"Update weatherdata every X minutes": "Aktualisiere Wetterdaten alle X Minuten",
 			"Minutes": "Minuten",
 
-			"Update Weatherdata": "Aktualisiere Wetterdaten",
+			"Update weatherdata": "Aktualisiere Wetterdaten",
 
 			"Module description": "Modulbeschreibung",
 

@@ -10,12 +10,12 @@
 				{ "type": "ValidationTextBox", "name": "Netatmo_Secret", "caption": "Client Secret" },
 
 				{ "type": "Label", "label": "" },
-				{ "type": "Label", "label": "Update Weatherdata every X minutes" },
+				{ "type": "Label", "label": "Update weatherdata every X minutes" },
 				{ "type": "IntervalBox", "name": "UpdateDataInterval", "caption": "Minutes" }
 			],
 	"actions":
 			[
-				{ "type": "Button", "label": "Update Weatherdata", "onClick": "NetatmoWeatherIO_UpdateData($id);" },
+				{ "type": "Button", "label": "Update weatherdata", "onClick": "NetatmoWeatherIO_UpdateData($id);" },
 				{ "type": "Label", "label": "____________________________________________________________________________________________________" },
 				{ "type": "Button", "label": "Module description", "onClick": "echo 'https://github.com/demel42/IPSymconNetatmoWeather/blob/master/README.md';" }
 			],

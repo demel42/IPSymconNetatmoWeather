@@ -351,7 +351,7 @@ class NetatmoWeatherDevice extends IPSModule
             case 'NAModule2':
                 $formElements[] = ['type' => 'Label', 'label' => 'optional weather data'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_windstrength', 'caption' => ' ... Windstrength'];
-                $formElements[] = ['type' => 'CheckBox', 'name' => 'with_windangle', 'caption' => ' ... Winddirection with degree'];
+                $formElements[] = ['type' => 'CheckBox', 'name' => 'with_windangle', 'caption' => ' ... Winddirection in degrees'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_winddirection', 'caption' => ' ... Winddirection with label'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_minmax', 'caption' => ' ... Strongest gust of today'];
                 break;
@@ -643,7 +643,7 @@ class NetatmoWeatherDevice extends IPSModule
 
                 $rf_status = $this->map_rf_status($module['rf_status']);
                 $battery_status = $this->map_battery_status($module['type'], $module['battery_vp']);
-                if ($battery_status < 3) {
+                if ($battery_status < 2) {
                     $battery_alarm = true;
                 }
 
