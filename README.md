@@ -1,7 +1,7 @@
 # IPSymconNetatmoWeather
 
 [![IPS-Version](https://img.shields.io/badge/Symcon_Version-5.0-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
-![Module-Version](https://img.shields.io/badge/Modul_Version-1.4-blue.svg)
+![Module-Version](https://img.shields.io/badge/Modul_Version-1.5-blue.svg)
 ![Code](https://img.shields.io/badge/Code-PHP-blue.svg)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 [![StyleCI](https://github.styleci.io/repos/123791865/shield?branch=master)](https://github.styleci.io/repos/123791865)
@@ -367,6 +367,10 @@ GUIDs
   - `{2D42552F-2545-9145-D3C8-A299E3FDC6EA}`: an NetatmoWeatherConfig, NetatmoWeatherDevice
 
 ## 7. Versions-Historie
+
+- 1.5 @ 02.10.2018 18:19 <br>
+  - Berechnung in _ConvertWindSpeed2Strength()_ war fehlerhaft
+  - Text in _ConvertWindStrength2Text()_ wurde nicht übersetzt
 
 - 1.4 @ 29.09.2018 13:41 <br>
   - Ballterie-Alarm erst ab _low_

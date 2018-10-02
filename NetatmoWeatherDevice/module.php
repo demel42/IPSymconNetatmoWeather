@@ -1879,11 +1879,11 @@ class NetatmoWeatherDevice extends IPSModule
     //   Quelle: https://de.wikipedia.org/wiki/Beaufortskala
     public function ConvertWindSpeed2Strength(int $speed)
     {
-        $kmh2bft = [0.3, 1.6, 3.4, 5.5, 8.0, 10.8, 13.9, 17.2, 20.8, 24.5, 28.5, 32.7];
+        $kn2bft = [1, 4, 7, 11, 16, 22, 28, 34, 41, 48, 56, 64];
 
-        $ms = $speed / 3.6;
-        for ($i = 0; $i < count($kmh2bft); $i++) {
-            if ($ms < $kmh2bft[$i]) {
+        $kn = $speed / 1.852;
+        for ($i = 0; $i < count($kn2bft); $i++) {
+            if ($kn < $kn2bft[$i]) {
                 break;
             }
         }
@@ -1911,7 +1911,7 @@ class NetatmoWeatherDevice extends IPSModule
         ];
 
         if ($bft >= 0 && $bft < count($bft2txt)) {
-            $txt = $bft2txt[$bft];
+            $txt = $this->Translate($bft2txt[$bft]);
         } else {
             $txt = '';
         }
