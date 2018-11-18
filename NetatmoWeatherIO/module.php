@@ -23,6 +23,7 @@ class NetatmoWeatherIO extends IPSModule
         $this->RegisterPropertyString('Netatmo_Secret', '');
 
         $this->RegisterPropertyInteger('UpdateDataInterval', '5');
+        $this->RegisterPropertyInteger('ignore_http_error', '3');
 
         $this->RegisterTimer('UpdateDataWeather', 0, 'NetatmoWeatherIO_UpdateData(' . $this->InstanceID . ');');
         $this->RegisterMessage(0, IPS_KERNELMESSAGE);
@@ -139,8 +140,8 @@ class NetatmoWeatherIO extends IPSModule
             $this->SetBuffer('Token', json_encode($jtoken));
 
             if ($do_abort) {
+                // $this->SendData('');
                 $this->SetBuffer('LastData', '');
-                $this->SendData('');
                 return -1;
             }
         }
@@ -176,7 +177,7 @@ class NetatmoWeatherIO extends IPSModule
         }
 
         if ($do_abort) {
-            $this->SendData('');
+            // $this->SendData('');
             $this->SetBuffer('LastData', '');
             return -1;
         }
@@ -189,6 +190,8 @@ class NetatmoWeatherIO extends IPSModule
 
     private function do_HttpRequest($url, $postdata = '')
     {
+		$ignore_http_error = $this->ReadPropertyInteger('ignore_http_error');
+
         $this->SendDebug(__FUNCTION__, 'http-' . ($postdata != '' ? 'post' : 'get') . ': url=' . $url, 0);
         $time_start = microtime(true);
 
@@ -237,10 +240,25 @@ class NetatmoWeatherIO extends IPSModule
         }
 
         if ($statuscode) {
-            echo "url=$url => statuscode=$statuscode, err=$err";
-            $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
-            $this->SetStatus($statuscode);
-        }
+			$cstat = $this->GetBuffer('LastStatus');
+			if ($cstat != '') {
+				$jstat = json_decode($cstat, true);
+			} else {
+				$jstat = [];
+			}
+			$jstat[] = [ 'statuscode' => $statuscode, 'err' => $err, 'tstamp' => time() ];
+			$n_stat = count($jstat);
+			$cstat = json_encode($jstat);
+			echo 'url=' . $url . ' => statuscode=' . $statuscode . ', err=' . $err . ', status #' . $n_stat;
+			if ($n_stat >= $ignore_http_error) {
+				$this->SetStatus($statuscode);
+				$cstat = '';
+			}
+            $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err . ', status #' . $n_stat, 0);
+        } else {
+			$cstat = '';
+		}
+		$this->SetBuffer('LastStatus', $cstat);
 
         return $data;
     }
