@@ -23,7 +23,7 @@ class NetatmoWeatherIO extends IPSModule
         $this->RegisterPropertyString('Netatmo_Secret', '');
 
         $this->RegisterPropertyInteger('UpdateDataInterval', '5');
-        $this->RegisterPropertyInteger('ignore_http_error', '3');
+        $this->RegisterPropertyInteger('ignore_http_error', '0');
 
         $this->RegisterTimer('UpdateDataWeather', 0, 'NetatmoWeatherIO_UpdateData(' . $this->InstanceID . ');');
         $this->RegisterMessage(0, IPS_KERNELMESSAGE);
