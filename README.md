@@ -370,7 +370,7 @@ GUIDs
 ## 7. Versions-Historie
 
 - 1.3-4.4 @ 18.11.2018 12:28<br>
-  - da Netatmo häufiger ein Server-Error meldet wird erst nach dem X. Fehler reagiert
+  - da Netatmo häufiger ein Server-Error meldet wird optional erst nach dem X. Fehler reagiert
   - I/O-Fehler werden nicht mehr an die Instanzen weitergeleitet
 
 - 1.2-4.4 @ 01.09.2018 15:09<br>
