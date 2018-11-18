@@ -1095,7 +1095,7 @@ class NetatmoWeatherDevice extends IPSModule
         if ($do_abort) {
             echo "statuscode=$statuscode, err=$err";
             $this->SendDebug(__FUNCTION__, $err, 0);
-			$this->SetStatus($statuscode);
+            $this->SetStatus($statuscode);
 
             if ($module_type == 'NAMain') {
                 $this->SetValue('Status', false);
