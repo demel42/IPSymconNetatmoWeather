@@ -190,7 +190,7 @@ class NetatmoWeatherIO extends IPSModule
 
     private function do_HttpRequest($url, $postdata = '')
     {
-		$ignore_http_error = $this->ReadPropertyInteger('ignore_http_error');
+        $ignore_http_error = $this->ReadPropertyInteger('ignore_http_error');
 
         $this->SendDebug(__FUNCTION__, 'http-' . ($postdata != '' ? 'post' : 'get') . ': url=' . $url, 0);
         $time_start = microtime(true);
@@ -240,25 +240,25 @@ class NetatmoWeatherIO extends IPSModule
         }
 
         if ($statuscode) {
-			$cstat = $this->GetBuffer('LastStatus');
-			if ($cstat != '') {
-				$jstat = json_decode($cstat, true);
-			} else {
-				$jstat = [];
-			}
-			$jstat[] = [ 'statuscode' => $statuscode, 'err' => $err, 'tstamp' => time() ];
-			$n_stat = count($jstat);
-			$cstat = json_encode($jstat);
-			echo 'url=' . $url . ' => statuscode=' . $statuscode . ', err=' . $err . ', status #' . $n_stat;
-			if ($n_stat >= $ignore_http_error) {
-				$this->SetStatus($statuscode);
-				$cstat = '';
-			}
+            $cstat = $this->GetBuffer('LastStatus');
+            if ($cstat != '') {
+                $jstat = json_decode($cstat, true);
+            } else {
+                $jstat = [];
+            }
+            $jstat[] = ['statuscode' => $statuscode, 'err' => $err, 'tstamp' => time()];
+            $n_stat = count($jstat);
+            $cstat = json_encode($jstat);
+            echo 'url=' . $url . ' => statuscode=' . $statuscode . ', err=' . $err . ', status #' . $n_stat;
+            if ($n_stat >= $ignore_http_error) {
+                $this->SetStatus($statuscode);
+                $cstat = '';
+            }
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err . ', status #' . $n_stat, 0);
         } else {
-			$cstat = '';
-		}
-		$this->SetBuffer('LastStatus', $cstat);
+            $cstat = '';
+        }
+        $this->SetBuffer('LastStatus', $cstat);
 
         return $data;
     }
