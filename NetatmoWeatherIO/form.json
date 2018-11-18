@@ -9,6 +9,9 @@
 				{ "type": "ValidationTextBox", "name": "Netatmo_Client", "caption": "Client ID" },
 				{ "type": "ValidationTextBox", "name": "Netatmo_Secret", "caption": "Client Secret" },
 
+				{ "type": "Label", "label": "Ignore HTTP-Error X times" },
+				{ "type": "IntervalBox", "name": "ignore_http_error", "caption": "Count" },
+
 				{ "type": "Label", "label": "" },
 				{ "type": "Label", "label": "Update weatherdata every X minutes" },
 				{ "type": "IntervalBox", "name": "UpdateDataInterval", "caption": "Minutes" }

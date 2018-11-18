@@ -13,6 +13,9 @@
 			"Client ID": "Client ID",
 			"Client Secret": "Client Secret",
 
+			"Ignore HTTP-Error X times": "HTTP-Fehler X-fach ignorieren",
+			"Count": "Anzahl",
+
 			"Update weatherdata every X minutes": "Aktualisiere Wetterdaten alle X Minuten",
 			"Minutes": "Minuten",
 
