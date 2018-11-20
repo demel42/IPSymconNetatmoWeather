@@ -177,7 +177,7 @@ class NetatmoWeatherConfig extends IPSModule
             ];
         $instID = $this->FindOrCreateInstance($station_id, $module_name, $module_info, $properties, $pos++);
 
-        $modules = $netatmo['body']['modules'];
+        $modules = $device['modules'];
         foreach (['NAModule4', 'NAModule1', 'NAModule3', 'NAModule2'] as $types) {
             foreach ($modules as $module) {
                 if ($module['type'] != $types) {
