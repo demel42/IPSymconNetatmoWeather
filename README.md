@@ -371,7 +371,7 @@ GUIDs
 
 - 1.4-4.4 @ 20.11.2018 17:38<br>
   - das Netatmo-API-Interface hat sich anscheinend geändert, die jetzt als _deprecated_ gekennzeichnete Funktion _Devicelist_ liefert seit heute ein anderes Format.
-    Es wird nun die Funktion 'Getstationsdata' verwendet.
+	Das Modul ist nun auf die Funktion 'Getstationsdata' umgestellt.
 
 - 1.3-4.4 @ 18.11.2018 12:28<br>
   - da Netatmo häufiger ein Server-Error meldet wird optional erst nach dem X. Fehler reagiert
