@@ -459,7 +459,7 @@ class NetatmoWeatherDevice extends IPSModule
         $pressure = $dashboard['AbsolutePressure'];
         $time_utc = $dashboard['time_utc'];
 
-        $modules = $netatmo['body']['modules'];
+		$modules = $device['modules'];
         foreach ($modules as $i => $value) {
             $module = $modules[$i];
             $dashboard = $module['dashboard_data'];
@@ -620,7 +620,7 @@ class NetatmoWeatherDevice extends IPSModule
             $this->SetValue('Wifi', $wifi_status);
         }
 
-        $modules = $netatmo['body']['modules'];
+		$modules = $device['modules'];
         foreach (['NAModule4', 'NAModule1', 'NAModule3', 'NAModule2'] as $types) {
             foreach ($modules as $module) {
                 if ($module['type'] != $types) {
@@ -800,7 +800,7 @@ class NetatmoWeatherDevice extends IPSModule
         $station_name = $device['station_name'];
 
         $module_found = false;
-        $modules = $netatmo['body']['modules'];
+        $modules = $device['modules'];
         foreach ($modules as $module) {
             $id = $module['_id'];
             if ($module_id != $module['_id']) {
@@ -1027,7 +1027,7 @@ class NetatmoWeatherDevice extends IPSModule
             if ($with_windchill) {
                 $temp = '';
                 $windspeed = '';
-                $modules = $netatmo['body']['modules'];
+                $modules = $device['modules'];
                 foreach ($modules as $i => $value) {
                     $module = $modules[$i];
                     $dashboard = $module['dashboard_data'];
@@ -1108,6 +1108,8 @@ class NetatmoWeatherDevice extends IPSModule
 
         $now = time();
 
+		$this->SendDebug(__FUNCTION__, 'netatmo=' . print_r($netatmo, true), 0);
+		$this->SendDebug(__FUNCTION__, 'device=' . print_r($device, true), 0);
         switch ($module_type) {
              case 'Station':
                 $statuscode = $this->eval_Station($netatmo, $device);
