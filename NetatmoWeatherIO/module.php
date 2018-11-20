@@ -84,7 +84,8 @@ class NetatmoWeatherIO extends IPSModule
     public function UpdateData()
     {
         $netatmo_auth_url = 'https://api.netatmo.net/oauth2/token';
-        $netatmo_netatmo_data_url = 'https://api.netatmo.net/api/devicelist';
+        //$netatmo_data_url = 'https://api.netatmo.net/api/devicelist';
+        $netatmo_data_url = 'https://api.netatmo.net/api/getstationsdata';
 
         $netatmo_user = $this->ReadPropertyString('Netatmo_User');
         $netatmo_password = $this->ReadPropertyString('Netatmo_Password');
@@ -147,7 +148,7 @@ class NetatmoWeatherIO extends IPSModule
         }
 
         // Anfrage mit Token
-        $netatmo_data_url = $netatmo_netatmo_data_url . '?access_token=' . $token;
+        $netatmo_data_url .= '?access_token=' . $token;
 
         $do_abort = false;
         $data = $this->do_HttpRequest($netatmo_data_url);
