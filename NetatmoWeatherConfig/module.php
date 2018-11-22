@@ -208,7 +208,7 @@ class NetatmoWeatherConfig extends IPSModule
                     default:
                         echo 'unknown module_type ' . $module['type'];
                         $this->SendDebug(__FUNCTION__, 'unknown module_type ' . $module['type'], 0);
-                        continue;
+                        break;
                 }
                 $properties = [
                         'module_type' => $module_type,
