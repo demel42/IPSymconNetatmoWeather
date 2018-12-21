@@ -10,13 +10,11 @@ if (!defined('KR_READY')) {
     define('KR_READY', 10103);
 }
 
-if (!defined('vtBoolean')) {
-    define('vtBoolean', 0);
-    define('vtInteger', 1);
-    define('vtFloat', 2);
-    define('vtString', 3);
-    define('vtArray', 8);
-    define('vtObject', 9);
+if (!defined('VARIABLETYPE_BOOLEAN')) {
+    define('VARIABLETYPE_BOOLEAN', 0);
+    define('VARIABLETYPE_INTEGER', 1);
+    define('VARIABLETYPE_FLOAT', 2);
+    define('VARIABLETYPE_STRING', 3);
 }
 
 class NetatmoWeatherDevice extends IPSModule
@@ -63,43 +61,43 @@ class NetatmoWeatherDevice extends IPSModule
         $this->RegisterPropertyBoolean('with_signal', false);
         $this->RegisterPropertyBoolean('with_battery', false);
 
-        $this->CreateVarProfile('Netatmo.Temperatur', vtFloat, ' °C', -10, 30, 0, 1, 'Temperature');
-        $this->CreateVarProfile('Netatmo.Humidity', vtFloat, ' %', 0, 0, 0, 0, 'Drops');
-        $this->CreateVarProfile('Netatmo.absHumidity', vtFloat, ' g/m³', 10, 100, 0, 0, 'Drops');
-        $this->CreateVarProfile('Netatmo.Dewpoint', vtFloat, ' °C', 0, 30, 0, 0, 'Drops');
-        $this->CreateVarProfile('Netatmo.Heatindex', vtFloat, ' °C', 0, 100, 0, 0, 'Temperature');
-        $this->CreateVarProfile('Netatmo.Pressure', vtFloat, ' mbar', 500, 1200, 0, 0, 'Gauge');
-        $this->CreateVarProfile('Netatmo.WindSpeed', vtFloat, ' km/h', 0, 100, 0, 0, 'WindSpeed');
-        $this->CreateVarProfile('Netatmo.WindStrength', vtInteger, ' bft', 0, 13, 0, 0, 'WindSpeed');
-        $this->CreateVarProfile('Netatmo.WindAngle', vtInteger, ' °', 0, 360, 0, 0, 'WindDirection');
-        $this->CreateVarProfile('Netatmo.WindDirection', vtString, '', 0, 0, 0, 0, 'WindDirection');
-        $this->CreateVarProfile('Netatmo.Rainfall', vtFloat, ' mm', 0, 60, 0, 1, 'Rainfall');
+        $this->CreateVarProfile('Netatmo.Temperatur', VARIABLETYPE_FLOAT, ' °C', -10, 30, 0, 1, 'Temperature');
+        $this->CreateVarProfile('Netatmo.Humidity', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, 'Drops');
+        $this->CreateVarProfile('Netatmo.absHumidity', VARIABLETYPE_FLOAT, ' g/m³', 10, 100, 0, 0, 'Drops');
+        $this->CreateVarProfile('Netatmo.Dewpoint', VARIABLETYPE_FLOAT, ' °C', 0, 30, 0, 0, 'Drops');
+        $this->CreateVarProfile('Netatmo.Heatindex', VARIABLETYPE_FLOAT, ' °C', 0, 100, 0, 0, 'Temperature');
+        $this->CreateVarProfile('Netatmo.Pressure', VARIABLETYPE_FLOAT, ' mbar', 500, 1200, 0, 0, 'Gauge');
+        $this->CreateVarProfile('Netatmo.WindSpeed', VARIABLETYPE_FLOAT, ' km/h', 0, 100, 0, 0, 'WindSpeed');
+        $this->CreateVarProfile('Netatmo.WindStrength', VARIABLETYPE_INTEGER, ' bft', 0, 13, 0, 0, 'WindSpeed');
+        $this->CreateVarProfile('Netatmo.WindAngle', VARIABLETYPE_INTEGER, ' °', 0, 360, 0, 0, 'WindDirection');
+        $this->CreateVarProfile('Netatmo.WindDirection', VARIABLETYPE_STRING, '', 0, 0, 0, 0, 'WindDirection');
+        $this->CreateVarProfile('Netatmo.Rainfall', VARIABLETYPE_FLOAT, ' mm', 0, 60, 0, 1, 'Rainfall');
 
         $associations = [];
         $associations[] = ['Wert' =>  0, 'Name' => '%d', 'Farbe' => 0x008040];
         $associations[] = ['Wert' => 40, 'Name' => '%d', 'Farbe' => 0xFFFF31];
         $associations[] = ['Wert' => 65, 'Name' => '%d', 'Farbe' => 0xFF8000];
         $associations[] = ['Wert' => 95, 'Name' => '%d', 'Farbe' => 0xFF0000];
-        $this->CreateVarProfile('Netatmo.Noise', vtInteger, ' dB', 0, 130, 0, 1, 'Speaker', $associations);
+        $this->CreateVarProfile('Netatmo.Noise', VARIABLETYPE_INTEGER, ' dB', 0, 130, 0, 1, 'Speaker', $associations);
 
         $associations = [];
         $associations[] = ['Wert' =>    0, 'Name' => '%d', 'Farbe' => 0x008000];
         $associations[] = ['Wert' => 1000, 'Name' => '%d', 'Farbe' => 0xFFFF00];
         $associations[] = ['Wert' => 1250, 'Name' => '%d', 'Farbe' => 0xFF8000];
         $associations[] = ['Wert' => 1300, 'Name' => '%d', 'Farbe' => 0xFF0000];
-        $this->CreateVarProfile('Netatmo.CO2', vtInteger, ' ppm', 250, 2000, 0, 1, 'Gauge', $associations);
+        $this->CreateVarProfile('Netatmo.CO2', VARIABLETYPE_INTEGER, ' ppm', 250, 2000, 0, 1, 'Gauge', $associations);
 
         $associations = [];
         $associations[] = ['Wert' => false, 'Name' => $this->Translate('No'), 'Farbe' => -1];
         $associations[] = ['Wert' => true, 'Name' => $this->Translate('Yes'), 'Farbe' => 0xEE0000];
-        $this->CreateVarProfile('Netatmo.Alarm', vtBoolean, '', 0, 0, 0, 1, 'Alert', $associations);
+        $this->CreateVarProfile('Netatmo.Alarm', VARIABLETYPE_BOOLEAN, '', 0, 0, 0, 1, 'Alert', $associations);
 
         $associations = [];
         $associations[] = ['Wert' => 0, 'Name' => $this->wifi_status2text(0), 'Farbe' => 0xEE0000];
         $associations[] = ['Wert' => 1, 'Name' => $this->wifi_status2text(1), 'Farbe' => 0xFFFF00];
         $associations[] = ['Wert' => 2, 'Name' => $this->wifi_status2text(2), 'Farbe' => 0x32CD32];
         $associations[] = ['Wert' => 3, 'Name' => $this->wifi_status2text(3), 'Farbe' => 0x228B22];
-        $this->CreateVarProfile('Netatmo.Wifi', vtInteger, '', 0, 0, 0, 1, 'Intensity', $associations);
+        $this->CreateVarProfile('Netatmo.Wifi', VARIABLETYPE_INTEGER, '', 0, 0, 0, 1, 'Intensity', $associations);
 
         $associations = [];
         $associations[] = ['Wert' => 0, 'Name' => $this->signal_status2text(0), 'Farbe' => 0xEE0000];
@@ -107,7 +105,7 @@ class NetatmoWeatherDevice extends IPSModule
         $associations[] = ['Wert' => 2, 'Name' => $this->signal_status2text(2), 'Farbe' => 0xFFFF00];
         $associations[] = ['Wert' => 3, 'Name' => $this->signal_status2text(3), 'Farbe' => 0x32CD32];
         $associations[] = ['Wert' => 4, 'Name' => $this->signal_status2text(4), 'Farbe' => 0x228B22];
-        $this->CreateVarProfile('Netatmo.RfSignal', vtInteger, '', 0, 0, 0, 1, 'Intensity', $associations);
+        $this->CreateVarProfile('Netatmo.RfSignal', VARIABLETYPE_INTEGER, '', 0, 0, 0, 1, 'Intensity', $associations);
 
         $associations = [];
         $associations[] = ['Wert' => 0, 'Name' => $this->battery_status2text(0), 'Farbe' => 0xEE0000];
@@ -116,13 +114,13 @@ class NetatmoWeatherDevice extends IPSModule
         $associations[] = ['Wert' => 3, 'Name' => $this->battery_status2text(3), 'Farbe' => 0x32CD32];
         $associations[] = ['Wert' => 4, 'Name' => $this->battery_status2text(4), 'Farbe' => 0x228B22];
         $associations[] = ['Wert' => 5, 'Name' => $this->battery_status2text(5), 'Farbe' => 0x228B22];
-        $this->CreateVarProfile('Netatmo.Battery', vtInteger, '', 0, 0, 0, 1, 'Intensity', $associations);
+        $this->CreateVarProfile('Netatmo.Battery', VARIABLETYPE_INTEGER, '', 0, 0, 0, 1, 'Intensity', $associations);
 
         $associations = [];
         $associations[] = ['Wert' => -1, 'Name' => $this->Translate('down'), 'Farbe' => -1];
         $associations[] = ['Wert' => 0, 'Name' => $this->Translate('stable'), 'Farbe' => -1];
         $associations[] = ['Wert' => 1, 'Name' => $this->Translate('up'), 'Farbe' => -1];
-        $this->CreateVarProfile('Netatmo.Trend', vtInteger, '', 0, 0, 0, 1, '', $associations);
+        $this->CreateVarProfile('Netatmo.Trend', VARIABLETYPE_INTEGER, '', 0, 0, 0, 1, '', $associations);
 
         $this->ConnectParent('{26A55798-5CBC-88F6-5C7B-370B043B24F9}');
 
@@ -176,95 +174,95 @@ class NetatmoWeatherDevice extends IPSModule
         switch ($module_type) {
             case 'Station':
                 // station-global vars
-                $this->MaintainVariable('Status', $this->Translate('State'), vtBoolean, '~Alert.Reversed', $vpos++, true);
-                $this->MaintainVariable('LastContact', $this->Translate('last transmission'), vtInteger, '~UnixTimestamp', $vpos++, $with_last_contact);
-                $this->MaintainVariable('Wifi', $this->Translate('Strength of wifi-signal'), vtInteger, 'Netatmo.Wifi', $vpos++, $with_signal);
-                $this->MaintainVariable('ModuleAlarm', $this->Translate('station or modules don\'t communicate'), vtBoolean, 'Netatmo.Alarm', $vpos++, true);
-                $this->MaintainVariable('BatteryAlarm', $this->Translate('Battery of one or more modules ist low or empty'), vtBoolean, 'Netatmo.Alarm', $vpos++, true);
-                $this->MaintainVariable('StatusBox', $this->Translate('State of station and modules'), vtString, '~HTMLBox', $vpos++, $with_status_box);
+                $this->MaintainVariable('Status', $this->Translate('State'), VARIABLETYPE_BOOLEAN, '~Alert.Reversed', $vpos++, true);
+                $this->MaintainVariable('LastContact', $this->Translate('last transmission'), VARIABLETYPE_INTEGER, '~UnixTimestamp', $vpos++, $with_last_contact);
+                $this->MaintainVariable('Wifi', $this->Translate('Strength of wifi-signal'), VARIABLETYPE_INTEGER, 'Netatmo.Wifi', $vpos++, $with_signal);
+                $this->MaintainVariable('ModuleAlarm', $this->Translate('station or modules don\'t communicate'), VARIABLETYPE_BOOLEAN, 'Netatmo.Alarm', $vpos++, true);
+                $this->MaintainVariable('BatteryAlarm', $this->Translate('Battery of one or more modules ist low or empty'), VARIABLETYPE_BOOLEAN, 'Netatmo.Alarm', $vpos++, true);
+                $this->MaintainVariable('StatusBox', $this->Translate('State of station and modules'), VARIABLETYPE_STRING, '~HTMLBox', $vpos++, $with_status_box);
                 $with_wunderground = $wunderground_id != '' && $wunderground_key != '';
-                $this->MaintainVariable('Wunderground', $this->Translate('State of upload to wunderground'), vtBoolean, '~Alert.Reversed', $vpos++, $with_wunderground);
+                $this->MaintainVariable('Wunderground', $this->Translate('State of upload to wunderground'), VARIABLETYPE_BOOLEAN, '~Alert.Reversed', $vpos++, $with_wunderground);
                 break;
             case 'NAMain':
                 // Basismodul
-                $this->MaintainVariable('Temperature', $this->Translate('Temperature'), vtFloat, 'Netatmo.Temperatur', $vpos++, true);
-                $this->MaintainVariable('CO2', $this->Translate('CO2'), vtInteger, 'Netatmo.CO2', $vpos++, true);
-                $this->MaintainVariable('Humidity', $this->Translate('Humidity'), vtFloat, 'Netatmo.Humidity', $vpos++, true);
-                $this->MaintainVariable('AbsoluteHumidity', $this->Translate('absolute humidity'), vtFloat, 'Netatmo.absHumidity', $vpos++, $with_absolute_humidity);
-                $this->MaintainVariable('Dewpoint', $this->Translate('Dewpoint'), vtFloat, 'Netatmo.Dewpoint', $vpos++, $with_dewpoint);
-                $this->MaintainVariable('Heatindex', $this->Translate('Heatindex'), vtFloat, 'Netatmo.Heatindex', $vpos++, $with_heatindex);
-                $this->MaintainVariable('Noise', $this->Translate('Noise'), vtInteger, 'Netatmo.Noise', $vpos++, true);
-                $this->MaintainVariable('Pressure', $this->Translate('Air pressure'), vtFloat, 'Netatmo.Pressure', $vpos++, true);
-                $this->MaintainVariable('AbsolutePressure', $this->Translate('absolute pressure'), vtFloat, 'Netatmo.Pressure', $vpos++, $with_absolute_pressure);
-                $this->MaintainVariable('TemperatureMax', $this->Translate('Today\'s temperature-maximum'), vtFloat, 'Netatmo.Temperatur', $vpos++, $with_minmax);
-                $this->MaintainVariable('TemperatureMaxTimestamp', $this->Translate('Time of today\'s temperature-maximum'), vtInteger, '~UnixTimestampTime', $vpos++, $with_minmax);
-                $this->MaintainVariable('TemperatureMin', $this->Translate('Today\'s temperature-minimum'), vtFloat, 'Netatmo.Temperatur', $vpos++, $with_minmax);
-                $this->MaintainVariable('TemperatureMinTimestamp', $this->Translate('Time of today\'s temperature-minimum'), vtInteger, '~UnixTimestampTime', $vpos++, $with_minmax);
-                $this->MaintainVariable('TemperatureTrend', $this->Translate('Trend of temperature'), vtInteger, 'Netatmo.Trend', $vpos++, $with_trend);
-                $this->MaintainVariable('PressureTrend', $this->Translate('Trend of air pressure'), vtInteger, 'Netatmo.Trend', $vpos++, $with_trend);
-                $this->MaintainVariable('LastMeasure', $this->Translate('last measurement'), vtInteger, '~UnixTimestamp', $vpos++, $with_last_measure);
+                $this->MaintainVariable('Temperature', $this->Translate('Temperature'), VARIABLETYPE_FLOAT, 'Netatmo.Temperatur', $vpos++, true);
+                $this->MaintainVariable('CO2', $this->Translate('CO2'), VARIABLETYPE_INTEGER, 'Netatmo.CO2', $vpos++, true);
+                $this->MaintainVariable('Humidity', $this->Translate('Humidity'), VARIABLETYPE_FLOAT, 'Netatmo.Humidity', $vpos++, true);
+                $this->MaintainVariable('AbsoluteHumidity', $this->Translate('absolute humidity'), VARIABLETYPE_FLOAT, 'Netatmo.absHumidity', $vpos++, $with_absolute_humidity);
+                $this->MaintainVariable('Dewpoint', $this->Translate('Dewpoint'), VARIABLETYPE_FLOAT, 'Netatmo.Dewpoint', $vpos++, $with_dewpoint);
+                $this->MaintainVariable('Heatindex', $this->Translate('Heatindex'), VARIABLETYPE_FLOAT, 'Netatmo.Heatindex', $vpos++, $with_heatindex);
+                $this->MaintainVariable('Noise', $this->Translate('Noise'), VARIABLETYPE_INTEGER, 'Netatmo.Noise', $vpos++, true);
+                $this->MaintainVariable('Pressure', $this->Translate('Air pressure'), VARIABLETYPE_FLOAT, 'Netatmo.Pressure', $vpos++, true);
+                $this->MaintainVariable('AbsolutePressure', $this->Translate('absolute pressure'), VARIABLETYPE_FLOAT, 'Netatmo.Pressure', $vpos++, $with_absolute_pressure);
+                $this->MaintainVariable('TemperatureMax', $this->Translate('Today\'s temperature-maximum'), VARIABLETYPE_FLOAT, 'Netatmo.Temperatur', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureMaxTimestamp', $this->Translate('Time of today\'s temperature-maximum'), VARIABLETYPE_INTEGER, '~UnixTimestampTime', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureMin', $this->Translate('Today\'s temperature-minimum'), VARIABLETYPE_FLOAT, 'Netatmo.Temperatur', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureMinTimestamp', $this->Translate('Time of today\'s temperature-minimum'), VARIABLETYPE_INTEGER, '~UnixTimestampTime', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureTrend', $this->Translate('Trend of temperature'), VARIABLETYPE_INTEGER, 'Netatmo.Trend', $vpos++, $with_trend);
+                $this->MaintainVariable('PressureTrend', $this->Translate('Trend of air pressure'), VARIABLETYPE_INTEGER, 'Netatmo.Trend', $vpos++, $with_trend);
+                $this->MaintainVariable('LastMeasure', $this->Translate('last measurement'), VARIABLETYPE_INTEGER, '~UnixTimestamp', $vpos++, $with_last_measure);
                 break;
             case 'NAModule1':
                 // Außenmodul
-                $this->MaintainVariable('Temperature', $this->Translate('Temperature'), vtFloat, 'Netatmo.Temperatur', $vpos++, true);
-                $this->MaintainVariable('Humidity', $this->Translate('Humidity'), vtFloat, 'Netatmo.Humidity', $vpos++, true);
-                $this->MaintainVariable('AbsoluteHumidity', $this->Translate('absolute humidity'), vtFloat, 'Netatmo.absHumidity', $vpos++, $with_absolute_humidity);
-                $this->MaintainVariable('Dewpoint', $this->Translate('Dewpoint'), vtFloat, 'Netatmo.Dewpoint', $vpos++, $with_dewpoint);
-                $this->MaintainVariable('Windchill', $this->Translate('Windchill'), vtFloat, 'Netatmo.Temperatur', $vpos++, $with_windchill);
-                $this->MaintainVariable('Heatindex', $this->Translate('Heatindex'), vtFloat, 'Netatmo.Heatindex', $vpos++, $with_heatindex);
-                $this->MaintainVariable('TemperatureMax', $this->Translate('Today\'s temperature-maximum'), vtFloat, 'Netatmo.Temperatur', $vpos++, $with_minmax);
-                $this->MaintainVariable('TemperatureMaxTimestamp', $this->Translate('Time of today\'s temperature-maximum'), vtInteger, '~UnixTimestampTime', $vpos++, $with_minmax);
-                $this->MaintainVariable('TemperatureMin', $this->Translate('Today\'s temperature-minimum'), vtFloat, 'Netatmo.Temperatur', $vpos++, $with_minmax);
-                $this->MaintainVariable('TemperatureMinTimestamp', $this->Translate('Time of today\'s temperature-minimum'), vtInteger, '~UnixTimestampTime', $vpos++, $with_minmax);
-                $this->MaintainVariable('TemperatureTrend', $this->Translate('Trend of temperature'), vtInteger, 'Netatmo.Trend', $vpos++, $with_trend);
-                $this->MaintainVariable('LastMeasure', $this->Translate('last measurement'), vtInteger, '~UnixTimestamp', $vpos++, $with_last_measure);
-                $this->MaintainVariable('RfSignal', $this->Translate('Signal-strength'), vtInteger, 'Netatmo.RfSignal', $vpos++, $with_signal);
-                $this->MaintainVariable('Battery', $this->Translate('Battery-Status'), vtInteger, 'Netatmo.Battery', $vpos++, $with_battery);
+                $this->MaintainVariable('Temperature', $this->Translate('Temperature'), VARIABLETYPE_FLOAT, 'Netatmo.Temperatur', $vpos++, true);
+                $this->MaintainVariable('Humidity', $this->Translate('Humidity'), VARIABLETYPE_FLOAT, 'Netatmo.Humidity', $vpos++, true);
+                $this->MaintainVariable('AbsoluteHumidity', $this->Translate('absolute humidity'), VARIABLETYPE_FLOAT, 'Netatmo.absHumidity', $vpos++, $with_absolute_humidity);
+                $this->MaintainVariable('Dewpoint', $this->Translate('Dewpoint'), VARIABLETYPE_FLOAT, 'Netatmo.Dewpoint', $vpos++, $with_dewpoint);
+                $this->MaintainVariable('Windchill', $this->Translate('Windchill'), VARIABLETYPE_FLOAT, 'Netatmo.Temperatur', $vpos++, $with_windchill);
+                $this->MaintainVariable('Heatindex', $this->Translate('Heatindex'), VARIABLETYPE_FLOAT, 'Netatmo.Heatindex', $vpos++, $with_heatindex);
+                $this->MaintainVariable('TemperatureMax', $this->Translate('Today\'s temperature-maximum'), VARIABLETYPE_FLOAT, 'Netatmo.Temperatur', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureMaxTimestamp', $this->Translate('Time of today\'s temperature-maximum'), VARIABLETYPE_INTEGER, '~UnixTimestampTime', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureMin', $this->Translate('Today\'s temperature-minimum'), VARIABLETYPE_FLOAT, 'Netatmo.Temperatur', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureMinTimestamp', $this->Translate('Time of today\'s temperature-minimum'), VARIABLETYPE_INTEGER, '~UnixTimestampTime', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureTrend', $this->Translate('Trend of temperature'), VARIABLETYPE_INTEGER, 'Netatmo.Trend', $vpos++, $with_trend);
+                $this->MaintainVariable('LastMeasure', $this->Translate('last measurement'), VARIABLETYPE_INTEGER, '~UnixTimestamp', $vpos++, $with_last_measure);
+                $this->MaintainVariable('RfSignal', $this->Translate('Signal-strength'), VARIABLETYPE_INTEGER, 'Netatmo.RfSignal', $vpos++, $with_signal);
+                $this->MaintainVariable('Battery', $this->Translate('Battery-Status'), VARIABLETYPE_INTEGER, 'Netatmo.Battery', $vpos++, $with_battery);
                 break;
             case 'NAModule2':
                 // Windmesser
-                $this->MaintainVariable('WindSpeed', $this->Translate('Windspeed'), vtFloat, 'Netatmo.WindSpeed', $vpos++, true);
-                $this->MaintainVariable('WindStrength', $this->Translate('Windstrength'), vtInteger, 'Netatmo.WindStrength', $vpos++, $with_windstrength);
-                $this->MaintainVariable('WindAngle', $this->Translate('Winddirection'), vtInteger, 'Netatmo.WindAngle', $vpos++, $with_windangle);
-                $this->MaintainVariable('WindDirection', $this->Translate('Winddirection'), vtString, 'Netatmo.WindDirection', $vpos++, $with_winddirection);
-                $this->MaintainVariable('GustSpeed', $this->Translate('Speed of gusts of last 5m'), vtFloat, 'Netatmo.WindSpeed', $vpos++, true);
-                $this->MaintainVariable('GustStrength', $this->Translate('Strength of gusts of last 5m'), vtInteger, 'Netatmo.WindStrength', $vpos++, $with_windstrength);
-                $this->MaintainVariable('GustAngle', $this->Translate('Direction of gusts of last 5m'), vtInteger, 'Netatmo.WindAngle', $vpos++, $with_windangle);
-                $this->MaintainVariable('GustDirection', $this->Translate('Direction of gusts of last 5m'), vtString, 'Netatmo.WindDirection', $vpos++, $with_winddirection);
-                $this->MaintainVariable('GustMaxSpeed', $this->Translate('Speed of today\'s strongest gust'), vtFloat, 'Netatmo.WindSpeed', $vpos++, $with_minmax);
-                $this->MaintainVariable('GustMaxStrength', $this->Translate('Strength of today\'s strongest gust'), vtInteger, 'Netatmo.WindStrength', $vpos++, $with_minmax && $with_windstrength);
-                $this->MaintainVariable('GustMaxAngle', $this->Translate('Direction of today\'s strongest gust'), vtInteger, 'Netatmo.WindAngle', $vpos++, $with_minmax && $with_windangle);
-                $this->MaintainVariable('GustMaxDirection', $this->Translate('Direction of today\'s strongest gust'), vtString, 'Netatmo.WindDirection', $vpos++, $with_minmax && $with_winddirection);
-                $this->MaintainVariable('GustMaxTimestamp', $this->Translate('Time of today\'s strongest gust'), vtInteger, '~UnixTimestampTime', $vpos++, $with_minmax);
-                $this->MaintainVariable('LastMeasure', $this->Translate('last measurement'), vtInteger, '~UnixTimestamp', $vpos++, $with_last_measure);
-                $this->MaintainVariable('RfSignal', $this->Translate('Signal-strength'), vtInteger, 'Netatmo.RfSignal', $vpos++, $with_signal);
-                $this->MaintainVariable('Battery', $this->Translate('Battery-Status'), vtInteger, 'Netatmo.Battery', $vpos++, $with_battery);
+                $this->MaintainVariable('WindSpeed', $this->Translate('Windspeed'), VARIABLETYPE_FLOAT, 'Netatmo.WindSpeed', $vpos++, true);
+                $this->MaintainVariable('WindStrength', $this->Translate('Windstrength'), VARIABLETYPE_INTEGER, 'Netatmo.WindStrength', $vpos++, $with_windstrength);
+                $this->MaintainVariable('WindAngle', $this->Translate('Winddirection'), VARIABLETYPE_INTEGER, 'Netatmo.WindAngle', $vpos++, $with_windangle);
+                $this->MaintainVariable('WindDirection', $this->Translate('Winddirection'), VARIABLETYPE_STRING, 'Netatmo.WindDirection', $vpos++, $with_winddirection);
+                $this->MaintainVariable('GustSpeed', $this->Translate('Speed of gusts of last 5m'), VARIABLETYPE_FLOAT, 'Netatmo.WindSpeed', $vpos++, true);
+                $this->MaintainVariable('GustStrength', $this->Translate('Strength of gusts of last 5m'), VARIABLETYPE_INTEGER, 'Netatmo.WindStrength', $vpos++, $with_windstrength);
+                $this->MaintainVariable('GustAngle', $this->Translate('Direction of gusts of last 5m'), VARIABLETYPE_INTEGER, 'Netatmo.WindAngle', $vpos++, $with_windangle);
+                $this->MaintainVariable('GustDirection', $this->Translate('Direction of gusts of last 5m'), VARIABLETYPE_STRING, 'Netatmo.WindDirection', $vpos++, $with_winddirection);
+                $this->MaintainVariable('GustMaxSpeed', $this->Translate('Speed of today\'s strongest gust'), VARIABLETYPE_FLOAT, 'Netatmo.WindSpeed', $vpos++, $with_minmax);
+                $this->MaintainVariable('GustMaxStrength', $this->Translate('Strength of today\'s strongest gust'), VARIABLETYPE_INTEGER, 'Netatmo.WindStrength', $vpos++, $with_minmax && $with_windstrength);
+                $this->MaintainVariable('GustMaxAngle', $this->Translate('Direction of today\'s strongest gust'), VARIABLETYPE_INTEGER, 'Netatmo.WindAngle', $vpos++, $with_minmax && $with_windangle);
+                $this->MaintainVariable('GustMaxDirection', $this->Translate('Direction of today\'s strongest gust'), VARIABLETYPE_STRING, 'Netatmo.WindDirection', $vpos++, $with_minmax && $with_winddirection);
+                $this->MaintainVariable('GustMaxTimestamp', $this->Translate('Time of today\'s strongest gust'), VARIABLETYPE_INTEGER, '~UnixTimestampTime', $vpos++, $with_minmax);
+                $this->MaintainVariable('LastMeasure', $this->Translate('last measurement'), VARIABLETYPE_INTEGER, '~UnixTimestamp', $vpos++, $with_last_measure);
+                $this->MaintainVariable('RfSignal', $this->Translate('Signal-strength'), VARIABLETYPE_INTEGER, 'Netatmo.RfSignal', $vpos++, $with_signal);
+                $this->MaintainVariable('Battery', $this->Translate('Battery-Status'), VARIABLETYPE_INTEGER, 'Netatmo.Battery', $vpos++, $with_battery);
                 break;
             case 'NAModule3':
                 // Regenmesser
-                $this->MaintainVariable('Rain', $this->Translate('Rainfall'), vtFloat, 'Netatmo.Rainfall', $vpos++, true);
-                $this->MaintainVariable('Rain_1h', $this->Translate('Rainfall of last hour'), vtFloat, 'Netatmo.Rainfall', $vpos++, true);
-                $this->MaintainVariable('Rain_24h', $this->Translate('Rainfall of today'), vtFloat, 'Netatmo.Rainfall', $vpos++, true);
-                $this->MaintainVariable('LastMeasure', $this->Translate('last measurement'), vtInteger, '~UnixTimestamp', $vpos++, $with_last_measure);
-                $this->MaintainVariable('RfSignal', $this->Translate('Signal-strength'), vtInteger, 'Netatmo.RfSignal', $vpos++, $with_signal);
-                $this->MaintainVariable('Battery', $this->Translate('Battery-Status'), vtInteger, 'Netatmo.Battery', $vpos++, $with_battery);
+                $this->MaintainVariable('Rain', $this->Translate('Rainfall'), VARIABLETYPE_FLOAT, 'Netatmo.Rainfall', $vpos++, true);
+                $this->MaintainVariable('Rain_1h', $this->Translate('Rainfall of last hour'), VARIABLETYPE_FLOAT, 'Netatmo.Rainfall', $vpos++, true);
+                $this->MaintainVariable('Rain_24h', $this->Translate('Rainfall of today'), VARIABLETYPE_FLOAT, 'Netatmo.Rainfall', $vpos++, true);
+                $this->MaintainVariable('LastMeasure', $this->Translate('last measurement'), VARIABLETYPE_INTEGER, '~UnixTimestamp', $vpos++, $with_last_measure);
+                $this->MaintainVariable('RfSignal', $this->Translate('Signal-strength'), VARIABLETYPE_INTEGER, 'Netatmo.RfSignal', $vpos++, $with_signal);
+                $this->MaintainVariable('Battery', $this->Translate('Battery-Status'), VARIABLETYPE_INTEGER, 'Netatmo.Battery', $vpos++, $with_battery);
                 break;
             case 'NAModule4':
                 // Innenmodul
-                $this->MaintainVariable('Temperature', $this->Translate('Temperature'), vtFloat, 'Netatmo.Temperatur', $vpos++, true);
-                $this->MaintainVariable('CO2', $this->Translate('CO2'), vtInteger, 'Netatmo.CO2', $vpos++, true);
-                $this->MaintainVariable('Humidity', $this->Translate('Humidity'), vtFloat, 'Netatmo.Humidity', $vpos++, true);
-                $this->MaintainVariable('AbsoluteHumidity', $this->Translate('absolute humidity'), vtFloat, 'Netatmo.absHumidity', $vpos++, $with_absolute_humidity);
-                $this->MaintainVariable('Dewpoint', $this->Translate('Dewpoint'), vtFloat, 'Netatmo.Dewpoint', $vpos++, $with_dewpoint);
-                $this->MaintainVariable('Heatindex', $this->Translate('Heatindex'), vtFloat, 'Netatmo.Heatindex', $vpos++, $with_heatindex);
-                $this->MaintainVariable('TemperatureMax', $this->Translate('Today\'s temperature-maximum'), vtFloat, 'Netatmo.Temperatur', $vpos++, $with_minmax);
-                $this->MaintainVariable('TemperatureMaxTimestamp', $this->Translate('Time of today\'s temperature-maximum'), vtInteger, '~UnixTimestampTime', $vpos++, $with_minmax);
-                $this->MaintainVariable('TemperatureMin', $this->Translate('Today\'s temperature-minimum'), vtFloat, 'Netatmo.Temperatur', $vpos++, $with_minmax);
-                $this->MaintainVariable('TemperatureMinTimestamp', $this->Translate('Time of today\'s temperature-minimum'), vtInteger, '~UnixTimestampTime', $vpos++, $with_minmax);
-                $this->MaintainVariable('TemperatureTrend', $this->Translate('Trend of temperature'), vtInteger, 'Netatmo.Trend', $vpos++, $with_trend);
-                $this->MaintainVariable('LastMeasure', $this->Translate('last measurement'), vtInteger, '~UnixTimestamp', $vpos++, $with_last_measure);
-                $this->MaintainVariable('RfSignal', $this->Translate('Signal-strength'), vtInteger, 'Netatmo.RfSignal', $vpos++, $with_signal);
-                $this->MaintainVariable('Battery', $this->Translate('Battery-Status'), vtInteger, 'Netatmo.Battery', $vpos++, $with_battery);
+                $this->MaintainVariable('Temperature', $this->Translate('Temperature'), VARIABLETYPE_FLOAT, 'Netatmo.Temperatur', $vpos++, true);
+                $this->MaintainVariable('CO2', $this->Translate('CO2'), VARIABLETYPE_INTEGER, 'Netatmo.CO2', $vpos++, true);
+                $this->MaintainVariable('Humidity', $this->Translate('Humidity'), VARIABLETYPE_FLOAT, 'Netatmo.Humidity', $vpos++, true);
+                $this->MaintainVariable('AbsoluteHumidity', $this->Translate('absolute humidity'), VARIABLETYPE_FLOAT, 'Netatmo.absHumidity', $vpos++, $with_absolute_humidity);
+                $this->MaintainVariable('Dewpoint', $this->Translate('Dewpoint'), VARIABLETYPE_FLOAT, 'Netatmo.Dewpoint', $vpos++, $with_dewpoint);
+                $this->MaintainVariable('Heatindex', $this->Translate('Heatindex'), VARIABLETYPE_FLOAT, 'Netatmo.Heatindex', $vpos++, $with_heatindex);
+                $this->MaintainVariable('TemperatureMax', $this->Translate('Today\'s temperature-maximum'), VARIABLETYPE_FLOAT, 'Netatmo.Temperatur', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureMaxTimestamp', $this->Translate('Time of today\'s temperature-maximum'), VARIABLETYPE_INTEGER, '~UnixTimestampTime', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureMin', $this->Translate('Today\'s temperature-minimum'), VARIABLETYPE_FLOAT, 'Netatmo.Temperatur', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureMinTimestamp', $this->Translate('Time of today\'s temperature-minimum'), VARIABLETYPE_INTEGER, '~UnixTimestampTime', $vpos++, $with_minmax);
+                $this->MaintainVariable('TemperatureTrend', $this->Translate('Trend of temperature'), VARIABLETYPE_INTEGER, 'Netatmo.Trend', $vpos++, $with_trend);
+                $this->MaintainVariable('LastMeasure', $this->Translate('last measurement'), VARIABLETYPE_INTEGER, '~UnixTimestamp', $vpos++, $with_last_measure);
+                $this->MaintainVariable('RfSignal', $this->Translate('Signal-strength'), VARIABLETYPE_INTEGER, 'Netatmo.RfSignal', $vpos++, $with_signal);
+                $this->MaintainVariable('Battery', $this->Translate('Battery-Status'), VARIABLETYPE_INTEGER, 'Netatmo.Battery', $vpos++, $with_battery);
                 break;
             default:
                 $this->SendDebug(__FUNCTION__, 'unknown module_type "' . $module_type . '"', 0);
