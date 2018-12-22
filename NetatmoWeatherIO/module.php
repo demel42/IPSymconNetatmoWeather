@@ -112,7 +112,7 @@ class NetatmoWeatherIO extends IPSModule
                 if ($params['access_token'] == '') {
                     $statuscode = 204;
                     $err = "no 'access_token' in response";
-					$this->LogMessage('statuscode=' . $statuscode . ', err=' . $err, KL_WARNING);
+                    $this->LogMessage('statuscode=' . $statuscode . ', err=' . $err, KL_WARNING);
                     $this->SendDebug(__FUNCTION__, $err, 0);
                     $this->SetStatus($statuscode);
                     $do_abort = true;
@@ -161,7 +161,7 @@ class NetatmoWeatherIO extends IPSModule
                 }
             }
             if ($statuscode) {
-				$this->LogMessage('statuscode=' . $statuscode . ', err=' . $err, KL_WARNING);
+                $this->LogMessage('statuscode=' . $statuscode . ', err=' . $err, KL_WARNING);
                 $this->SendDebug(__FUNCTION__, $err, 0);
                 $this->SetStatus($statuscode);
                 $do_abort = true;
@@ -243,7 +243,7 @@ class NetatmoWeatherIO extends IPSModule
             $jstat[] = ['statuscode' => $statuscode, 'err' => $err, 'tstamp' => time()];
             $n_stat = count($jstat);
             $cstat = json_encode($jstat);
-			$this->LogMessage('url=' . $url . ' => statuscode=' . $statuscode . ', err=' . $err . ', status #' . $n_stat, KL_WARNING);
+            $this->LogMessage('url=' . $url . ' => statuscode=' . $statuscode . ', err=' . $err . ', status #' . $n_stat, KL_WARNING);
 
             if ($n_stat >= $ignore_http_error) {
                 $this->SetStatus($statuscode);
