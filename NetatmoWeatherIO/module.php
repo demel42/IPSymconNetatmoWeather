@@ -2,13 +2,6 @@
 
 require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
 
-// Constants will be defined with IP-Symcon 5.0 and newer
-if (!defined('IPS_KERNELMESSAGE')) {
-    define('IPS_KERNELMESSAGE', 10100);
-}
-if (!defined('KR_READY')) {
-    define('KR_READY', 10103);
-}
 class NetatmoWeatherIO extends IPSModule
 {
     use NetatmoWeatherCommon;
@@ -119,7 +112,7 @@ class NetatmoWeatherIO extends IPSModule
                 if ($params['access_token'] == '') {
                     $statuscode = 204;
                     $err = "no 'access_token' in response";
-                    echo "statuscode=$statuscode, err=$err";
+					$this->LogMessage('statuscode=' . $statuscode . ', err=' . $err, KL_WARNING);
                     $this->SendDebug(__FUNCTION__, $err, 0);
                     $this->SetStatus($statuscode);
                     $do_abort = true;
@@ -168,7 +161,7 @@ class NetatmoWeatherIO extends IPSModule
                 }
             }
             if ($statuscode) {
-                echo "statuscode=$statuscode, err=$err";
+				$this->LogMessage('statuscode=' . $statuscode . ', err=' . $err, KL_WARNING);
                 $this->SendDebug(__FUNCTION__, $err, 0);
                 $this->SetStatus($statuscode);
                 $do_abort = true;
@@ -250,7 +243,8 @@ class NetatmoWeatherIO extends IPSModule
             $jstat[] = ['statuscode' => $statuscode, 'err' => $err, 'tstamp' => time()];
             $n_stat = count($jstat);
             $cstat = json_encode($jstat);
-            echo 'url=' . $url . ' => statuscode=' . $statuscode . ', err=' . $err . ', status #' . $n_stat;
+			$this->LogMessage('url=' . $url . ' => statuscode=' . $statuscode . ', err=' . $err . ', status #' . $n_stat, KL_WARNING);
+
             if ($n_stat >= $ignore_http_error) {
                 $this->SetStatus($statuscode);
                 $cstat = '';

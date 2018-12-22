@@ -2,21 +2,6 @@
 
 require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
 
-// Constants will be defined with IP-Symcon 5.0 and newer
-if (!defined('IPS_KERNELMESSAGE')) {
-    define('IPS_KERNELMESSAGE', 10100);
-}
-if (!defined('KR_READY')) {
-    define('KR_READY', 10103);
-}
-
-if (!defined('VARIABLETYPE_BOOLEAN')) {
-    define('VARIABLETYPE_BOOLEAN', 0);
-    define('VARIABLETYPE_INTEGER', 1);
-    define('VARIABLETYPE_FLOAT', 2);
-    define('VARIABLETYPE_STRING', 3);
-}
-
 class NetatmoWeatherDevice extends IPSModule
 {
     use NetatmoWeatherCommon;
