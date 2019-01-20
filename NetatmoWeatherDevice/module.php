@@ -1017,7 +1017,7 @@ class NetatmoWeatherDevice extends IPSModule
             return $statuscode;
         }
 
-        if ($module_nodata == false) {
+        if ($module_nodata == true) {
             $instName = IPS_GetName($this->InstanceID);
             $module_type_text = $this->module_type2text($module_type);
             $msg = "instance $this->InstanceID \"$instName\" ($module_type_text) module with id $module_id has no data";
