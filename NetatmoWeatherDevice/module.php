@@ -803,17 +803,31 @@ class NetatmoWeatherDevice extends IPSModule
 
             $last_message = $module['last_message'];
 
-            $rf_status = $this->map_rf_status($module['rf_status']);
-            $battery_status = $this->map_battery_status($module_type, $module['battery_vp']);
+			$rf_status = $this->map_rf_status($module['rf_status']);
+			if ($with_signal) {
+				$this->SetValue('RfSignal', $rf_status);
+			}
+
+			$battery_status = $this->map_battery_status($module_type, $module['battery_vp']);
+			if ($with_battery) {
+				$this->SetValue('Battery', $battery_status);
+			}
 
             if (!isset($module['dashboard_data'])) {
                 $module_nodata = true;
+
+				$module_type_text = $this->module_type2text($module_type);
+				$msg = "  module_type=$module_type($module_type_text), module_name=$module_name, rf_status=$rf_status, battery_status=$battery_status";
+				$this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
                 break;
             }
 
             $dashboard = $module['dashboard_data'];
 
-            $last_measure = $dashboard['time_utc'];
+			$last_measure = $dashboard['time_utc'];
+			if ($with_last_measure) {
+				$this->SetValue('LastMeasure', $last_measure);
+			}
 
             switch ($module_type) {
                 case 'NAModule1':
@@ -856,15 +870,6 @@ class NetatmoWeatherDevice extends IPSModule
                         if (is_int($trend)) {
                             $this->SetValue('TemperatureTrend', $trend);
                         }
-                    }
-                    if ($with_last_measure) {
-                        $this->SetValue('LastMeasure', $last_measure);
-                    }
-                    if ($with_signal) {
-                        $this->SetValue('RfSignal', $rf_status);
-                    }
-                    if ($with_battery) {
-                        $this->SetValue('Battery', $battery_status);
                     }
 
                     $msg = "outdoor module \"$module_name\": Temperature=$Temperature, Humidity=$Humidity";
@@ -914,15 +919,6 @@ class NetatmoWeatherDevice extends IPSModule
                         }
                         $this->SetValue('GustMaxTimestamp', $wind_max_date);
                     }
-                    if ($with_last_measure) {
-                        $this->SetValue('LastMeasure', $last_measure);
-                    }
-                    if ($with_signal) {
-                        $this->SetValue('RfSignal', $rf_status);
-                    }
-                    if ($with_battery) {
-                        $this->SetValue('Battery', $battery_status);
-                    }
 
                     $msg = "wind gauge \"$module_name\": WindSpeed=$WindSpeed, WindAngle=$WindAngle, GustSpeed=$GustSpeed, GustAngle=$GustAngle";
                     $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
@@ -936,15 +932,6 @@ class NetatmoWeatherDevice extends IPSModule
                     $this->SetValue('Rain', $Rain);
                     $this->SetValue('Rain_1h', $sum_rain_1);
                     $this->SetValue('Rain_24h', $sum_rain_24);
-                    if ($with_last_measure) {
-                        $this->SetValue('LastMeasure', $last_measure);
-                    }
-                    if ($with_signal) {
-                        $this->SetValue('RfSignal', $rf_status);
-                    }
-                    if ($with_battery) {
-                        $this->SetValue('Battery', $battery_status);
-                    }
 
                     $msg = "rain gauge \"$module_name\": Rain=$Rain, sum_rain_1=$sum_rain_1, sum_rain_24=$sum_rain_24";
                     $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
@@ -987,15 +974,6 @@ class NetatmoWeatherDevice extends IPSModule
                         if (is_int($trend)) {
                             $this->SetValue('TemperatureTrend', $trend);
                         }
-                    }
-                    if ($with_last_measure) {
-                        $this->SetValue('LastMeasure', $last_measure);
-                    }
-                    if ($with_signal) {
-                        $this->SetValue('RfSignal', $rf_status);
-                    }
-                    if ($with_battery) {
-                        $this->SetValue('Battery', $battery_status);
                     }
 
                     $msg = "indoor module \"$module_name\": Temperature=$Temperature, Humidity=$Humidity, CO2=$CO2";
