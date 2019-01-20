@@ -1,7 +1,7 @@
 # IPSymconNetatmoWeather
 
 [![IPS-Version](https://img.shields.io/badge/Symcon_Version-5.0-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
-![Module-Version](https://img.shields.io/badge/Modul_Version-1.9-blue.svg)
+![Module-Version](https://img.shields.io/badge/Modul_Version-1.10-blue.svg)
 ![Code](https://img.shields.io/badge/Code-PHP-blue.svg)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 [![StyleCI](https://github.styleci.io/repos/123791865/shield?branch=master)](https://github.styleci.io/repos/123791865)
@@ -369,6 +369,10 @@ GUIDs
   - `{2D42552F-2545-9145-D3C8-A299E3FDC6EA}`: an NetatmoWeatherConfig, NetatmoWeatherDevice
 
 ## 7. Versions-Historie
+
+- 1.10 @ 20.01.2019 14:12<br>
+  - Abfangen von fehlenden Daten.<br>
+  Hintergrund: wenn ein Modul nicht mehr kommuniziert fehlen die _dashboard_data_ in den Daten.
 
 - 1.9 @ 22.12.2018 12:20<br>
   - Fehler in der http-Kommunikation nun nicht mehr mit _echo_ (also als **ERROR**) sondern mit _LogMessage_ als **NOTIFY**
