@@ -803,31 +803,31 @@ class NetatmoWeatherDevice extends IPSModule
 
             $last_message = $module['last_message'];
 
-			$rf_status = $this->map_rf_status($module['rf_status']);
-			if ($with_signal) {
-				$this->SetValue('RfSignal', $rf_status);
-			}
+            $rf_status = $this->map_rf_status($module['rf_status']);
+            if ($with_signal) {
+                $this->SetValue('RfSignal', $rf_status);
+            }
 
-			$battery_status = $this->map_battery_status($module_type, $module['battery_vp']);
-			if ($with_battery) {
-				$this->SetValue('Battery', $battery_status);
-			}
+            $battery_status = $this->map_battery_status($module_type, $module['battery_vp']);
+            if ($with_battery) {
+                $this->SetValue('Battery', $battery_status);
+            }
 
             if (!isset($module['dashboard_data'])) {
                 $module_nodata = true;
 
-				$module_type_text = $this->module_type2text($module_type);
-				$msg = "  module_type=$module_type($module_type_text), module_name=$module_name, rf_status=$rf_status, battery_status=$battery_status";
-				$this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
+                $module_type_text = $this->module_type2text($module_type);
+                $msg = "  module_type=$module_type($module_type_text), module_name=$module_name, rf_status=$rf_status, battery_status=$battery_status";
+                $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
                 break;
             }
 
             $dashboard = $module['dashboard_data'];
 
-			$last_measure = $dashboard['time_utc'];
-			if ($with_last_measure) {
-				$this->SetValue('LastMeasure', $last_measure);
-			}
+            $last_measure = $dashboard['time_utc'];
+            if ($with_last_measure) {
+                $this->SetValue('LastMeasure', $last_measure);
+            }
 
             switch ($module_type) {
                 case 'NAModule1':
