@@ -371,8 +371,8 @@ GUIDs
 ## 7. Versions-Historie
 
 - 1.10 @ 20.01.2019 14:12<br>
-  - Abfangen von fehlenden Daten.<br>
-  Hintergrund: wenn ein Modul nicht mehr kommuniziert fehlt das Element _dashboard_data_ in den Daten.
+  - Abfangen von fehlenden Daten in der Antwort vom Netatmo-Server<br>
+    Hintergrund: wenn ein Modul nicht mehr kommuniziert fehlt das Element _dashboard_data_ in den Daten.
 
 - 1.9 @ 22.12.2018 12:20<br>
   - Fehler in der http-Kommunikation nun nicht mehr mit _echo_ (also als **ERROR**) sondern mit _LogMessage_ als **NOTIFY**
