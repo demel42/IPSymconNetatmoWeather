@@ -445,9 +445,9 @@ class NetatmoWeatherDevice extends IPSModule
         $modules = $device['modules'];
         foreach ($modules as $i => $value) {
             $module = $modules[$i];
-			if (!isset($module['dashboard_data'])) {
-				continue;
-			}
+            if (!isset($module['dashboard_data'])) {
+                continue;
+            }
             $dashboard = $module['dashboard_data'];
             switch ($module['type']) {
                 case 'NAModule1':
@@ -614,12 +614,12 @@ class NetatmoWeatherDevice extends IPSModule
                 }
                 $module_name = $module['module_name'];
 
-				if (isset($module['dashboard_data'])) {
-					$dashboard = $module['dashboard_data'];
-					$last_measure = $dashboard['time_utc'];
-				} else {
-					$last_measure = 0;
-				}
+                if (isset($module['dashboard_data'])) {
+                    $dashboard = $module['dashboard_data'];
+                    $last_measure = $dashboard['time_utc'];
+                } else {
+                    $last_measure = 0;
+                }
 
                 $last_message = $module['last_message'];
                 if (is_int($last_message)) {
@@ -808,10 +808,10 @@ class NetatmoWeatherDevice extends IPSModule
             $rf_status = $this->map_rf_status($module['rf_status']);
             $battery_status = $this->map_battery_status($module_type, $module['battery_vp']);
 
-			if (!isset($module['dashboard_data'])) {
-				$module_nodata = true;
-				break;
-			}
+            if (!isset($module['dashboard_data'])) {
+                $module_nodata = true;
+                break;
+            }
 
             $dashboard = $module['dashboard_data'];
 
@@ -1012,18 +1012,18 @@ class NetatmoWeatherDevice extends IPSModule
             $instName = IPS_GetName($this->InstanceID);
             $module_type_text = $this->module_type2text($module_type);
             $msg = "instance $this->InstanceID \"$instName\" ($module_type_text) module with id $module_id not found";
-			$this->LogMessage($msg, KL_WARNING);
+            $this->LogMessage($msg, KL_WARNING);
             $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
-			return $statuscode;
+            return $statuscode;
         }
 
         if ($module_nodata == false) {
             $instName = IPS_GetName($this->InstanceID);
             $module_type_text = $this->module_type2text($module_type);
             $msg = "instance $this->InstanceID \"$instName\" ($module_type_text) module with id $module_id has no data";
-			$this->LogMessage($msg, KL_NOTIFY);
+            $this->LogMessage($msg, KL_NOTIFY);
             $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
-			return $statuscode;
+            return $statuscode;
         }
 
         if ($module_type == 'NAModule1') {
@@ -1035,9 +1035,9 @@ class NetatmoWeatherDevice extends IPSModule
                 $modules = $device['modules'];
                 foreach ($modules as $i => $value) {
                     $module = $modules[$i];
-					if (!isset($module['dashboard_data'])) {
-						continue;
-					}
+                    if (!isset($module['dashboard_data'])) {
+                        continue;
+                    }
                     $dashboard = $module['dashboard_data'];
                     switch ($module['type']) {
                         case 'NAModule1':
