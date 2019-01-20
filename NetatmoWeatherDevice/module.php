@@ -801,8 +801,6 @@ class NetatmoWeatherDevice extends IPSModule
 
             $module_name = $module['module_name'];
 
-            $last_measure = $dashboard['time_utc'];
-
             $last_message = $module['last_message'];
 
             $rf_status = $this->map_rf_status($module['rf_status']);
@@ -814,6 +812,8 @@ class NetatmoWeatherDevice extends IPSModule
             }
 
             $dashboard = $module['dashboard_data'];
+
+            $last_measure = $dashboard['time_utc'];
 
             switch ($module_type) {
                 case 'NAModule1':
