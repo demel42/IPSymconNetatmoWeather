@@ -2,11 +2,11 @@
 	"id": "{0F675628-33AE-88E8-D9C4-9A2D1C7FE394}",
 	"author": "Ch. Damsky",
 	"name": "NetatmoWeather",
-	"url": "",
+	"url": "https://github.com/demel42/IPSymconNetatmoWeather",
 	"compatibility": {
 		"version": "5.0"
 	},
-	"version": "1.10",
+	"version": "1.11",
 	"build": 0,
-	"date": 1547989974
+	"date": 1548263914
 }

@@ -200,25 +200,30 @@ class NetatmoWeatherIO extends IPSModule
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         $cdata = curl_exec($ch);
+		$cerrno = curl_errno ($ch);
+		$cerror = $cerrno ? curl_error($ch) : '';
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         $duration = round(microtime(true) - $time_start, 2);
-        $this->SendDebug(__FUNCTION__, ' => httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
+        $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
 
         $statuscode = 0;
         $err = '';
         $data = '';
-        if ($httpcode != 200) {
+        if ($cerrno) {
+            $statuscode = 204;
+            $err = 'got curl-errno ' . $cerrno . ' (' . $cerror . ')';
+        } elseif ($httpcode != 200) {
             if ($httpcode == 401) {
                 $statuscode = 201;
-                $err = "got http-code $httpcode (unauthorized)";
+                $err = 'got http-code ' . $httpcode . ' (unauthorized)';
             } elseif ($httpcode >= 500 && $httpcode <= 599) {
                 $statuscode = 202;
-                $err = "got http-code $httpcode (server error)";
+                $err = 'got http-code ' . $httpcode . ' (server error)';
             } else {
                 $statuscode = 203;
-                $err = "got http-code $httpcode";
+                $err = 'got http-code ' . $httpcode;
             }
         } elseif ($cdata == '') {
             $statuscode = 204;
