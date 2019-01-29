@@ -520,25 +520,25 @@ class NetatmoWeatherDevice extends IPSModule
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $wstatus = curl_exec($ch);
-		$cerrno = curl_errno ($ch);
-		$cerror = $cerrno ? curl_error($ch) : '';
+        $cerrno = curl_errno($ch);
+        $cerror = $cerrno ? curl_error($ch) : '';
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         $duration = round(microtime(true) - $time_start, 2);
-		$this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
+        $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
 
         $do_abort = false;
 
-		if ($cerrno) {
+        if ($cerrno) {
             $err = ' => got curl-errno ' . $cerrno . ' (' . $cerror . ')';
             $this->SendDebug(__FUNCTION__, $err, 0);
-			$this->LogMessage($err, KL_WARNING);
+            $this->LogMessage($err, KL_WARNING);
             $do_abort = true;
         } elseif ($httpcode != 200) {
             $err = ' => got http-code ' . $httpcode . ' from wunderground';
             $this->SendDebug(__FUNCTION__, $err, 0);
-			$this->LogMessage($err, KL_WARNING);
+            $this->LogMessage($err, KL_WARNING);
             $do_abort = true;
         }
 
@@ -546,7 +546,7 @@ class NetatmoWeatherDevice extends IPSModule
         if ($wstatus != 'success') {
             $err = ' => got from wunderground: ' . $wstatus;
             $this->SendDebug(__FUNCTION__, $err, 0);
-			$this->LogMessage($err, KL_WARNING);
+            $this->LogMessage($err, KL_WARNING);
             $do_abort = true;
         }
 
