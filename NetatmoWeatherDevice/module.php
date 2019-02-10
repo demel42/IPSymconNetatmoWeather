@@ -541,13 +541,13 @@ class NetatmoWeatherDevice extends IPSModule
             $this->LogMessage($err, KL_WARNING);
             $do_abort = true;
         } else {
-			$wstatus = trim($wstatus, "\n");
-			if ($wstatus != 'success') {
-				$err = ' => got from wunderground: ' . $wstatus;
-				$this->SendDebug(__FUNCTION__, $err, 0);
-				$this->LogMessage($err, KL_WARNING);
-				$do_abort = true;
-			}
+            $wstatus = trim($wstatus, "\n");
+            if ($wstatus != 'success') {
+                $err = ' => got from wunderground: ' . $wstatus;
+                $this->SendDebug(__FUNCTION__, $err, 0);
+                $this->LogMessage($err, KL_WARNING);
+                $do_abort = true;
+            }
         }
 
         if ($do_abort) {
