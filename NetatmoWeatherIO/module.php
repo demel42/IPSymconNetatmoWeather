@@ -267,6 +267,7 @@ class NetatmoWeatherIO extends IPSModule
 
         $duration = round(microtime(true) - $time_start, 2);
         $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
+		$this->SendDebug(__FUNCTION__, '    cdata=' . $cdata, 0);
 
         $statuscode = 0;
         $err = '';
