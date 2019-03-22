@@ -8,13 +8,13 @@ if (!defined('VARIABLETYPE_BOOLEAN')) {
 }
 
 if (!defined('IS_NODATA')) {
-	define('IS_NODATA', IS_EBASE + 1);
-	define('IS_UNAUTHORIZED', IS_EBASE + 2);
-	define('IS_SERVERERROR', IS_EBASE + 3);
-	define('IS_HTTPERROR', IS_EBASE + 4);
-	define('IS_INVALIDDATA', IS_EBASE + 5);
-	define('IS_NOSTATION', IS_EBASE + 6);
-	define('IS_STATIONMISSІNG', IS_EBASE + 7);
+    define('IS_NODATA', IS_EBASE + 1);
+    define('IS_UNAUTHORIZED', IS_EBASE + 2);
+    define('IS_SERVERERROR', IS_EBASE + 3);
+    define('IS_HTTPERROR', IS_EBASE + 4);
+    define('IS_INVALIDDATA', IS_EBASE + 5);
+    define('IS_NOSTATION', IS_EBASE + 6);
+    define('IS_STATIONMISSІNG', IS_EBASE + 7);
 }
 
 trait NetatmoWeatherCommon
@@ -27,7 +27,7 @@ trait NetatmoWeatherCommon
             return;
         }
 
-		$ret = parent::SetValue($Ident, $Value);
+        $ret = parent::SetValue($Ident, $Value);
         if ($ret == false) {
             $this->SendDebug(__FUNCTION__, 'mismatch of value "' . $Value . '" for variable ' . $Ident, 0);
         }
@@ -41,7 +41,7 @@ trait NetatmoWeatherCommon
             return false;
         }
 
-		$ret = parent::GetValue($Ident);
+        $ret = parent::GetValue($Ident);
         return $ret;
     }
 

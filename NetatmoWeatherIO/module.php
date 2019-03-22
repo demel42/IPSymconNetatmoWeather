@@ -10,7 +10,7 @@ class NetatmoWeatherIO extends IPSModule
     {
         parent::Create();
 
-		$this->RegisterPropertyBoolean('module_disable', false);
+        $this->RegisterPropertyBoolean('module_disable', false);
 
         $this->RegisterPropertyString('Netatmo_User', '');
         $this->RegisterPropertyString('Netatmo_Password', '');
@@ -28,12 +28,12 @@ class NetatmoWeatherIO extends IPSModule
     {
         parent::ApplyChanges();
 
-		$module_disable = $this->ReadPropertyBoolean('module_disable');
-		if ($module_disable) {
-			$this->SetTimerInterval('UpdateDataWeather', 0);
-			$this->SetStatus(IS_INACTIVE);
-			return;
-		}
+        $module_disable = $this->ReadPropertyBoolean('module_disable');
+        if ($module_disable) {
+            $this->SetTimerInterval('UpdateDataWeather', 0);
+            $this->SetStatus(IS_INACTIVE);
+            return;
+        }
 
         $netatmo_user = $this->ReadPropertyString('Netatmo_User');
         $netatmo_password = $this->ReadPropertyString('Netatmo_Password');
@@ -56,7 +56,7 @@ class NetatmoWeatherIO extends IPSModule
     public function GetConfigurationForm()
     {
         $formElements = [];
-		$formElements[] = ['type' => 'CheckBox', 'name' => 'module_disable', 'caption' => 'Instance is disabled'];
+        $formElements[] = ['type' => 'CheckBox', 'name' => 'module_disable', 'caption' => 'Instance is disabled'];
         $formElements[] = ['type' => 'Label', 'label' => 'Netatmo Access-Details'];
         $formElements[] = ['type' => 'Label', 'label' => 'Netatmo-Account from https://my.netatmo.com'];
         $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'Netatmo_User', 'caption' => 'Username'];
@@ -91,7 +91,7 @@ class NetatmoWeatherIO extends IPSModule
         $formStatus[] = ['code' => IS_STATIONMISSІNG, 'icon' => 'error', 'caption' => 'Instance is inactive (station missing)'];
 
         return json_encode(['elements' => $formElements, 'actions' => $formActions, 'status' => $formStatus]);
-	}
+    }
 
     // Inspired by module SymconTest/HookServe
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
@@ -125,7 +125,7 @@ class NetatmoWeatherIO extends IPSModule
 
     public function UpdateData()
     {
-		$inst = IPS_GetInstance($this->InstanceID);
+        $inst = IPS_GetInstance($this->InstanceID);
         if ($inst['InstanceStatus'] == IS_INACTIVE) {
             $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
             return;
@@ -238,7 +238,7 @@ class NetatmoWeatherIO extends IPSModule
 
     private function do_HttpRequest($url, $postdata = '')
     {
-		$inst = IPS_GetInstance($this->InstanceID);
+        $inst = IPS_GetInstance($this->InstanceID);
         if ($inst['InstanceStatus'] == IS_INACTIVE) {
             $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
             return;
