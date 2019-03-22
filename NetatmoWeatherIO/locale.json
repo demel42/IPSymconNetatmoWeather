@@ -1,6 +1,8 @@
 {
 	"translations": {
 		"de": {
+			"Instance is disabled": "Instanz ist deaktiviert",
+
 			"Netatmo Access-Details": "Netatmo Zugangsdaten",
 
 			"Netatmo-Account from https://my.netatmo.com":
@@ -25,13 +27,17 @@
 
 			"Instance getting created": "Instanz wird erstellt",
 			"Instance is active": "Instanz ist aktiv",
+			"Instance is deleted": "Instanz wird gelöscht",
 			"Instance is inactive": "Instanz ist inaktiv",
+			"Instance is not created": "Instanz wurde nicht erzeugt",
 
+			"Instance is inactive (no data)": "Instanz ist inaktiv (keine Daten)",
 			"Instance is inactive (unauthorized)": "Instanz ist inaktiv (Authorisierung fehlerhaft)",
 			"Instance is inactive (server error)": "Instanz ist inaktiv (Serverfehler)",
 			"Instance is inactive (http error)": "Instanz ist inaktiv (HTTP-Fehler)",
 			"Instance is inactive (invalid data)": "Instanz ist inaktiv (ungültige Daten)",
-			"Instance is inactive (no station)": "Instanz ist inaktiv (keine Station vorhanden)"
+			"Instance is inactive (no station)": "Instanz ist inaktiv (keine Station)",
+			"Instance is inactive (station missing)": "Instanz ist inaktiv (Station ist unbekannt)"
 		}
 	}
 }

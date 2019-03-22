@@ -282,7 +282,7 @@ class NetatmoWeatherDevice extends IPSModule
             }
         }
 
-        $this->SetStatus(102);
+        $this->SetStatus(IS_ACTIVE);
     }
 
     public function GetConfigurationForm()
@@ -367,7 +367,7 @@ class NetatmoWeatherDevice extends IPSModule
                 $formElements[] = ['type' => 'SelectScript', 'name' => 'webhook_script', 'caption' => ' ... Webhook'];
 
                 $formElements[] = ['type' => 'Label', 'label' => 'Duration until the connection to netatmo or between stations is marked disturbed'];
-                $formElements[] = ['type' => 'IntervalBox', 'name' => 'minutes2fail', 'caption' => 'Minutes'];
+                $formElements[] = ['type' => 'NumberSpinner', 'name' => 'minutes2fail', 'caption' => 'Minutes'];
                 break;
             case 'NAMain':
                 $formElements[] = ['type' => 'Label', 'label' => 'optional module data'];
@@ -395,14 +395,6 @@ class NetatmoWeatherDevice extends IPSModule
                 break;
         }
 
-        $formStatus = [];
-        $formStatus[] = ['code' => '101', 'icon' => 'inactive', 'caption' => 'Instance getting created'];
-        $formStatus[] = ['code' => '102', 'icon' => 'active', 'caption' => 'Instance is active'];
-        $formStatus[] = ['code' => '104', 'icon' => 'inactive', 'caption' => 'Instance is inactive'];
-
-        $formStatus[] = ['code' => '201', 'icon' => 'error', 'caption' => 'Instance is inactive (no data)'];
-        $formStatus[] = ['code' => '202', 'icon' => 'error', 'caption' => 'Instance is inactive (station missing)'];
-
         $formActions = [];
         $formActions[] = ['type' => 'Label', 'label' => '____________________________________________________________________________________________________'];
         $formActions[] = [
@@ -410,6 +402,21 @@ class NetatmoWeatherDevice extends IPSModule
                             'caption' => 'Module description',
                             'onClick' => 'echo "https://github.com/demel42/IPSymconNetatmoWeather/blob/master/README.md";'
                         ];
+
+        $formStatus = [];
+		$formStatus[] = ['code' => IS_CREATING, 'icon' => 'inactive', 'caption' => 'Instance getting created'];
+		$formStatus[] = ['code' => IS_ACTIVE, 'icon' => 'active', 'caption' => 'Instance is active'];
+		$formStatus[] = ['code' => IS_DELETING, 'icon' => 'inactive', 'caption' => 'Instance is deleted'];
+		$formStatus[] = ['code' => IS_INACTIVE, 'icon' => 'inactive', 'caption' => 'Instance is inactive'];
+		$formStatus[] = ['code' => IS_NOTCREATED, 'icon' => 'inactive', 'caption' => 'Instance is not created'];
+
+        $formStatus[] = ['code' => IS_NODATA, 'icon' => 'error', 'caption' => 'Instance is inactive (no data)'];
+        $formStatus[] = ['code' => IS_UNAUTHORIZED, 'icon' => 'error', 'caption' => 'Instance is inactive (unauthorized)'];
+        $formStatus[] = ['code' => IS_SERVERERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (server error)'];
+        $formStatus[] = ['code' => IS_HTTPERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (http error)'];
+        $formStatus[] = ['code' => IS_INVALIDDATA, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid data)'];
+        $formStatus[] = ['code' => IS_NOSTATION, 'icon' => 'error', 'caption' => 'Instance is inactive (no station)'];
+        $formStatus[] = ['code' => IS_STATIONMISSІNG, 'icon' => 'error', 'caption' => 'Instance is inactive (station missing)'];
 
         return json_encode(['elements' => $formElements, 'actions' => $formActions, 'status' => $formStatus]);
     }
@@ -569,7 +576,7 @@ class NetatmoWeatherDevice extends IPSModule
 
         $now = time();
 
-        $statuscode = 102;
+        $statuscode = IS_ACTIVE;
         $battery_alarm = false;
         $module_alarm = false;
         $module_data = [];
@@ -698,7 +705,7 @@ class NetatmoWeatherDevice extends IPSModule
 
         $now = time();
 
-        $statuscode = 102;
+        $statuscode = IS_ACTIVE;
 
         $station_name = $device['station_name'];
         $module_name = $device['module_name'];
@@ -793,7 +800,7 @@ class NetatmoWeatherDevice extends IPSModule
 
         $now = time();
 
-        $statuscode = 102;
+        $statuscode = IS_ACTIVE;
 
         $station_name = $device['station_name'];
 
@@ -1078,12 +1085,12 @@ class NetatmoWeatherDevice extends IPSModule
             }
             if ($station_found == false) {
                 $err = "station_id \"$station_id\" not found";
-                $statuscode = 202;
+                $statuscode = IS_STATIONMISSІNG;
                 $do_abort = true;
             }
         } else {
             $err = 'no data';
-            $statuscode = 201;
+            $statuscode = IS_NODATA;
             $do_abort = true;
         }
 
@@ -1120,7 +1127,7 @@ class NetatmoWeatherDevice extends IPSModule
                 break;
             default:
                 $this->SendDebug(__FUNCTION__, 'unknown module_type "' . $module_type . '"', 0);
-                $statuscode = 102;
+                $statuscode = IS_ACTIVE;
                 break;
         }
 
@@ -1402,7 +1409,7 @@ class NetatmoWeatherDevice extends IPSModule
     // Inspired from module SymconTest/HookServe
     protected function ProcessHookData()
     {
-        $this->SendDebug('WebHook SERVER', print_r($_SERVER, true), 0);
+        $this->SendDebug(__FUNCTION__, '_SERVER=' . print_r($_SERVER, true), 0);
 
         $root = realpath(__DIR__);
         $uri = $_SERVER['REQUEST_URI'];

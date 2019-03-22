@@ -10,6 +10,8 @@ class NetatmoWeatherIO extends IPSModule
     {
         parent::Create();
 
+		$this->RegisterPropertyBoolean('module_disable', false);
+
         $this->RegisterPropertyString('Netatmo_User', '');
         $this->RegisterPropertyString('Netatmo_Password', '');
         $this->RegisterPropertyString('Netatmo_Client', '');
@@ -26,6 +28,13 @@ class NetatmoWeatherIO extends IPSModule
     {
         parent::ApplyChanges();
 
+		$module_disable = $this->ReadPropertyBoolean('module_disable');
+		if ($module_disable) {
+			$this->SetTimerInterval('UpdateDataWeather', 0);
+			$this->SetStatus(IS_INACTIVE);
+			return;
+		}
+
         $netatmo_user = $this->ReadPropertyString('Netatmo_User');
         $netatmo_password = $this->ReadPropertyString('Netatmo_Password');
         $netatmo_client = $this->ReadPropertyString('Netatmo_Client');
@@ -38,11 +47,51 @@ class NetatmoWeatherIO extends IPSModule
             if (IPS_GetKernelRunlevel() == KR_READY) {
                 $this->UpdateData();
             }
-            $this->SetStatus(102);
+            $this->SetStatus(IS_ACTIVE);
         } else {
-            $this->SetStatus(104);
+            $this->SetStatus(IS_INACTIVE);
         }
     }
+
+    public function GetConfigurationForm()
+    {
+        $formElements = [];
+		$formElements[] = ['type' => 'CheckBox', 'name' => 'module_disable', 'caption' => 'Instance is disabled'];
+        $formElements[] = ['type' => 'Label', 'label' => 'Netatmo Access-Details'];
+        $formElements[] = ['type' => 'Label', 'label' => 'Netatmo-Account from https://my.netatmo.com'];
+        $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'Netatmo_User', 'caption' => 'Username'];
+        $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'Netatmo_Password', 'caption' => 'Password'];
+        $formElements[] = ['type' => 'Label', 'label' => 'Netatmo-Connect from https://dev.netatmo.com'];
+        $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'Netatmo_Client', 'caption' => 'Client ID'];
+        $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'Netatmo_Secret', 'caption' => 'Client Secret'];
+        $formElements[] = ['type' => 'Label', 'label' => 'Ignore HTTP-Error X times'];
+        $formElements[] = ['type' => 'NumberSpinner', 'name' => 'ignore_http_error', 'caption' => 'Count'];
+        $formElements[] = ['type' => 'Label', 'label' => ''];
+        $formElements[] = ['type' => 'Label', 'label' => 'Update weatherdata every X minutes'];
+        $formElements[] = ['type' => 'NumberSpinner', 'name' => 'UpdateDataInterval', 'caption' => 'Minutes'];
+
+        $formActions = [];
+        $formActions[] = ['type' => 'Button', 'label' => 'Update weatherdata', 'onClick' => 'NetatmoWeatherIO_UpdateData($id);'];
+        $formActions[] = ['type' => 'Label', 'label' => '____________________________________________________________________________________________________'];
+        $formActions[] = ['type' => 'Button', 'label' => 'Module description', 'onClick' => 'echo \'https://github.com/demel42/IPSymconNetatmoWeather/blob/master/README.md\';'];
+
+        $formStatus = [];
+        $formStatus[] = ['code' => IS_CREATING, 'icon' => 'inactive', 'caption' => 'Instance getting created'];
+        $formStatus[] = ['code' => IS_ACTIVE, 'icon' => 'active', 'caption' => 'Instance is active'];
+        $formStatus[] = ['code' => IS_DELETING, 'icon' => 'inactive', 'caption' => 'Instance is deleted'];
+        $formStatus[] = ['code' => IS_INACTIVE, 'icon' => 'inactive', 'caption' => 'Instance is inactive'];
+        $formStatus[] = ['code' => IS_NOTCREATED, 'icon' => 'inactive', 'caption' => 'Instance is not created'];
+
+        $formStatus[] = ['code' => IS_NODATA, 'icon' => 'error', 'caption' => 'Instance is inactive (no data)'];
+        $formStatus[] = ['code' => IS_UNAUTHORIZED, 'icon' => 'error', 'caption' => 'Instance is inactive (unauthorized)'];
+        $formStatus[] = ['code' => IS_SERVERERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (server error)'];
+        $formStatus[] = ['code' => IS_HTTPERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (http error)'];
+        $formStatus[] = ['code' => IS_INVALIDDATA, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid data)'];
+        $formStatus[] = ['code' => IS_NOSTATION, 'icon' => 'error', 'caption' => 'Instance is inactive (no station)'];
+        $formStatus[] = ['code' => IS_STATIONMISSІNG, 'icon' => 'error', 'caption' => 'Instance is inactive (station missing)'];
+
+        return json_encode(['elements' => $formElements, 'actions' => $formActions, 'status' => $formStatus]);
+	}
 
     // Inspired by module SymconTest/HookServe
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
@@ -76,8 +125,13 @@ class NetatmoWeatherIO extends IPSModule
 
     public function UpdateData()
     {
+		$inst = IPS_GetInstance($this->InstanceID);
+        if ($inst['InstanceStatus'] == IS_INACTIVE) {
+            $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
+            return;
+        }
+
         $netatmo_auth_url = 'https://api.netatmo.net/oauth2/token';
-        //$netatmo_data_url = 'https://api.netatmo.net/api/devicelist';
         $netatmo_data_url = 'https://api.netatmo.net/api/getstationsdata';
 
         $netatmo_user = $this->ReadPropertyString('Netatmo_User');
@@ -110,7 +164,7 @@ class NetatmoWeatherIO extends IPSModule
             if ($response != '') {
                 $params = json_decode($response, true);
                 if ($params['access_token'] == '') {
-                    $statuscode = 204;
+                    $statuscode = IS_INVALIDDATA;
                     $err = "no 'access_token' in response";
                     $this->LogMessage('statuscode=' . $statuscode . ', err=' . $err, KL_WARNING);
                     $this->SendDebug(__FUNCTION__, $err, 0);
@@ -152,12 +206,12 @@ class NetatmoWeatherIO extends IPSModule
             $status = $netatmo['status'];
             if ($status != 'ok') {
                 $err = "got status \"$status\"";
-                $statuscode = 204;
+                $statuscode = IS_INVALIDDATA;
             } else {
                 $devices = $netatmo['body']['devices'];
                 if (!count($devices)) {
                     $err = 'data contains no station';
-                    $statuscode = 205;
+                    $statuscode = IS_NOSTATION;
                 }
             }
             if ($statuscode) {
@@ -176,7 +230,7 @@ class NetatmoWeatherIO extends IPSModule
             return -1;
         }
 
-        $this->SetStatus(102);
+        $this->SetStatus(IS_ACTIVE);
 
         $this->SendData($data);
         $this->SetBuffer('LastData', $data);
@@ -184,6 +238,12 @@ class NetatmoWeatherIO extends IPSModule
 
     private function do_HttpRequest($url, $postdata = '')
     {
+		$inst = IPS_GetInstance($this->InstanceID);
+        if ($inst['InstanceStatus'] == IS_INACTIVE) {
+            $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
+            return;
+        }
+
         $ignore_http_error = $this->ReadPropertyInteger('ignore_http_error');
 
         $this->SendDebug(__FUNCTION__, 'http-' . ($postdata != '' ? 'post' : 'get') . ': url=' . $url, 0);
@@ -212,26 +272,26 @@ class NetatmoWeatherIO extends IPSModule
         $err = '';
         $data = '';
         if ($cerrno) {
-            $statuscode = 204;
+            $statuscode = IS_SERVERERROR;
             $err = 'got curl-errno ' . $cerrno . ' (' . $cerror . ')';
         } elseif ($httpcode != 200) {
             if ($httpcode == 401) {
-                $statuscode = 201;
+                $statuscode = IS_UNAUTHORIZED;
                 $err = 'got http-code ' . $httpcode . ' (unauthorized)';
             } elseif ($httpcode >= 500 && $httpcode <= 599) {
-                $statuscode = 202;
+                $statuscode = IS_SERVERERROR;
                 $err = 'got http-code ' . $httpcode . ' (server error)';
             } else {
-                $statuscode = 203;
+                $statuscode = IS_HTTPERROR;
                 $err = 'got http-code ' . $httpcode;
             }
         } elseif ($cdata == '') {
-            $statuscode = 204;
+            $statuscode = IS_NODATA;
             $err = 'no data';
         } else {
             $jdata = json_decode($cdata, true);
             if ($jdata == '') {
-                $statuscode = 204;
+                $statuscode = IS_INVALIDDATA;
                 $err = 'malformed response';
             } else {
                 $data = $cdata;

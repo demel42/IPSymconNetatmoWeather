@@ -17,7 +17,7 @@ class NetatmoWeatherConfig extends IPSModule
     {
         parent::ApplyChanges();
 
-        $this->SetStatus(102);
+        $this->SetStatus(IS_ACTIVE);
     }
 
     public function GetConfigurationForm()
@@ -48,13 +48,19 @@ class NetatmoWeatherConfig extends IPSModule
                         ];
 
         $formStatus = [];
-        $formStatus[] = ['code' => '101', 'icon' => 'inactive', 'caption' => 'Instance getting created'];
-        $formStatus[] = ['code' => '102', 'icon' => 'active', 'caption' => 'Instance is active'];
-        $formStatus[] = ['code' => '104', 'icon' => 'inactive', 'caption' => 'Instance is inactive'];
+		$formStatus[] = ['code' => IS_CREATING, 'icon' => 'inactive', 'caption' => 'Instance getting created'];
+		$formStatus[] = ['code' => IS_ACTIVE, 'icon' => 'active', 'caption' => 'Instance is active'];
+		$formStatus[] = ['code' => IS_DELETING, 'icon' => 'inactive', 'caption' => 'Instance is deleted'];
+		$formStatus[] = ['code' => IS_INACTIVE, 'icon' => 'inactive', 'caption' => 'Instance is inactive'];
+		$formStatus[] = ['code' => IS_NOTCREATED, 'icon' => 'inactive', 'caption' => 'Instance is not created'];
 
-        $formStatus[] = ['code' => '201', 'icon' => 'error', 'caption' => 'Instance is inactive (no data)'];
-        $formStatus[] = ['code' => '202', 'icon' => 'error', 'caption' => 'Instance is inactive (station missing)'];
-        $formStatus[] = ['code' => '203', 'icon' => 'error', 'caption' => 'Instance is inactive (no station)'];
+        $formStatus[] = ['code' => IS_NODATA, 'icon' => 'error', 'caption' => 'Instance is inactive (no data)'];
+        $formStatus[] = ['code' => IS_UNAUTHORIZED, 'icon' => 'error', 'caption' => 'Instance is inactive (unauthorized)'];
+        $formStatus[] = ['code' => IS_SERVERERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (server error)'];
+        $formStatus[] = ['code' => IS_HTTPERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (http error)'];
+        $formStatus[] = ['code' => IS_INVALIDDATA, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid data)'];
+        $formStatus[] = ['code' => IS_NOSTATION, 'icon' => 'error', 'caption' => 'Instance is inactive (no station)'];
+        $formStatus[] = ['code' => IS_STATIONMISSІNG, 'icon' => 'error', 'caption' => 'Instance is inactive (station missing)'];
 
         return json_encode(['actions' => $formActions, 'status' => $formStatus]);
     }
@@ -123,17 +129,17 @@ class NetatmoWeatherConfig extends IPSModule
                 }
                 if (!$station_found) {
                     $err = "station \"$station_name\" don't exists";
-                    $statuscode = 202;
+                    $statuscode = IS_STATIONMISSІNG;
                     $do_abort = true;
                 }
             } else {
                 $err = 'no station selected';
-                $statuscode = 203;
+                $statuscode = IS_NOSTATION;
                 $do_abort = true;
             }
         } else {
             $err = 'no data';
-            $statuscode = 201;
+            $statuscode = IS_NODATA;
             $do_abort = true;
         }
 
@@ -144,7 +150,7 @@ class NetatmoWeatherConfig extends IPSModule
             return -1;
         }
 
-        $this->SetStatus(102);
+        $this->SetStatus(IS_ACTIVE);
 
         $place = $device['place'];
         $station_id = $device['_id'];
