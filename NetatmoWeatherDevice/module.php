@@ -446,7 +446,7 @@ class NetatmoWeatherDevice extends IPSModule
 
         $dashboard = $device['dashboard_data'];
 
-        $pressure = $dashboard['AbsolutePressure'];
+        $pressure = $this->GetArrayElem($dashboard, 'AbsolutePressure', 0);
         $time_utc = $dashboard['time_utc'];
 
         $modules = $device['modules'];
@@ -458,17 +458,17 @@ class NetatmoWeatherDevice extends IPSModule
             $dashboard = $module['dashboard_data'];
             switch ($module['type']) {
                 case 'NAModule1':
-                    $temp = $dashboard['Temperature'];
-                    $humidity = $dashboard['Humidity'];
+                    $temp = $this->GetArrayElem($dashboard, 'Temperature', 0);
+                    $humidity = $this->GetArrayElem($dashboard, 'Humidity', 0);
                     break;
                 case 'NAModule2':
-                    $winddir = $dashboard['WindAngle'];
-                    $windspeed = $dashboard['WindStrength'];
-                    $windgustdir = $dashboard['GustAngle'];
-                    $windgust = $dashboard['GustStrength'];
+                    $winddir = $this->GetArrayElem($dashboard, 'WindAngle', 0);
+                    $windspeed = $this->GetArrayElem($dashboard, 'WindStrength', 0);
+                    $windgustdir = $this->GetArrayElem($dashboard, 'GustAngle', 0);
+                    $windgust = $this->GetArrayElem($dashboard, 'GustStrength', 0);
                     break;
                 case 'NAModule3':
-                    $rain = $dashboard['Rain'];
+                    $rain = $this->GetArrayElem($dashboard, 'Rain', 0);
                     $sum_rain_1 = $this->GetArrayElem($dashboard, 'sum_rain_1', 0);
                     $sum_rain_24 = $this->GetArrayElem($dashboard, 'sum_rain_24', 0);
                     break;
@@ -712,12 +712,12 @@ class NetatmoWeatherDevice extends IPSModule
 
         $dashboard = $device['dashboard_data'];
 
-        $Temperature = $dashboard['Temperature'];
-        $CO2 = $dashboard['CO2'];
-        $Humidity = $dashboard['Humidity'];
+        $Temperature = $this->GetArrayElem($dashboard, 'Temperature', 0);
+        $CO2 = $this->GetArrayElem($dashboard, 'CO2', 0);
+        $Humidity = $this->GetArrayElem($dashboard, 'Humidity', 0);
         $Noise = $this->GetArrayElem($dashboard, 'Noise', 0);
-        $Pressure = $dashboard['Pressure'];
-        $AbsolutePressure = $dashboard['AbsolutePressure'];
+        $Pressure = $this->GetArrayElem($dashboard, 'Pressure', 0);
+        $AbsolutePressure = $this->GetArrayElem($dashboard, 'AbsolutePressure', 0);
 
         $min_temp = $this->GetArrayElem($dashboard, 'min_temp', 0);
         $date_min_temp = $this->GetArrayElem($dashboard, 'date_min_temp', 0);
@@ -848,8 +848,8 @@ class NetatmoWeatherDevice extends IPSModule
             switch ($module_type) {
                 case 'NAModule1':
                     // Außenmodul
-                    $Temperature = $dashboard['Temperature'];
-                    $Humidity = $dashboard['Humidity'];
+                    $Temperature = $this->GetArrayElem($dashboard, 'Temperature', 0);
+                    $Humidity = $this->GetArrayElem($dashboard, 'Humidity', 0);
 
                     $min_temp = $this->GetArrayElem($dashboard, 'min_temp', 0);
                     $date_min_temp = $this->GetArrayElem($dashboard, 'date_min_temp', 0);
@@ -893,10 +893,10 @@ class NetatmoWeatherDevice extends IPSModule
                     break;
                 case 'NAModule2':
                     // Windmesser
-                    $WindSpeed = $dashboard['WindStrength'];
-                    $WindAngle = $dashboard['WindAngle'];
-                    $GustSpeed = $dashboard['GustStrength'];
-                    $GustAngle = $dashboard['GustAngle'];
+                    $WindSpeed = $this->GetArrayElem($dashboard, 'WindStrength', 0);
+                    $WindAngle = $this->GetArrayElem($dashboard, 'WindAngle', 0);
+                    $GustSpeed = $this->GetArrayElem($dashboard, 'GustStrength', 0);
+                    $GustAngle = $this->GetArrayElem($dashboard, 'GustAngle', 0);
 
                     $wind_max = $this->GetArrayElem($dashboard, 'max_wind_str', 0);
                     $wind_max_angle = $this->GetArrayElem($dashboard, 'max_wind_angle', 0);
@@ -941,7 +941,7 @@ class NetatmoWeatherDevice extends IPSModule
                     break;
                 case 'NAModule3':
                     // Regenmesser
-                    $Rain = $dashboard['Rain'];
+                    $Rain = $this->GetArrayElem($dashboard, 'Rain', 0);
                     $sum_rain_1 = $this->GetArrayElem($dashboard, 'sum_rain_1', 0);
                     $sum_rain_24 = $this->GetArrayElem($dashboard, 'sum_rain_24', 0);
 
@@ -954,9 +954,9 @@ class NetatmoWeatherDevice extends IPSModule
                     break;
                 case 'NAModule4':
                     // Innenmodul
-                    $Temperature = $dashboard['Temperature'];
-                    $Humidity = $dashboard['Humidity'];
-                    $CO2 = $dashboard['CO2'];
+                    $Temperature = $this->GetArrayElem($dashboard, 'Temperature', 0);
+                    $Humidity = $this->GetArrayElem($dashboard, 'Humidity', 0);
+                    $CO2 = $this->GetArrayElem($dashboard, 'CO2', 0);
 
                     $min_temp = $this->GetArrayElem($dashboard, 'min_temp', 0);
                     $date_min_temp = $this->GetArrayElem($dashboard, 'date_min_temp', 0);
@@ -1035,11 +1035,11 @@ class NetatmoWeatherDevice extends IPSModule
                     $dashboard = $module['dashboard_data'];
                     switch ($module['type']) {
                         case 'NAModule1':
-                            $temp = $dashboard['Temperature'];
+                            $temp = $this->GetArrayElem($dashboard, 'Temperature', 0);
                             break;
                         case 'NAModule2':
                             $type = 'wind';
-                            $windspeed = $dashboard['WindStrength'];
+                            $windspeed = $this->GetArrayElem($dashboard, 'WindStrength', 0);
                             break;
                         default:
                             break;
