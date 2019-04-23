@@ -6,6 +6,8 @@
 			"Station-Name": "Stationsname",
 
 			"Import of station": "Importieren der Station",
+			"Triggering the function creates the missing instances for all Netatmo modules of the selected station. Are you sure?":
+				"Durch Auslösen der Funktion werden für alle Netatmo-Module der ausgewählten Station die fehlenden Instanzen angelegt. Sind Sie sich sicher?",
 			"Module description": "Modulbeschreibung",
 
 			"Instance getting created": "Instanz wird erstellt",
