@@ -40,11 +40,11 @@ class NetatmoWeatherConfig extends IPSModule
         $formActions = [];
         $formActions[] = ['type' => 'Select', 'name' => 'station_name', 'caption' => 'Station-Name', 'options' => $options];
         $formActions[] = [
-							'type'    => 'Button',
-							'caption' => 'Import of station',
-							'confirm' => 'Triggering the function creates the missing instances for all Netatmo modules of the selected station. Are you sure?',
-							'onClick' => 'NetatmoWeatherConfig_Doit($id, $station_name);'
-						];
+                            'type'    => 'Button',
+                            'caption' => 'Import of station',
+                            'confirm' => 'Triggering the function creates the missing instances for all Netatmo modules of the selected station. Are you sure?',
+                            'onClick' => 'NetatmoWeatherConfig_Doit($id, $station_name);'
+                        ];
         $formActions[] = ['type' => 'Label', 'label' => '____________________________________________________________________________________________________'];
         $formActions[] = [
                             'type'    => 'Button',
