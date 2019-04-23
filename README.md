@@ -154,33 +154,33 @@ Datenstruktur (muss mit json_decode() aufbereitet werden):
 
 - _station_: Informationen zu einer Wetterstation
 
-| Attribut        | Datentyp                | Bedeutung                               |
-| :-------------: | :---------------------: | :-------------------------------------: |
-| last_query      | UNIX-Timestamp          | Zeitpunkt der Abfrage                   |
-| status          | string                  | Status (_ok_ oder ein Fehler)           |
-| last_contact    | UNIX-Timestamp          | Zeitpunkt der letzten Datenübertragung  |
-| station_name    | string                  | Benutzerbezeichnung der Station         |
-| modules         | array von _module_      | die Module der Station                  |
+| Attribut      | Datentyp           | Bedeutung |
+| :------------ | :----------------- | :-------- |
+| last_query    | UNIX-Timestamp     | Zeitpunkt der Abfrage |
+| status        | string             | Status (_ok_ oder ein Fehler) |
+| last_contact  | UNIX-Timestamp     | Zeitpunkt der letzten Datenübertragung |
+| station_name  | string             | Benutzerbezeichnung der Station |
+| modules       | array von _module_ | die Module der Station |
 
 - _module_: Informationen zu einem Modul
 
-| Attribut           | Datentyp                | Bedeutung                               |
-| :----------------: | :---------------------: | :-------------------------------------: |
-| module_type        | string                  | Typ des Modules (_NAMain_, _NAModule1_, _NAModule2_, _NAModule3_, _NAModule4_) |
-| module_type_txt    | string                  |  ... als Text                           |
-| module_type_img    | string                  |  ... als Pfad zum Icon                  |
-| module_name        | string                  | Bezeichnung des Moduls                  |
-| last_measure       | UNIX-Timestamp          | Zeitpunkt der letzten Messung           |
-| last_message       | UNIX-Timestamp          | Zeitpunkt der letzten Meldung des Moduls bei der Basis |
-| wifi_status        | integer                 | Wifi (_nur NAMain_)                     |
-| wifi_status_txt    | string                  |  ... als Text                           |
-| wifi_status_img    | string                  |  ... als Pfad zum Icon                  |
-| rf_status          | integer                 | Funk (nicht _NAMain_)                   |
-| rf_status_txt      | string                  |  ... als Text                           |
-| rf_status_img      | string                  |  ... als Pfad zum Icon                  |
-| battery_status     | integer                 | Status der Batterie (nicht _NAMain_)    |
-| battery_status_txt | string                  |  ... als Text                           |
-| battery_status_img | string                  |  ... als Pfad zum Icon                  |
+| Attribut           | Datentyp        | Bedeutung |
+| :----------------- | :-------------- | :-------- |
+| module_type        | string          | Typ des Modules (_NAMain_, _NAModule1_, _NAModule2_, _NAModule3_, _NAModule4_) |
+| module_type_txt    | string          |  ... als Text |
+| module_type_img    | string          |  ... als Pfad zum Icon |
+| module_name        | string          | Bezeichnung des Moduls |
+| last_measure       | UNIX-Timestamp  | Zeitpunkt der letzten Messung |
+| last_message       | UNIX-Timestamp  | Zeitpunkt der letzten Meldung des Moduls bei der Basis |
+| wifi_status        | integer         | Wifi (_nur NAMain_) |
+| wifi_status_txt    | string          |  ... als Text |
+| wifi_status_img    | string          |  ... als Pfad zum Icon |
+| rf_status          | integer         | Funk (nicht _NAMain_) |
+| rf_status_txt      | string          |  ... als Text |
+| rf_status_img      | string          |  ... als Pfad zum Icon |
+| battery_status     | integer         | Status der Batterie (nicht _NAMain_) |
+| battery_status_txt | string          |  ... als Text |
+| battery_status_img | string          |  ... als Pfad zum Icon |
 
 Die gelieferte Struktur ist _station_; kein Array, weil es immer nur um eine bestimmte Station geht.
 
@@ -190,22 +190,22 @@ Die gelieferte Struktur ist _station_; kein Array, weil es immer nur um eine bes
 
 #### Variablen
 
-| Eigenschaft               | Typ      | Standardwert | Beschreibung |
-| :-----------------------: | :-----:  | :----------: | :----------------------------------------------------------------------------------------------------------: |
-| Netatmo-Zugangsdaten      | string   |              | Benutzername und Passwort von https://my.netatmo.com sowie Client-ID und -Secret von https://dev.netatmo.com |
-|                           |          |              | |
-| Ignoriere HTTP-Fehler     | integer  | 0            | Da Netatmo häufiger HTTP-Fehler meldet, wird erst ab dem X. Fehler in Folge reagiert |
-|                           |          |              | |
-| Aktualisiere Daten ...    | integer  | 5            | Aktualisierungsintervall, Angabe in Minuten |
+| Eigenschaft            | Typ     | Standardwert | Beschreibung |
+| :--------------------- | :-----  | :----------- | :----------- |
+| Netatmo-Zugangsdaten   | string  |              | Benutzername und Passwort von https://my.netatmo.com sowie Client-ID und -Secret von https://dev.netatmo.com |
+|                        |         |              | |
+| Ignoriere HTTP-Fehler  | integer | 0            | Da Netatmo häufiger HTTP-Fehler meldet, wird erst ab dem X. Fehler in Folge reagiert |
+|                        |         |              | |
+| Aktualisiere Daten ... | integer | 5            | Aktualisierungsintervall, Angabe in Minuten |
 
 Hinweis zum Intervall: die Daten werden nur ca. alle 10m von der Wetterstation an Netatmo übertragen, ein minütliches Intervall ist zulässig, macht aber nur begrenzt Sinn.
 Bei einer Angabe von 5m sind die Werte nicht älter als 15m.
 
 #### Schaltflächen
 
-| Bezeichnung                  | Beschreibung |
-| :--------------------------: | :------------------------------------------------: |
-| Aktualisiere Wetterdaten     | führt eine sofortige Aktualisierung durch |
+| Bezeichnung              | Beschreibung |
+| :----------------------- | :----------- |
+| Aktualisiere Wetterdaten | führt eine sofortige Aktualisierung durch |
 
 ### Konfigurator
 
@@ -215,9 +215,9 @@ Es werden alle Stationen zu dem konfigurierten Account zur Auswahl angeboten. Es
 
 #### Schaltflächen
 
-| Bezeichnung                  | Beschreibung |
-| :--------------------------: | :------------------------------------------------: |
-| Import der Station           | richtet die Geräte-Instanzen ein |
+| Bezeichnung        | Beschreibung |
+| :----------------- | :----------- |
+| Import der Station | richtet die Geräte-Instanzen ein |
 
 ### Geräte
 
@@ -225,11 +225,11 @@ Es werden alle Stationen zu dem konfigurierten Account zur Auswahl angeboten. Es
 
 werden vom Konfigurator beim Anlegen der Instanz gesetzt.
 
-| Eigenschaft            | Typ     | Standardwert | Beschreibung                               |
-| :--------------------: | :-----: | :----------: | :----------------------------------------: |
-| station_id             | string  |              | ID der Station                             |
-| module_id              | string  |              | ID des Moduls                              |
-| module_type            | string  |              | Typ des Moduls                             |
+| Eigenschaft | Typ    | Standardwert | Beschreibung |
+| :---------- | :----- | :----------- | :----------- |
+| station_id  | string |              | ID der Station |
+| module_id   | string |              | ID des Moduls |
+| module_type | string |              | Typ des Moduls |
 
 _module_type_: _NAMain_=Basis, _NAModule1_=Außen, _NAModule2_=Wind, _NAModule3_=Regen, _NAModule4_=Innen sowie _Station_, die für die Netatmo-Station als Ganzes steht.
 
@@ -237,33 +237,33 @@ _module_type_: _NAMain_=Basis, _NAModule1_=Außen, _NAModule2_=Wind, _NAModule3_
 
 stehen je nach Typ des Moduls zur Verfügung
 
-| Eigenschaft               | Typ     | Standardwert | Beschreibung                               |
-| :-----------------------: | :-----: | :----------: | :----------------------------------------: |
-| altitude                  | float   |              | Höhe der Station                           |
-| longitude                 | float   |              | Längengrad der Station                     |
-| latitude                  | float   |              | Breitengrad der Station                    |
-|                           |         |              |                                            |
-| with_absolute_humidity    | boolean | false        | absolute Luftfeuchtigkeit                  |
-| with_absolute_pressure    | boolean | false        | absoluter Luftdruck                        |
-| with_battery              | boolean | false        | Batterie-Status                            |
-| with_dewpoint             | boolean | false        | Taupunkt                                   |
-| with_heatindex            | boolean | false        | Hitzeindex                                 |
-| with_last_contact         | boolean | false        | letzte Übertragung an Netatmo              |
+| Eigenschaft               | Typ     | Standardwert | Beschreibung |
+| :------------------------ | :------ | :----------- | :----------- |
+| altitude                  | float   |              | Höhe der Station |
+| longitude                 | float   |              | Längengrad der Station |
+| latitude                  | float   |              | Breitengrad der Station |
+|                           |         |              | |
+| with_absolute_humidity    | boolean | false        | absolute Luftfeuchtigkeit |
+| with_absolute_pressure    | boolean | false        | absoluter Luftdruck |
+| with_battery              | boolean | false        | Batterie-Status |
+| with_dewpoint             | boolean | false        | Taupunkt |
+| with_heatindex            | boolean | false        | Hitzeindex |
+| with_last_contact         | boolean | false        | letzte Übertragung an Netatmo |
 | with_minmax               | boolean | false        | Ausgabe von Min/Max-Wert (Temperatur, Wind) |
-| with_last_measure         | boolean | false        | Messzeitpunkt                              |
-| with_signal               | boolean | false        | Wifi-/RF-Signalstärke                      |
+| with_last_measure         | boolean | false        | Messzeitpunkt |
+| with_signal               | boolean | false        | Wifi-/RF-Signalstärke |
 | with_status_box           | boolean | false        | HTML-Box mit Status der Station und Module |
-| with_trend                | boolean | false        | Ausgabe des Trend (Temperatur, Luftdruck)  |
-| with_windangle            | boolean | true         | Windrichtung in Grad                       |
-| with_windchill            | boolean | false        | Windchill (Windkühle)                      |
-| with_winddirection        | boolean | false        | Windrichtung mit Text                      |
-| with_windstrength         | boolean | false        | Windstärke                                 |
-|                           |         |              |                                            |
+| with_trend                | boolean | false        | Ausgabe des Trend (Temperatur, Luftdruck) |
+| with_windangle            | boolean | true         | Windrichtung in Grad |
+| with_windchill            | boolean | false        | Windchill (Windkühle) |
+| with_winddirection        | boolean | false        | Windrichtung mit Text |
+| with_windstrength         | boolean | false        | Windstärke |
+|                           |         |              | |
 | statusbox_script          | integer | 0            | Script zum Füllen der Variable _StatusBox_ |
-| webhook_script            | integer | 0            | Script zur Verwendung im WebHook           |
-|                           |         |              |                                            |
+| webhook_script            | integer | 0            | Script zur Verwendung im WebHook |
+|                           |         |              | |
 | minutes2fail              | integer | 30           | Dauer, bis die Kommunikation als gestört gilt |
-|                           |         |              |                                            |
+|                           |         |              | |
 | Wunderground-Zugangsdaten | string  |              | Station-ID und -Key von https://www.wunderground.com/personal-weather-station/mypws |
 
 Das hier angebbare Minuten-Intervall dient zu Überprüfung der Kommunikation zwischen
@@ -293,50 +293,50 @@ Beispiel in module.php sind _Build_StatusBox()_ und _ProcessHook_Status()_.
 
 folgende Variable werden angelegt, zum Teil optional
 
-| Name                    | Typ            | Beschreibung                                    | Option                 | Module    |
-| :---------------------: | :------------: | :---------------------------------------------: | :--------------------: | :-------: |
-| AbsoluteHumidity        | float          | absolute Luftfeuchtigkeit                       | with_absolute_humidity | B,A,I     |
-| AbsolutePressure        | float          | absoluter Luftdruck                             | with_absolute_pressure | B         |
-| BatteryAlarm            | boolean        | Batterie-Zustand eines oder mehrere Module      |                        | B         |
-| Battery                 | integer        | Batterie-Status                                 | with_battery           | A,W,R,I   |
-| CO2                     | integer        | CO2                                             |                        | B,I       |
-| Dewpoint                | float          | Taupunkt                                        | with_dewpoint          | B,A,I     |
-| GustAngle               | integer        | Richtung der Böen der letzten 5m                | with_windangle         | W         |
-| GustDirection           | string         | Richtung der Böen der letzten 5m                | with_winddirection     | W         |
-| GustMaxAngle            | integer        | Richtung der stärksten heutigen Böe             | with_minmax + with_windangle    | W         |
+| Name                    | Typ            | Beschreibung                                    | Option                           | Module    |
+| :---------------------- | :------------- | :---------------------------------------------- | :------------------------------- | :-------- |
+| AbsoluteHumidity        | float          | absolute Luftfeuchtigkeit                       | with_absolute_humidity           | B,A,I     |
+| AbsolutePressure        | float          | absoluter Luftdruck                             | with_absolute_pressure           | B         |
+| BatteryAlarm            | boolean        | Batterie-Zustand eines oder mehrere Module      |                                  | B         |
+| Battery                 | integer        | Batterie-Status                                 | with_battery                     | A,W,R,I   |
+| CO2                     | integer        | CO2                                             |                                  | B,I       |
+| Dewpoint                | float          | Taupunkt                                        | with_dewpoint                    | B,A,I     |
+| GustAngle               | integer        | Richtung der Böen der letzten 5m                | with_windangle                   | W         |
+| GustDirection           | string         | Richtung der Böen der letzten 5m                | with_winddirection               | W         |
+| GustMaxAngle            | integer        | Richtung der stärksten heutigen Böe             | with_minmax + with_windangle     | W         |
 | GustMaxDirection        | string         | Richtung der stärksten heutigen Böe             | with_minmax + with_winddirection | W         |
-| GustMaxSpeed            | float          | Geschwindigkeit der stärksten heutigen Böe      |                        | W         |
-| GustMaxStrength         | integer        | Stärke der stärksten heutigen Böe               | with_minmax + with_windstrength | W         |
-| GustMaxTimestamp        | UNIX-Timestamp | Zeitpunkt der stärksten heutigen Böe            | with_minmax            | W         |
-| GustSpeed               | float          | Geschwindigkeit der Böen der letzten 5m         |                        | W         |
-| GustStrength            | integer        | Stärke der Böen der letzten 5m                  | with_windstrength      | W         |
-| Heatindex               | float          | Hitzeindex                                      | with_heatindex         | B,A,I     |
-| Humidity                | float          | Luftfeuchtigkeit                                |                        | B,A,I     |
-| LastContact             | UNIX-Timestamp | letzte Übertragung                              | with_last_contact      | B         |
-| LastMeasure             | UNIX-Timestamp | letzte Messung                                  | with_last_measure      | B,A,W,R,I |
-| ModuleAlarm             | boolean        | Station oder Module kommunizieren nicht         |                        | B         |
-| Noise                   | integer        | Lärm                                            |                        | B         |
-| Pressure                | float          | Luftdruck                                       |                        | B         |
-| PressureTrend           | integer        | Trend des Luftdrucks                            | with_trend             | B         |
-| Rain_1h                 | float          | Regenmenge der letzten Stunde                   |                        | R         |
-| Rain_24h                | float          | Regenmenge von heute                            |                        | R         |
-| Rain                    | float          | Regenmenge                                      |                        | R         |
-| RfSignal                | integer        | Signal-Stärke                                   | with_signal            | A,W,R,I   |
-| Status                  | boolean        | Status                                          |                        | B         |
-| StatusBox               | string         | Status der Station und der Module               | with_status_box        | B         |
-| Temperature             | float          | Temperatur                                      |                        | B,A,I     |
-| TemperatureMax          | float          | heutiges Temperatur-Maximum                     | with_minmax            | B,A,I     |
-| TemperatureMaxTimestamp | UNIX-Timestamp | Zeitpunkt des heutigen Temperatur-Maximums      | with_minmax            | B,A,I     |
-| TemperatureMin          | float          | heutiges Temperatur-Minimum                     | with_minmax            | B,A,I     |
-| TemperatureMinTimestamp | UNIX-Timestamp | Zeitpunkt des heutigen Temperatur-Minimums      | with_minmax            | B,A,I     |
-| TemperatureTrend        | integer        | Trend der Temperatur                            | with_trend             | B,A,I     |
-| Wifi                    | integer        | Stärke des Wifi-Signals                         | with_signal            | B         |
-| WindAngle               | integer        | Windrichtung                                    | with_windangle         | W         |
-| Windchill               | float          | Windchill                                       | with_windchill         | A         |
-| WindDirection           | string         | Windrichtung                                    | with_winddirection     | W         |
-| WindSpeed               | float          | Windgeschwindigkeit                             |                        | W         |
-| WindStrength            | integer        | Windstärke                                      | with_windstrength      | W         |
-| Wunderground            | boolean        | Status der Übertragung an Wunderground          | wunderground_id        | B         |
+| GustMaxSpeed            | float          | Geschwindigkeit der stärksten heutigen Böe      |                                  | W         |
+| GustMaxStrength         | integer        | Stärke der stärksten heutigen Böe               | with_minmax + with_windstrength  | W         |
+| GustMaxTimestamp        | UNIX-Timestamp | Zeitpunkt der stärksten heutigen Böe            | with_minmax                      | W         |
+| GustSpeed               | float          | Geschwindigkeit der Böen der letzten 5m         |                                  | W         |
+| GustStrength            | integer        | Stärke der Böen der letzten 5m                  | with_windstrength                | W         |
+| Heatindex               | float          | Hitzeindex                                      | with_heatindex                   | B,A,I     |
+| Humidity                | float          | Luftfeuchtigkeit                                |                                  | B,A,I     |
+| LastContact             | UNIX-Timestamp | letzte Übertragung                              | with_last_contact                | B         |
+| LastMeasure             | UNIX-Timestamp | letzte Messung                                  | with_last_measure                | B,A,W,R,I |
+| ModuleAlarm             | boolean        | Station oder Module kommunizieren nicht         |                                  | B         |
+| Noise                   | integer        | Lärm                                            |                                  | B         |
+| Pressure                | float          | Luftdruck                                       |                                  | B         |
+| PressureTrend           | integer        | Trend des Luftdrucks                            | with_trend                       | B         |
+| Rain_1h                 | float          | Regenmenge der letzten Stunde                   |                                  | R         |
+| Rain_24h                | float          | Regenmenge von heute                            |                                  | R         |
+| Rain                    | float          | Regenmenge                                      |                                  | R         |
+| RfSignal                | integer        | Signal-Stärke                                   | with_signal                      | A,W,R,I   |
+| Status                  | boolean        | Status                                          |                                  | B         |
+| StatusBox               | string         | Status der Station und der Module               | with_status_box                  | B         |
+| Temperature             | float          | Temperatur                                      |                                  | B,A,I     |
+| TemperatureMax          | float          | heutiges Temperatur-Maximum                     | with_minmax                      | B,A,I     |
+| TemperatureMaxTimestamp | UNIX-Timestamp | Zeitpunkt des heutigen Temperatur-Maximums      | with_minmax                      | B,A,I     |
+| TemperatureMin          | float          | heutiges Temperatur-Minimum                     | with_minmax                      | B,A,I     |
+| TemperatureMinTimestamp | UNIX-Timestamp | Zeitpunkt des heutigen Temperatur-Minimums      | with_minmax                      | B,A,I     |
+| TemperatureTrend        | integer        | Trend der Temperatur                            | with_trend                       | B,A,I     |
+| Wifi                    | integer        | Stärke des Wifi-Signals                         | with_signal                      | B         |
+| WindAngle               | integer        | Windrichtung                                    | with_windangle                   | W         |
+| Windchill               | float          | Windchill                                       | with_windchill                   | A         |
+| WindDirection           | string         | Windrichtung                                    | with_winddirection               | W         |
+| WindSpeed               | float          | Windgeschwindigkeit                             |                                  | W         |
+| WindStrength            | integer        | Windstärke                                      | with_windstrength                | W         |
+| Wunderground            | boolean        | Status der Übertragung an Wunderground          | wunderground_id                  | B         |
 
 
 _Module_: B=Basis, A=Außen, W=Wind, R=Regen, I=Innen
