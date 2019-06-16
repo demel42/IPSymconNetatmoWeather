@@ -283,7 +283,7 @@ class NetatmoWeatherIO extends IPSModule
             } elseif ($httpcode == 403) {
                 $statuscode = IS_FORBIDDEN;
                 $err = 'got http-code ' . $httpcode . ' (forbidden)';
-				$this->SetBuffer('Token', '');
+                $this->SetBuffer('Token', '');
             } elseif ($httpcode >= 500 && $httpcode <= 599) {
                 $statuscode = IS_SERVERERROR;
                 $err = 'got http-code ' . $httpcode . ' (server error)';
