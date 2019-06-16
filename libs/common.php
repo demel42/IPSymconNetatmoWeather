@@ -10,11 +10,12 @@ if (!defined('VARIABLETYPE_BOOLEAN')) {
 if (!defined('IS_NODATA')) {
     define('IS_NODATA', IS_EBASE + 1);
     define('IS_UNAUTHORIZED', IS_EBASE + 2);
-    define('IS_SERVERERROR', IS_EBASE + 3);
-    define('IS_HTTPERROR', IS_EBASE + 4);
-    define('IS_INVALIDDATA', IS_EBASE + 5);
-    define('IS_NOSTATION', IS_EBASE + 6);
-    define('IS_STATIONMISSІNG', IS_EBASE + 7);
+    define('IS_FORBIDDEN', IS_EBASE + 3);
+    define('IS_SERVERERROR', IS_EBASE + 4);
+    define('IS_HTTPERROR', IS_EBASE + 5);
+    define('IS_INVALIDDATA', IS_EBASE + 6);
+    define('IS_NOSTATION', IS_EBASE + 7);
+    define('IS_STATIONMISSІNG', IS_EBASE + 8);
 }
 
 trait NetatmoWeatherCommon

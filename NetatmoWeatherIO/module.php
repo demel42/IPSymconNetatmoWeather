@@ -84,6 +84,7 @@ class NetatmoWeatherIO extends IPSModule
 
         $formStatus[] = ['code' => IS_NODATA, 'icon' => 'error', 'caption' => 'Instance is inactive (no data)'];
         $formStatus[] = ['code' => IS_UNAUTHORIZED, 'icon' => 'error', 'caption' => 'Instance is inactive (unauthorized)'];
+        $formStatus[] = ['code' => IS_FORBIDDEN, 'icon' => 'error', 'caption' => 'Instance is inactive (forbidden)'];
         $formStatus[] = ['code' => IS_SERVERERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (server error)'];
         $formStatus[] = ['code' => IS_HTTPERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (http error)'];
         $formStatus[] = ['code' => IS_INVALIDDATA, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid data)'];
@@ -279,6 +280,10 @@ class NetatmoWeatherIO extends IPSModule
             if ($httpcode == 401) {
                 $statuscode = IS_UNAUTHORIZED;
                 $err = 'got http-code ' . $httpcode . ' (unauthorized)';
+            } elseif ($httpcode == 403) {
+                $statuscode = IS_FORBIDDEN;
+                $err = 'got http-code ' . $httpcode . ' (forbidden)';
+				$this->SetBuffer('Token', '');
             } elseif ($httpcode >= 500 && $httpcode <= 599) {
                 $statuscode = IS_SERVERERROR;
                 $err = 'got http-code ' . $httpcode . ' (server error)';
