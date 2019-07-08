@@ -47,9 +47,11 @@ Hinweis: Wunderground gibt an, das Daten von Netatmo automatisch übernommen wer
 
  - IP-Symcon ab Version 5<br>
    Version 4.4 mit Branch _ips_4.4_ (nur noch Fehlerkorrekturen)
- - Netatmo Wetterstation und ein entsprechenden Account bei Netatmo.
-
-   Es wird sowohl der "normalen" Benutzer-Account, der bei der Anmeldung der Geräte bei Netatmo erzeugt wird (https://my.netatmo.com) als auch einen Account sowie eine "App" bei Netatmo Connect benötigt, um die Werte abrufen zu können (https://dev.netatmo.com).
+ - eine Netatmo Wetterstation
+ - den "normalen" Benutzer-Account, der bei der Anmeldung der Geräte bei Netatmo erzeugt wird (https://my.netatmo.com)
+ - einen Account sowie eine "App" bei Netatmo Connect, um die Werte abrufen zu können (https://dev.netatmo.com)<br>
+   Achtung: diese App ist nur für den Zugriff auf Netatmo-Weather-Produkte gedacht; das Modul benutzt den Scope _read_station_.
+   Eine gleichzeitige Benutzung der gleichen Netatmo-App für andere Bereiche (z.B. Security) stört sich gegenseitig.
 
  - optional ein Account bei Wunderground für eine "Personal-Weather-Station"
    hierzu muss man bei Wunderground ein Konto anlegen und eine eine Wettersttaion einrichten.
