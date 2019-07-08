@@ -345,7 +345,7 @@ _Module_: B=Basis, A=Außen, W=Wind, R=Regen, I=Innen
 
 ### Variablenprofile
 
-Es werden folgende Variableprofile angelegt:
+Es werden folgende Variablenprofile angelegt:
 * Boolean<br>
 Netatmo.Alarm
 
