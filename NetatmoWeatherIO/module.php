@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
 
 class NetatmoWeatherIO extends IPSModule
@@ -185,9 +187,9 @@ class NetatmoWeatherIO extends IPSModule
             $this->SendDebug(__FUNCTION__, 'token=' . $token . ', expiration=' . $token_expiration, 0);
 
             $jtoken = [
-                    'token'            => $token,
-                    'token_expiration' => $token_expiration
-                ];
+                'token'            => $token,
+                'token_expiration' => $token_expiration
+            ];
             $this->SetBuffer('Token', json_encode($jtoken));
 
             if ($do_abort) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
 
 class NetatmoWeatherDevice extends IPSModule
@@ -399,10 +401,10 @@ class NetatmoWeatherDevice extends IPSModule
         if (IPS_GetKernelVersion() < 5.2) {
             $formActions[] = ['type' => 'Label', 'label' => '____________________________________________________________________________________________________'];
             $formActions[] = [
-                                'type'    => 'Button',
-                                'caption' => 'Module description',
-                                'onClick' => 'echo "https://github.com/demel42/IPSymconNetatmoWeather/blob/master/README.md";'
-                            ];
+                'type'    => 'Button',
+                'caption' => 'Module description',
+                'onClick' => 'echo "https://github.com/demel42/IPSymconNetatmoWeather/blob/master/README.md";'
+            ];
         }
 
         $formStatus = [];
@@ -608,11 +610,11 @@ class NetatmoWeatherDevice extends IPSModule
         $wifi_status = $this->map_wifi_status($device['wifi_status']);
 
         $module_data[] = [
-                'module_type'  => $device['type'],
-                'module_name'  => $module_name,
-                'last_measure' => $last_measure,
-                'wifi_status'  => $wifi_status,
-            ];
+            'module_type'  => $device['type'],
+            'module_name'  => $module_name,
+            'last_measure' => $last_measure,
+            'wifi_status'  => $wifi_status,
+        ];
 
         $msg = "station \"$module_name\": station_name=$station_name, wifi_status=$wifi_status, last_contact=$last_contact";
         $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
@@ -656,23 +658,23 @@ class NetatmoWeatherDevice extends IPSModule
                 }
 
                 $module_data[] = [
-                        'module_type'     => $module['type'],
-                        'module_name'     => $module_name,
-                        'last_measure'    => $last_measure,
-                        'last_message'    => $last_message,
-                        'rf_status'       => $rf_status,
-                        'battery_status'  => $battery_status,
-                    ];
+                    'module_type'     => $module['type'],
+                    'module_name'     => $module_name,
+                    'last_measure'    => $last_measure,
+                    'last_message'    => $last_message,
+                    'rf_status'       => $rf_status,
+                    'battery_status'  => $battery_status,
+                ];
             }
         }
 
         $station_data = [
-                'last_query'      => $now,
-                'status'          => $netatmo['status'],
-                'last_contact'    => $last_contact,
-                'station_name'    => $device['station_name'],
-                'modules'         => $module_data,
-            ];
+            'last_query'      => $now,
+            'status'          => $netatmo['status'],
+            'last_contact'    => $last_contact,
+            'station_name'    => $device['station_name'],
+            'modules'         => $module_data,
+        ];
 
         $this->SetBuffer('Data', json_encode($station_data));
 

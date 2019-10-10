@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
 
 class NetatmoWeatherConfig extends IPSModule
@@ -40,18 +42,18 @@ class NetatmoWeatherConfig extends IPSModule
         $formActions = [];
         $formActions[] = ['type' => 'Select', 'name' => 'station_name', 'caption' => 'Station-Name', 'options' => $options];
         $formActions[] = [
-                            'type'    => 'Button',
-                            'caption' => 'Import of station',
-                            'confirm' => 'Triggering the function creates the missing instances for all Netatmo modules of the selected station. Are you sure?',
-                            'onClick' => 'NetatmoWeatherConfig_Doit($id, $station_name);'
-                        ];
+            'type'    => 'Button',
+            'caption' => 'Import of station',
+            'confirm' => 'Triggering the function creates the missing instances for all Netatmo modules of the selected station. Are you sure?',
+            'onClick' => 'NetatmoWeatherConfig_Doit($id, $station_name);'
+        ];
         if (IPS_GetKernelVersion() < 5.2) {
             $formActions[] = ['type' => 'Label', 'label' => '____________________________________________________________________________________________________'];
             $formActions[] = [
-                                'type'    => 'Button',
-                                'caption' => 'Module description',
-                                'onClick' => 'echo "https://github.com/demel42/IPSymconNetatmoWeather/blob/master/README.md";'
-                            ];
+                'type'    => 'Button',
+                'caption' => 'Module description',
+                'onClick' => 'echo "https://github.com/demel42/IPSymconNetatmoWeather/blob/master/README.md";'
+            ];
         }
 
         $formStatus = [];
@@ -171,12 +173,12 @@ class NetatmoWeatherConfig extends IPSModule
         $module_info = 'Station (' . $station_name . ')';
 
         $properties = [
-                'module_type'       => $module_type,
-                'station_id'        => $station_id,
-                'station_altitude'  => $station_altitude,
-                'station_longitude' => $station_longitude,
-                'station_latitude'  => $station_latitude,
-            ];
+            'module_type'       => $module_type,
+            'station_id'        => $station_id,
+            'station_altitude'  => $station_altitude,
+            'station_longitude' => $station_longitude,
+            'station_latitude'  => $station_latitude,
+        ];
         $pos = 1000;
         $instID = $this->FindOrCreateInstance('', $station_name, $module_info, $properties, $pos++);
 
@@ -186,9 +188,9 @@ class NetatmoWeatherConfig extends IPSModule
         $module_info = 'Basismodul (' . $station_name . '\\' . $module_name . ')';
 
         $properties = [
-                'module_type' => $module_type,
-                'station_id'  => $station_id,
-            ];
+            'module_type' => $module_type,
+            'station_id'  => $station_id,
+        ];
         $instID = $this->FindOrCreateInstance($station_id, $module_name, $module_info, $properties, $pos++);
 
         $modules = $device['modules'];
@@ -225,9 +227,9 @@ class NetatmoWeatherConfig extends IPSModule
                         break;
                 }
                 $properties = [
-                        'module_type' => $module_type,
-                        'station_id'  => $station_id,
-                    ];
+                    'module_type' => $module_type,
+                    'station_id'  => $station_id,
+                ];
                 $instID = $this->FindOrCreateInstance($module_id, $module_name, $module_info, $properties, $pos++);
             }
         }
