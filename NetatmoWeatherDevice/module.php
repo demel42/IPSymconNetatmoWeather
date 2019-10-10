@@ -485,30 +485,30 @@ class NetatmoWeatherDevice extends IPSModule
         }
 
         $param = '&dateutc=' . rawurlencode(date('Y-m-d G:i:s', $time_utc));
-        if (strlen($temp)) {
+        if ($temp > 0) {
             $param .= '&tempf=' . rawurlencode($this->celsius2farenheit($temp));
         }
-        if (strlen($humidity)) {
-            $param .= '&humidity=' . rawurlencode($humidity);
+        if ($humidity > 0) {
+            $param .= '&humidity=' . rawurlencode((string) $humidity);
         }
-        if (strlen($temp) && strlen($humidity)) {
+        if ($temp > 0 && $humidity > 0) {
             $dewpoint = $this->CalcDewpoint($temp, $humidity);
             $param .= '&dewptf=' . rawurlencode($this->celsius2farenheit($dewpoint));
         }
-        if (strlen($pressure)) {
+        if ($pressure > 0) {
             $param .= '&baromin=' . rawurlencode($this->mb2inch($pressure));
         }
-        if (strlen($sum_rain_1)) {
+        if ($sum_rain_1 > 0) {
             $param .= '&rainin=' . rawurlencode($this->mm2inch($sum_rain_1));
         }
-        if (strlen($sum_rain_24)) {
+        if ($sum_rain_24 > 0) {
             $param .= '&dailyrainin=' . rawurlencode($this->mm2inch($sum_rain_24));
         }
-        if (strlen($windspeed)) {
-            $param .= '&windspeedmph=' . rawurlencode($this->km2mile($windspeed)) . '&winddir=' . rawurlencode($winddir);
+        if ($windspeed > 0) {
+            $param .= '&windspeedmph=' . rawurlencode($this->km2mile($windspeed)) . '&winddir=' . rawurlencode((string) $winddir);
         }
-        if (strlen($windgust)) {
-            $param .= '&windgustmph=' . rawurlencode($this->km2mile($windgust)) . '&windgustdir=' . rawurlencode($windgustdir);
+        if ($windgust > 0) {
+            $param .= '&windgustmph=' . rawurlencode($this->km2mile($windgust)) . '&windgustdir=' . rawurlencode((string) $windgustdir);
         }
 
         $msg = 'temp=' . $temp . '°C';
