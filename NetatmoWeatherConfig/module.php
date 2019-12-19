@@ -35,7 +35,7 @@ class NetatmoWeatherConfig extends IPSModule
             $devices = $netatmo['body']['devices'];
             foreach ($devices as $device) {
                 $station_name = $device['station_name'];
-                $options[] = ['label' => $station_name, 'value' => $station_name];
+                $options[] = ['caption' => $station_name, 'value' => $station_name];
             }
         }
 
@@ -48,7 +48,7 @@ class NetatmoWeatherConfig extends IPSModule
             'onClick' => 'NetatmoWeatherConfig_Doit($id, $station_name);'
         ];
         if (IPS_GetKernelVersion() < 5.2) {
-            $formActions[] = ['type' => 'Label', 'label' => '____________________________________________________________________________________________________'];
+            $formActions[] = ['type' => 'Label', 'caption' => '____________________________________________________________________________________________________'];
             $formActions[] = [
                 'type'    => 'Button',
                 'caption' => 'Module description',

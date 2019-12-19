@@ -295,28 +295,28 @@ class NetatmoWeatherDevice extends IPSModule
 
         switch ($module_type) {
             case 'Station':
-                $formElements[] = ['type' => 'Label', 'label' => 'Netatmo Weather-Station'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weather-Station'];
                 break;
             case 'NAMain':
-                $formElements[] = ['type' => 'Label', 'label' => 'Netatmo Weather-Station - Module: base module'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weather-Station - Module: base module'];
                 break;
             case 'NAModule1':
-                $formElements[] = ['type' => 'Label', 'label' => 'Netatmo Weather-Station - Module: outdoor module'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weather-Station - Module: outdoor module'];
                 break;
             case 'NAModule2':
-                $formElements[] = ['type' => 'Label', 'label' => 'Netatmo Weather-Station - Module: wind gauge'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weather-Station - Module: wind gauge'];
                 break;
             case 'NAModule3':
-                $formElements[] = ['type' => 'Label', 'label' => 'Netatmo Weather-Station - Module: rain gauge'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weather-Station - Module: rain gauge'];
                 break;
             case 'NAModule4':
-                $formElements[] = ['type' => 'Label', 'label' => 'Netatmo Weather-Station - Module: indoor module'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weather-Station - Module: indoor module'];
                 break;
         }
 
         switch ($module_type) {
             case 'NAMain':
-                $formElements[] = ['type' => 'Label', 'label' => 'optional weather data'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'optional weather data'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_absolute_pressure', 'caption' => ' ... absolute Pressure'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_absolute_humidity', 'caption' => ' ... absolute Humidity'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_dewpoint', 'caption' => ' ... Dewpoint'];
@@ -325,7 +325,7 @@ class NetatmoWeatherDevice extends IPSModule
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_trend', 'caption' => ' ... Trend of temperature and pressure'];
                 break;
             case 'NAModule1':
-                $formElements[] = ['type' => 'Label', 'label' => 'optional weather data'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'optional weather data'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_absolute_humidity', 'caption' => ' ... absolute Humidity'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_dewpoint', 'caption' => ' ... Dewpoint'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_windchill', 'caption' => ' ... Windchill'];
@@ -334,7 +334,7 @@ class NetatmoWeatherDevice extends IPSModule
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_trend', 'caption' => ' ... Trend of temperature'];
                 break;
             case 'NAModule2':
-                $formElements[] = ['type' => 'Label', 'label' => 'optional weather data'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'optional weather data'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_windstrength', 'caption' => ' ... Windstrength'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_windangle', 'caption' => ' ... Winddirection in degrees'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_winddirection', 'caption' => ' ... Winddirection with label'];
@@ -343,7 +343,7 @@ class NetatmoWeatherDevice extends IPSModule
             case 'NAModule3':
                 break;
             case 'NAModule4':
-                $formElements[] = ['type' => 'Label', 'label' => 'optional weather data'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'optional weather data'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_absolute_humidity', 'caption' => ' ... absolute Humidity'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_dewpoint', 'caption' => ' ... Dewpoint'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_heatindex', 'caption' => ' ... Heatindex'];
@@ -354,32 +354,32 @@ class NetatmoWeatherDevice extends IPSModule
 
         switch ($module_type) {
             case 'Station':
-                $formElements[] = ['type' => 'Label', 'label' => 'station data'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'station data'];
                 $formElements[] = ['type' => 'NumberSpinner', 'name' => 'station_altitude', 'caption' => 'Altitude'];
                 $formElements[] = ['type' => 'NumberSpinner', 'digits' => 5, 'name' => 'station_longitude', 'caption' => 'Longitude'];
                 $formElements[] = ['type' => 'NumberSpinner', 'digits' => 5, 'name' => 'station_latitude', 'caption' => 'Latitude'];
 
-                $formElements[] = ['type' => 'Label', 'label' => 'optional station data'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'optional station data'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_last_contact', 'caption' => ' ... last transmission to Netatmo'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_status_box', 'caption' => ' ... html-box with state of station and modules'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_signal', 'caption' => ' ... Wifi-Signal'];
 
-                $formElements[] = ['type' => 'Label', 'label' => 'alternate script to use for ...'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'alternate script to use for ...'];
                 $formElements[] = ['type' => 'SelectScript', 'name' => 'statusbox_script', 'caption' => ' ... "StatusBox"'];
                 $formElements[] = ['type' => 'SelectScript', 'name' => 'webhook_script', 'caption' => ' ... Webhook'];
 
-                $formElements[] = ['type' => 'Label', 'label' => 'Duration until the connection to netatmo or between stations is marked disturbed'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'Duration until the connection to netatmo or between stations is marked disturbed'];
                 $formElements[] = ['type' => 'NumberSpinner', 'name' => 'minutes2fail', 'caption' => 'Minutes'];
                 break;
             case 'NAMain':
-                $formElements[] = ['type' => 'Label', 'label' => 'optional module data'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'optional module data'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_last_measure', 'caption' => ' ... Measurement-Timestamp'];
                 break;
             case 'NAModule1':
             case 'NAModule2':
             case 'NAModule3':
             case 'NAModule4':
-                $formElements[] = ['type' => 'Label', 'label' => 'optional module data'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'optional module data'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_last_measure', 'caption' => ' ... Measurement-Timestamp'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_signal', 'caption' => ' ... RF-Signal'];
                 $formElements[] = ['type' => 'CheckBox', 'name' => 'with_battery', 'caption' => ' ... Battery (a global battery indicator is always present)'];
@@ -388,8 +388,8 @@ class NetatmoWeatherDevice extends IPSModule
 
         switch ($module_type) {
             case 'Station':
-                $formElements[] = ['type' => 'Label', 'label' => 'Konfiguration to update Wunderground (only if filled)'];
-                $formElements[] = ['type' => 'Label', 'label' => 'Wunderground Access-Details from https://www.wunderground.com/personal-weather-station/mypws'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'Konfiguration to update Wunderground (only if filled)'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'Wunderground Access-Details from https://www.wunderground.com/personal-weather-station/mypws'];
                 $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'Wunderground_ID', 'caption' => 'Station ID'];
                 $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'Wunderground_Key', 'caption' => 'Station Key'];
                 break;
@@ -399,7 +399,7 @@ class NetatmoWeatherDevice extends IPSModule
 
         $formActions = [];
         if (IPS_GetKernelVersion() < 5.2) {
-            $formActions[] = ['type' => 'Label', 'label' => '____________________________________________________________________________________________________'];
+            $formActions[] = ['type' => 'Label', 'caption' => '____________________________________________________________________________________________________'];
             $formActions[] = [
                 'type'    => 'Button',
                 'caption' => 'Module description',

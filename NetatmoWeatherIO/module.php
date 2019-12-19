@@ -59,24 +59,24 @@ class NetatmoWeatherIO extends IPSModule
     {
         $formElements = [];
         $formElements[] = ['type' => 'CheckBox', 'name' => 'module_disable', 'caption' => 'Instance is disabled'];
-        $formElements[] = ['type' => 'Label', 'label' => 'Netatmo Access-Details'];
-        $formElements[] = ['type' => 'Label', 'label' => 'Netatmo-Account from https://my.netatmo.com'];
+        $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Access-Details'];
+        $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo-Account from https://my.netatmo.com'];
         $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'Netatmo_User', 'caption' => 'Username'];
         $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'Netatmo_Password', 'caption' => 'Password'];
-        $formElements[] = ['type' => 'Label', 'label' => 'Netatmo-Connect from https://dev.netatmo.com'];
+        $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo-Connect from https://dev.netatmo.com'];
         $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'Netatmo_Client', 'caption' => 'Client ID'];
         $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'Netatmo_Secret', 'caption' => 'Client Secret'];
-        $formElements[] = ['type' => 'Label', 'label' => 'Ignore HTTP-Error X times'];
+        $formElements[] = ['type' => 'Label', 'caption' => 'Ignore HTTP-Error X times'];
         $formElements[] = ['type' => 'NumberSpinner', 'name' => 'ignore_http_error', 'caption' => 'Count'];
-        $formElements[] = ['type' => 'Label', 'label' => ''];
-        $formElements[] = ['type' => 'Label', 'label' => 'Update weatherdata every X minutes'];
+        $formElements[] = ['type' => 'Label', 'caption' => ''];
+        $formElements[] = ['type' => 'Label', 'caption' => 'Update weatherdata every X minutes'];
         $formElements[] = ['type' => 'NumberSpinner', 'name' => 'UpdateDataInterval', 'caption' => 'Minutes'];
 
         $formActions = [];
-        $formActions[] = ['type' => 'Button', 'label' => 'Update weatherdata', 'onClick' => 'NetatmoWeatherIO_UpdateData($id);'];
+        $formActions[] = ['type' => 'Button', 'caption' => 'Update weatherdata', 'onClick' => 'NetatmoWeatherIO_UpdateData($id);'];
         if (IPS_GetKernelVersion() < 5.2) {
-            $formActions[] = ['type' => 'Label', 'label' => '____________________________________________________________________________________________________'];
-            $formActions[] = ['type' => 'Button', 'label' => 'Module description', 'onClick' => 'echo \'https://github.com/demel42/IPSymconNetatmoWeather/blob/master/README.md\';'];
+            $formActions[] = ['type' => 'Label', 'caption' => '____________________________________________________________________________________________________'];
+            $formActions[] = ['type' => 'Button', 'caption' => 'Module description', 'onClick' => 'echo \'https://github.com/demel42/IPSymconNetatmoWeather/blob/master/README.md\';'];
         }
 
         $formStatus = [];

@@ -1,7 +1,7 @@
 # IPSymconNetatmoWeather
 
 [![IPS-Version](https://img.shields.io/badge/Symcon_Version-5.0+-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
-![Module-Version](https://img.shields.io/badge/Modul_Version-1.20-blue.svg)
+![Module-Version](https://img.shields.io/badge/Modul_Version-1.21-blue.svg)
 ![Code](https://img.shields.io/badge/Code-PHP-blue.svg)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
@@ -371,81 +371,85 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.20 @ 10.10.2019 17:27<br>
+- 1.21 @ 19.12.2019 14:09
+  - Anpassungen an IPS 5.3
+    - Formular-Elemente: 'label' in 'caption' geändert
+
+- 1.20 @ 10.10.2019 17:27
   - Anpassungen an IPS 5.2
     - IPS_SetVariableProfileValues(), IPS_SetVariableProfileDigits() nur bei INTEGER, FLOAT
     - Dokumentation-URL in module.json
   - Umstellung auf strict_types=1
   - Umstellung von StyleCI auf php-cs-fixer
 
-- 1.19 @ 09.08.2019 14:32<br>
+- 1.19 @ 09.08.2019 14:32
   - Schreibfehler korrigiert
 
-- 1.18 @ 12.07.2019 15:29<br>
+- 1.18 @ 12.07.2019 15:29
   - Klarstellung zur Einrichtung/Bedeutung der Netatmo-App
 
-- 1.17 @ 16.06.2019 17:42<br>
+- 1.17 @ 16.06.2019 17:42
   - HTTP-Error 403 abgefangen (neuen Token erzwingen)
   - Anpassung IPS 5.1: Korrektur der GUID's (_parentRequirements_ in _NetatmoWeatherDevice_)
 
-- 1.16 @ 23.04.2019 17:08<br>
+- 1.16 @ 23.04.2019 17:08
   - Konfigurator um Sicherheitsabfrage ergänzt
 
-- 1.15 @ 31.03.2019 11:20<br>
+- 1.15 @ 31.03.2019 11:20
   - Zugriff auf alle Datenfelder abgesichert
 
-- 1.14 @ 29.03.2019 16:19<br>
+- 1.14 @ 29.03.2019 16:19
   - SetValue() abgesichert
 
-- 1.13 @ 22.03.2019 10:27<br>
+- 1.13 @ 22.03.2019 10:27
   - Anpassungen IPS 5
   - Schalter, um ein Modul (temporär) zu deaktivieren
   - form.json in GetConfigurationForm() abgebildet
   - Konfigurations-Element IntervalBox -> NumberSpinner
 
-- 1.12 @ 10.02.2019 11:16<br>
+- 1.12 @ 10.02.2019 11:16
   - verbesserte Absicherung des Upload zu Wunderground
 
-- 1.11 @ 23.01.2019 18:18<br>
+- 1.11 @ 23.01.2019 18:18
   - curl_errno() abfragen
 
-- 1.10 @ 20.01.2019 14:12<br>
+- 1.10 @ 20.01.2019 14:12
   - Abfangen von fehlenden Daten in der Antwort vom Netatmo-Server<br>
     Hintergrund: wenn ein Modul nicht mehr kommuniziert fehlt das Element _dashboard_data_ in den Daten.
 
-- 1.9 @ 22.12.2018 12:20<br>
+- 1.9 @ 22.12.2018 12:20
   - Fehler in der http-Kommunikation nun nicht mehr mit _echo_ (also als **ERROR**) sondern mit _LogMessage_ als **NOTIFY**
 
-- 1.8 @ 21.12.2018 13:10<br>
+- 1.8 @ 21.12.2018 13:10
   - Standard-Konstanten verwenden
 
-- 1.7 @ 20.11.2018 17:38<br>
-  - das Netatmo-API-Interface hat sich anscheinend geändert, die jetzt als _deprecated_ gekennzeichnete Funktion _Devicelist_ liefert seit heute ein anderes Format.
+- 1.7 @ 20.11.2018 17:38
+  - das Netatmo-API-Interface hat sich anscheinend geändert, die jetzt als _deprecated_ gekennzeichnete Funktion _Devicelist_ liefert seit heute ein anderes Format.<br>
 	Das Modul ist nun auf die Funktion 'Getstationsdata' umgestellt.
 
-- 1.6 @ 18.11.2018 12:28<br>
+- 1.6 @ 18.11.2018 12:28
   - da Netatmo häufiger ein Server-Error meldet wird optional erst nach dem X. Fehler reagiert
   - I/O-Fehler werden nicht mehr an die Instanzen weitergeleitet
 
-- 1.5 @ 02.10.2018 18:19 <br>
+- 1.5 @ 02.10.2018 18:19 
   - Berechnung in _ConvertWindSpeed2Strength()_ war fehlerhaft
   - Text in _ConvertWindStrength2Text()_ wurde nicht übersetzt
 
-- 1.4 @ 29.09.2018 13:41 <br>
+- 1.4 @ 29.09.2018 13:41 
   - Ballterie-Alarm erst ab _low_
   - Schreibfehler in der GUI
 
-- 1.3 @ 10.09.2018 15:43<br>
+- 1.3 @ 10.09.2018 15:43
   - Schreibfehler in der Dokumentation
 
-- 1.2 @ 01.09.2018 15:09<br>
+- 1.2 @ 01.09.2018 15:09
   - Fehlermeldung 'unknown trend' erscheint nicht mehr im Log (ist nur ein Hinweis, das von Netatmo kein Trend geliefert wurde)
 
-- 1.1 @ 22.08.2018 16:59<br>
+- 1.1 @ 22.08.2018 16:59
   - Anpassungen IPS 5, Abspaltung Branch _ips_4.4_
   - Versionshistorie dazu
   - define's der Variablentypen
   - Schaltfläche mit Link zu README.md in den Konfigurationsdialogen
 
-- 1.0 @ 03.04.2018 17:59<br>
-  Initiale Version
+- 1.0 @ 03.04.2018 17:59
+  - Initiale Version
