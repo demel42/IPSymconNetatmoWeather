@@ -47,14 +47,6 @@ class NetatmoWeatherConfig extends IPSModule
             'confirm' => 'Triggering the function creates the missing instances for all Netatmo modules of the selected station. Are you sure?',
             'onClick' => 'NetatmoWeatherConfig_Doit($id, $station_name);'
         ];
-        if (IPS_GetKernelVersion() < 5.2) {
-            $formActions[] = ['type' => 'Label', 'caption' => '____________________________________________________________________________________________________'];
-            $formActions[] = [
-                'type'    => 'Button',
-                'caption' => 'Module description',
-                'onClick' => 'echo "https://github.com/demel42/IPSymconNetatmoWeather/blob/master/README.md";'
-            ];
-        }
 
         $formStatus = [];
         $formStatus[] = ['code' => IS_CREATING, 'icon' => 'inactive', 'caption' => 'Instance getting created'];

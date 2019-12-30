@@ -74,10 +74,6 @@ class NetatmoWeatherIO extends IPSModule
 
         $formActions = [];
         $formActions[] = ['type' => 'Button', 'caption' => 'Update weatherdata', 'onClick' => 'NetatmoWeatherIO_UpdateData($id);'];
-        if (IPS_GetKernelVersion() < 5.2) {
-            $formActions[] = ['type' => 'Label', 'caption' => '____________________________________________________________________________________________________'];
-            $formActions[] = ['type' => 'Button', 'caption' => 'Module description', 'onClick' => 'echo \'https://github.com/demel42/IPSymconNetatmoWeather/blob/master/README.md\';'];
-        }
 
         $formStatus = [];
         $formStatus[] = ['code' => IS_CREATING, 'icon' => 'inactive', 'caption' => 'Instance getting created'];
