@@ -1,7 +1,7 @@
 # IPSymconNetatmoWeather
 
 [![IPS-Version](https://img.shields.io/badge/Symcon_Version-5.3+-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
-![Module-Version](https://img.shields.io/badge/Modul_Version-1.21-blue.svg)
+![Module-Version](https://img.shields.io/badge/Modul_Version-1.22-blue.svg)
 ![Code](https://img.shields.io/badge/Code-PHP-blue.svg)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
@@ -370,6 +370,9 @@ GUIDs
   - `{2D42552F-2545-9145-D3C8-A299E3FDC6EA}`: an NetatmoWeatherConfig, NetatmoWeatherDevice
 
 ## 7. Versions-Historie
+
+- 1.22 @ 06.01.2020 11:17
+  - Nutzung von RegisterReference() für im Modul genutze Objekte (Scripte, Kategorien etc)
 
 - 1.21 @ 30.12.2019 10:56
   - Anpassungen an IPS 5.3

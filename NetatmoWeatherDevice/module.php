@@ -111,12 +111,9 @@ class NetatmoWeatherDevice extends IPSModule
 
         $this->ConnectParent('{26A55798-5CBC-88F6-5C7B-370B043B24F9}');
 
-        // Inspired by module SymconTest/HookServe
-        // We need to call the RegisterHook function on Kernel READY
         $this->RegisterMessage(0, IPS_KERNELMESSAGE);
     }
 
-    // Inspired by module SymconTest/HookServe
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
         parent::MessageSink($TimeStamp, $SenderID, $Message, $Data);
@@ -276,9 +273,19 @@ class NetatmoWeatherDevice extends IPSModule
 
         $this->SetSummary($module_info);
 
+        $refs = $this->GetReferenceList();
+        foreach ($refs as $ref) {
+            $this->UnregisterReference($ref);
+        }
+        $propertyNames = ['statusbox_script', 'webhook_script'];
+        foreach ($propertyNames as $name) {
+            $oid = $this->ReadPropertyInteger($name);
+            if ($oid > 0) {
+                $this->RegisterReference($oid);
+            }
+        }
+
         if ($module_type == 'Station') {
-            // Inspired by module SymconTest/HookServe
-            // Only call this in READY state. On startup the WebHook instance might not be available yet
             if (IPS_GetKernelRunlevel() == KR_READY) {
                 $this->RegisterHook('/hook/NetatmoWeather');
             }
