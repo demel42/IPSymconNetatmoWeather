@@ -1,14 +1,12 @@
 {
 	"translations": {
 		"de": {
-			"Station-Name only needs to be selected if you have more then one":
-				"Stationsname muss nur ausgewählt werden, wenn mehr als eine Station vorhanden ist",
-			"Station-Name": "Stationsname",
+			"category for products to be created:": "Kategorie für anzulegende Produkte:",
+			"category": "Kategorie",
 
-			"Import of station": "Importieren der Station",
-			"Triggering the function creates the missing instances for all Netatmo modules of the selected station. Are you sure?":
-				"Durch Auslösen der Funktion werden für alle Netatmo-Module der ausgewählten Station die fehlenden Instanzen angelegt. Sind Sie sich sicher?",
-			"Module description": "Modulbeschreibung",
+			"City": "Stadt",
+			"Name": "Name",
+			"Id": "Id",
 
 			"Instance getting created": "Instanz wird erstellt",
 			"Instance is active": "Instanz ist aktiv",

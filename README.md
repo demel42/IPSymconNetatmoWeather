@@ -100,7 +100,7 @@ Die Instanzen können dann in gewohnter Weise im Objektbaum frei positioniert we
 
 ### zentrale Funktion
 
-`NetatmoWeatherIO_UpdateData(int $InstanzID)`
+`NetatmoWeather_UpdateData(int $InstanzID)`
 
 ruft die Daten der Netatmo-Wetterstation ab und aktualisiert optional die Wundergrund-PWS. Wird automatisch zyklisch durch die Instanz durchgeführt im Abstand wie in der Konfiguration angegeben.
 
@@ -370,9 +370,10 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.23 @ 02.02.2020 15:31
+- 1.23 @ 02.02.2020 18:57
   - Ergänzung um die Möglichkeit per OAuth anzumelden
-  - Prefix _NetatmoWeatherIO_ in _NetatmoWeather_ geändert
+  - Prefix _NetatmoWeatherIO_, _NetatmoWeatherConfig_ in _NetatmoWeather_ geändert
+  - Umbau der Konfiguration auf einen 2-stufigen Konfigurator
 
 - 1.22 @ 06.01.2020 11:17
   - Nutzung von RegisterReference() für im Modul genutze Objekte (Scripte, Kategorien etc)
