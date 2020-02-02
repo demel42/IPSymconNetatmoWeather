@@ -467,9 +467,30 @@ class NetatmoWeatherIO extends IPSModule
 
     public function ForwardData($data)
     {
-        $last_data = $this->GetBuffer('LastData');
-        $this->SendDebug(__FUNCTION__, 'last_data=' . print_r($last_data, true), 0);
-        return $last_data;
+        if ($this->CheckStatus() == STATUS_INVALID) {
+            $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => skip', 0);
+            return;
+        }
+
+        $jdata = json_decode($data, true);
+        $this->SendDebug(__FUNCTION__, 'data=' . print_r($jdata, true), 0);
+
+        $ret = '';
+        if (isset($jdata['Function'])) {
+            switch ($jdata['Function']) {
+                case 'LastData':
+                    $ret = $this->GetBuffer('LastData');
+                    break;
+                default:
+                    $this->SendDebug(__FUNCTION__, 'unknown function "' . $jdata['Function'] . '"', 0);
+                    break;
+                }
+        } else {
+            $this->SendDebug(__FUNCTION__, 'unknown message-structure', 0);
+        }
+
+        $this->SendDebug(__FUNCTION__, 'ret=' . print_r($ret, true), 0);
+        return $ret;
     }
 
     private function GetApiAccessToken()
