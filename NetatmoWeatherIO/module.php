@@ -585,7 +585,7 @@ class NetatmoWeatherIO extends IPSModule
             $this->SendDebug(__FUNCTION__, 'jdata=' . print_r($jdata, true), 0);
             $status = $jdata['status'];
             if ($status != 'ok') {
-                $err = "got status \"$status\"";
+                $err = 'got status "' . $status . '"';
                 $statuscode = IS_INVALIDDATA;
             } else {
                 $empty = true;
