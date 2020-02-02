@@ -8,6 +8,12 @@ if (!defined('CONNECTION_UNDEFINED')) {
     define('CONNECTION_DEVELOPER', 2);
 }
 
+if (!defined('STATUS_INVALID')) {
+    define('STATUS_INVALID', 0);
+    define('STATUS_VALID', 1);
+    define('STATUS_RETRYABLE', 2);
+}
+
 if (!defined('IS_NODATA')) {
     define('IS_NODATA', IS_EBASE + 1);
     define('IS_UNAUTHORIZED', IS_EBASE + 2);
@@ -17,7 +23,7 @@ if (!defined('IS_NODATA')) {
     define('IS_INVALIDDATA', IS_EBASE + 6);
     define('IS_NOSTATION', IS_EBASE + 7);
     define('IS_STATIONMISSІNG', IS_EBASE + 8);
-	define('IS_INVALIDCONFIG', IS_EBASE + 9);
+    define('IS_INVALIDCONFIG', IS_EBASE + 9);
     define('IS_NOSYMCONCONNECT', IS_EBASE + 10);
 }
 
@@ -230,7 +236,7 @@ trait NetatmoWeatherCommon
         $formStatus[] = ['code' => IS_INVALIDDATA, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid data)'];
         $formStatus[] = ['code' => IS_NOSTATION, 'icon' => 'error', 'caption' => 'Instance is inactive (no station)'];
         $formStatus[] = ['code' => IS_STATIONMISSІNG, 'icon' => 'error', 'caption' => 'Instance is inactive (station missing)'];
-		$formStatus[] = ['code' => IS_INVALIDCONFIG, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid config)'];
+        $formStatus[] = ['code' => IS_INVALIDCONFIG, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid config)'];
         $formStatus[] = ['code' => IS_NOSYMCONCONNECT, 'icon' => 'error', 'caption' => 'Instance is inactive (no Symcon-Connect)'];
 
         return $formStatus;
