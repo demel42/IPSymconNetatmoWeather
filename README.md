@@ -370,6 +370,10 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.23 @ 02.02.2020 15:31
+  - Ergänzung um die Möglichkeit per OAuth anzumelden
+  - Prefix _NetatmoWeatherIO_ in _NetatmoWeather_ geändert
+
 - 1.22 @ 06.01.2020 11:17
   - Nutzung von RegisterReference() für im Modul genutze Objekte (Scripte, Kategorien etc)
 

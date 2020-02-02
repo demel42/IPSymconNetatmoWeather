@@ -170,7 +170,9 @@
 			"Instance is inactive (http error)": "Instanz ist inaktiv (HTTP-Fehler)",
 			"Instance is inactive (invalid data)": "Instanz ist inaktiv (ungültige Daten)",
 			"Instance is inactive (no station)": "Instanz ist inaktiv (keine Station)",
-			"Instance is inactive (station missing)": "Instanz ist inaktiv (Station ist unbekannt)"
+			"Instance is inactive (station missing)": "Instanz ist inaktiv (Station ist unbekannt)",
+			"Instance is inactive (invalid config)": "Instanz ist inaktiv (ungültige Konfiguration)",
+			"Instance is inactive (no Symcon-Connect)": "Instanz ist inaktiv (kein Symcon-Connect)"
 		}
 	}
 }
