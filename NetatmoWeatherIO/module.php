@@ -75,8 +75,9 @@ class NetatmoWeatherIO extends IPSModule
                     return;
                 }
                 $refresh_token = $this->ReadAttributeString('ApiRefreshToken');
-                if ($refresh_token != '') {
-                    $this->SetStatus(IS_INVALIDCONFIG);
+                $this->SendDebug(__FUNCTION__, 'refresh_token=' . $refresh_token, 0);
+                if ($refresh_token == '') {
+                    $this->SetStatus(IS_NOLOGIN);
                 } else {
                     $this->SetStatus(IS_ACTIVE);
                 }
@@ -143,11 +144,12 @@ class NetatmoWeatherIO extends IPSModule
             ]
         ];
         $context = stream_context_create($options);
-        $cdata = @file_get_contents($url, false, $context);
+        $cdata = file_get_contents($url, false, $context);
         $duration = round(microtime(true) - $time_start, 2);
-        if (preg_match('/HTTP\/[0-9\.]+\s+([0-9]*)/', $http_response_header[0], $r)) {
+        if (isset(http_response_header[0]) && preg_match('/HTTP\/[0-9\.]+\s+([0-9]*)/', $http_response_header[0], $r)) {
             $httpcode = $r[1];
         } else {
+            $this->LogMessage('missing http_response_header, cdata=' . $cdata, KL_WARNING);
             $this->SendDebug(__FUNCTION__, 'http_response_header=' . print_r($http_response_header, true), 0);
             $httpcode = 0;
         }
@@ -229,7 +231,7 @@ class NetatmoWeatherIO extends IPSModule
             $this->SendDebug(__FUNCTION__, 'refresh_token=' . print_r($refresh_token, true), 0);
             if ($refresh_token == 'False') {
                 $this->SendDebug(__FUNCTION__, 'has no refresh_token', 0);
-                $this->SetBuffer('ApiRefreshToken', '');
+                $this->WriteAttributeString('ApiRefreshToken', '');
                 return false;
             }
             if ($refresh_token == '') {
@@ -260,14 +262,14 @@ class NetatmoWeatherIO extends IPSModule
     {
         if (!isset($_GET['code'])) {
             $this->SendDebug(__FUNCTION__, 'code missing, _GET=' . print_r($_GET, true), 0);
-            $this->SetStatus(IS_INVALIDCONFIG);
+            $this->SetStatus(IS_NOLOGIN);
             $this->WriteAttributeString('ApiRefreshToken', '');
             return;
         }
         $refresh_token = $this->FetchRefreshToken($_GET['code']);
         $this->SendDebug(__FUNCTION__, 'refresh_token=' . $refresh_token, 0);
         $this->WriteAttributeString('ApiRefreshToken', $refresh_token);
-        if ($this->GetStatus() == IS_INVALIDCONFIG) {
+        if ($this->GetStatus() == IS_NOLOGIN) {
             $this->SetStatus(IS_ACTIVE);
         }
     }

@@ -106,47 +106,47 @@ ruft die Daten der Netatmo-Wetterstation ab und aktualisiert optional die Wunder
 
 ### Hilfsfunktionen
 
-`float NetatmoWeatherDevice_CalcAbsoluteHumidity(int $InstanzID, float $Temperatur, float $Humidity)`
+`float NetatmoWeather_CalcAbsoluteHumidity(int $InstanzID, float $Temperatur, float $Humidity)`
 
 berechnet aus der Temperatur (in °C) und der relativen Luftfeuchtigkeit (in %) die absulte Feuchte (in g/m³)
 
 
-`float NetatmoWeatherDevice_CalcAbsolutePressure(int $InstanzID, float $Pressure, $Temperatur, int $Altitude)`
+`float NetatmoWeather_CalcAbsolutePressure(int $InstanzID, float $Pressure, $Temperatur, int $Altitude)`
 
 berechnet aus dem relativen Luftdruck (in mbar) und der Temperatur (in °C) und Höhe (in m) der absoluten Luftdruck (in mbar)
 ist die Höhe nicht angegeben, wird die Höhe der Netatmo-Wettersttaion verwendet
 
 
-`float NetatmoWeatherDevice_CalcDewpoint(int $InstanzID, float $Temperatur, float $Humidity)`
+`float NetatmoWeather_CalcDewpoint(int $InstanzID, float $Temperatur, float $Humidity)`
 
 berechnet aus der Temperatur (in °C) und der relativen Luftfeuchtigkeit (in %) den Taupunkt (in °C)
 
 
-`float NetatmoWeatherDevice_CalcHeatindex(int $InstanzID, float $Temperatur, float $Humidity)`
+`float NetatmoWeather_CalcHeatindex(int $InstanzID, float $Temperatur, float $Humidity)`
 
 berechnet aus der Temperatur (in °C) und der relativen Luftfeuchtigkeit (in %) den Hitzeindex (in °C)
 
 
-`float NetatmoWeatherDevice_CalcWindchill(int $InstanzID, float $Temperatur, float $WindSpeed)`
+`float NetatmoWeather_CalcWindchill(int $InstanzID, float $Temperatur, float $WindSpeed)`
 
 berechnet aus der Temperatur (in °C) und der Windgeschwindigkeit (in km/h) den Windchill (Windkühle) (in °C)
 
 
-`string NetatmoWeatherDevice_ConvertWindDirection2Text(int $InstanzID, int $WindDirection)`
+`string NetatmoWeather_ConvertWindDirection2Text(int $InstanzID, int $WindDirection)`
 
 ermittelt aus der Windrichtung (in °) die korespondierende Bezeichnung auf der Windrose
 
 
-`int NetatmoWeatherDevice_ConvertWindSpeed2Strength(int $InstanzID, float $WindSpeed)`
+`int NetatmoWeather_ConvertWindSpeed2Strength(int $InstanzID, float $WindSpeed)`
 
 berechnet aus der Windgeschwindigkeit (in km/h) die Windstärke (in bft)
 
 
-`string NetatmoWeatherDevice_ConvertWindStrength2Text(int $InstanzID, int $WindStrength)`
+`string NetatmoWeather_ConvertWindStrength2Text(int $InstanzID, int $WindStrength)`
 
 ermittelt aus der Windstärke (in bft) die korespondierende Bezeichnung gemäß Beaufortskala
 
-`string NetatmoWeatherDevice_GetRawData(int $InstanzID)`
+`string NetatmoWeather_GetRawData(int $InstanzID)`
 
 liefert die Zusatzdaten, die nicht in den Variablen gespeichert sind und zu Darstellung der HTML-Box bzw WebHook verwendet werden
 
@@ -278,14 +278,14 @@ mit diesen Scripten kann man eine alternative Darstellung realisieren.
 Ein passendes Code-Fragment für ein Script:
 
 ```
-$data = NetatmoWeatherDevice_GetRawData($_IPS['InstanceID']);
+$data = NetatmoWeather_GetRawData($_IPS['InstanceID']);
 if ($data) {
 	$station = json_decode($r,true);
 	...
 	echo $result;
 }
 ```
-Die Beschreibung der Struktur siehe _NetatmoWeatherDevice_GetRawData()_.
+Die Beschreibung der Struktur siehe _NetatmoWeather_GetRawData()_.
 
 Beispiel in module.php sind _Build_StatusBox()_ und _ProcessHook_Status()_.
 
@@ -372,7 +372,8 @@ GUIDs
 
 - 1.23 @ 02.02.2020 18:57
   - Ergänzung um die Möglichkeit per OAuth anzumelden
-  - Prefix _NetatmoWeatherIO_, _NetatmoWeatherConfig_ in _NetatmoWeather_ geändert
+  - Prefix _NetatmoWeatherIO_, _NetatmoWeatherConfig_ und _NetatmoWeatherDeviceg_ in _NetatmoWeather_ geändert
+    Achtung: wenn man Funktionen von diesem Modul in Scripten benutzt, muss der Prefix angepasst werden!
   - Umbau der Konfiguration auf einen 2-stufigen Konfigurator
 
 - 1.22 @ 06.01.2020 11:17

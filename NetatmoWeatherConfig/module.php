@@ -54,7 +54,7 @@ class NetatmoWeatherConfig extends IPSModule
         return $tree_position;
     }
 
-    private function buildEntry($station_name, $station_id, $city, $properties)
+    private function buildEntry($station_name, $station_id, $info, $city, $properties)
     {
         $guid = '{1023DB4A-D491-A0D5-17CD-380D3578D0FA}';
 
@@ -78,7 +78,7 @@ class NetatmoWeatherConfig extends IPSModule
             'location'       => $this->SetLocation(),
             'configuration'  => $properties
         ];
-        $create['info'] = 'Station (' . $station_name . ')';
+        $create['info'] = $info;
 
         $entry = [
             'name'       => $station_name,
@@ -132,6 +132,8 @@ class NetatmoWeatherConfig extends IPSModule
                 $longitude = $place['location'][0];
                 $latitude = $place['location'][1];
 
+                $info = 'Station (' . $station_name . ')';
+
                 $properties = [
                     'module_id'       	 => '',
                     'module_type'       => $module_type,
@@ -141,15 +143,15 @@ class NetatmoWeatherConfig extends IPSModule
                     'station_latitude'  => $latitude,
                 ];
 
-                $entry = $this->buildEntry($station_name, $station_id, $city, $properties);
+                $entry = $this->buildEntry($station_name, $station_id, $info, $city, $properties);
                 $entries[] = $entry;
             }
         }
 
         $configurator = [
             'type'    => 'Configurator',
-            'name'    => 'products',
-            'caption' => 'Products',
+            'name'    => 'stations',
+            'caption' => 'available weatherstations',
 
             'rowCount' => count($entries),
 
@@ -180,7 +182,7 @@ class NetatmoWeatherConfig extends IPSModule
         ];
 
         $formElements = [];
-        $formElements[] = ['type' => 'Label', 'caption' => 'category for products to be created:'];
+        $formElements[] = ['type' => 'Label', 'caption' => 'category for weatherstations to be created:'];
         $formElements[] = ['name' => 'ImportCategoryID', 'type' => 'SelectCategory', 'caption' => 'category'];
         $formElements[] = $configurator;
 
