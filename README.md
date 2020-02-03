@@ -372,9 +372,10 @@ GUIDs
 
 - 1.23 @ 02.02.2020 18:57
   - Ergänzung um die Möglichkeit per OAuth anzumelden
+    Achtung: in der IO-Instanz den Verbindungstyp nach dem Update auf _Developer Key_ setzen!
   - Prefix _NetatmoWeatherIO_, _NetatmoWeatherConfig_ und _NetatmoWeatherDeviceg_ in _NetatmoWeather_ geändert
     Achtung: wenn man Funktionen von diesem Modul in Scripten benutzt, muss der Prefix angepasst werden!
-  - Umbau der Konfiguration auf einen 2-stufigen Konfigurator
+  - Umbau der Konfiguration auf eine 2-stufige Konfiguration (Konfigurator legt nur die Station an, darin werden dann die Module angeboten)
 
 - 1.22 @ 06.01.2020 11:17
   - Nutzung von RegisterReference() für im Modul genutze Objekte (Scripte, Kategorien etc)
