@@ -410,7 +410,7 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.23 @ 02.02.2020 18:57
+- 1.23 @ 12.02.2020 16:53
   - Ergänzung um die Möglichkeit per OAuth anzumelden
     Achtung: in der IO-Instanz den Verbindungstyp nach dem Update auf _Developer Key_ setzen!
   - Prefix _NetatmoWeatherIO_, _NetatmoWeatherConfig_ und _NetatmoWeatherDevice_ in _NetatmoWeather_ geändert
