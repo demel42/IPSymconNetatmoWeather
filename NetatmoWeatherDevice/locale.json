@@ -1,22 +1,29 @@
 {
 	"translations": {
 		"de": {
-			"Netatmo Weather-Station": "Netatmo Wetterstation",
-			"Netatmo Weather-Station - Module: base module":
+			"Netatmo Weatherstation": "Netatmo Wetterstation",
+			"Netatmo Weatherstation - Module: base module":
 				"Netatmo Wetterstation - Basismodul",
-			"Netatmo Weather-Station - Module: outdoor module":
+			"Netatmo Weatherstation - Module: outdoor module":
 				"Netatmo Wetterstation - Außenmodul",
-			"Netatmo Weather-Station - Module: wind gauge":
+			"Netatmo Weatherstation - Module: wind gauge":
 				"Netatmo Wetterstation - Windmesser",
-			"Netatmo Weather-Station - Module: rain gauge":
+			"Netatmo Weatherstation - Module: rain gauge":
 				"Netatmo Wetterstation - Regenmesser",
-			"Netatmo Weather-Station - Module: indoor module":
+			"Netatmo Weatherstation - Module: indoor module":
 				"Netatmo Wetterstation - Innenmodul",
 
 			"Basic configuration (don't change)": "Basis-Konfiguration (nicht ändern)",
 			"Module-Type": "Modul-Typ",
 			"Module-ID": "Modul-ID",
 			"Station-ID": "Stations-ID",
+
+			"Weather-station": "Wetterstation",
+			"Base module": "Basismodul",
+			"Outdoor module": "Außenmodul",
+			"Wind gauge": "Windmesser",
+			"Rain gauge": "Regenmesser",
+			"Indoor module": "Innenmodul",
 
 			"optional weather data": "optionale Wetterdaten",
 			" ... absolute Pressure": " ... absoluter Luftdruck",

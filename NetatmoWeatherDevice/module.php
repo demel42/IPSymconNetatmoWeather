@@ -375,6 +375,21 @@ class NetatmoWeatherDevice extends IPSModule
                     continue;
                 }
                 $station_name = $device['station_name'];
+
+                $module_type = 'NAMain';
+                $module_id = $device['_id'];
+                $module_name = $device['module_name'];
+                $module_desc = $this->Translate('Base module');
+                $module_info = $module_desc . ' (' . $station_name . '\\' . $module_name . ')';
+
+                $properties = [
+                    'module_id'   => $module_id,
+                    'module_type' => $module_type,
+                    'station_id'  => $station_id,
+                ];
+                $entry = $this->buildEntry($module_name, $module_id, $module_desc, $module_info, $properties);
+                $entries[] = $entry;
+
                 $modules = $device['modules'];
                 foreach (['NAModule4', 'NAModule1', 'NAModule3', 'NAModule2'] as $types) {
                     foreach ($modules as $module) {
@@ -386,22 +401,22 @@ class NetatmoWeatherDevice extends IPSModule
                             case 'NAModule1':
                                 $module_id = $module['_id'];
                                 $module_name = $module['module_name'];
-                                $module_desc = 'Außenmodul';
+                                $module_desc = $this->Translate('Outdoor module');
                                 break;
                             case 'NAModule2':
                                 $module_id = $module['_id'];
                                 $module_name = $module['module_name'];
-                                $module_desc = 'Windmesser';
+                                $module_desc = $this->Translate('Wind gauge');
                                 break;
                             case 'NAModule3':
                                 $module_id = $module['_id'];
                                 $module_name = $module['module_name'];
-                                $module_desc = 'Regenmesser';
+                                $module_desc = $this->Translate('Rain gauge');
                                 break;
                             case 'NAModule4':
                                 $module_id = $module['_id'];
                                 $module_name = $module['module_name'];
-                                $module_desc = 'Innenmodul';
+                                $module_desc = $this->Translate('Indoor module');
                                 break;
                             default:
                                 $module_id = '';
@@ -487,22 +502,22 @@ class NetatmoWeatherDevice extends IPSModule
 
         switch ($module_type) {
             case 'Station':
-                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weather-Station'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weatherstation'];
                 break;
             case 'NAMain':
-                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weather-Station - Module: base module'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weatherstation - Module: base module'];
                 break;
             case 'NAModule1':
-                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weather-Station - Module: outdoor module'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weatherstation - Module: outdoor module'];
                 break;
             case 'NAModule2':
-                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weather-Station - Module: wind gauge'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weatherstation - Module: wind gauge'];
                 break;
             case 'NAModule3':
-                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weather-Station - Module: rain gauge'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weatherstation - Module: rain gauge'];
                 break;
             case 'NAModule4':
-                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weather-Station - Module: indoor module'];
+                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weatherstation - Module: indoor module'];
                 break;
         }
 
