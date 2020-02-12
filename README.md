@@ -68,7 +68,7 @@ Die Webconsole von IP-Symcon mit http://<IP-Symcon IP>:3777/console/ öffnen.
 
 Anschließend oben rechts auf das Symbol für den Modulstore (IP-Symcon > 5.1) klicken
 
-Im Suchfeld nun NetatmoSecurity eingeben, das Modul auswählen und auf Installieren drücken.
+Im Suchfeld nun NetatmoWeather eingeben, das Modul auswählen und auf Installieren drücken.
 
 **Installieren über die Modules-Instanz**
 
@@ -86,7 +86,7 @@ Anschließend erscheint ein Eintrag für das Modul in der Liste der Instanz _Mod
 
 ### b. Einrichtung in IPS
 
-#### NetatmoSecurityIO
+#### NetatmoWeatherIO
 
 In IP-Symcon nun unterhalb von _I/O Instanzen_ die Funktion _Instanz hinzufügen_ (_CTRL+1_) auswählen, als Hersteller _Netatmo_ und als Gerät _NetatmoWeather I/O_ auswählen.
 
@@ -110,7 +110,7 @@ Anmerkung: auch wenn hier alle möglichen Netamo-Produkte aufgelistet sind, bezi
 
 In dem Konfigurationsdialog die Netatmo-Zugangsdaten eintragen.
 
-#### NetatmoSecurityConfig
+#### NetatmoWeatherConfig
 
 Dann unter _Konfigurator Instanzen_ analog den Konfigurator _NetatmoWeather Konfigurator_ hinzufügen.
 
@@ -121,7 +121,7 @@ Ein Ersatz eines Moduls wird beim Aufruf des Konfigurators dazuführen, das eine
 
 Die im Netatmo eingetragenen Höhe der Station sowie die geographische Position wird als Property zu dem virtuellen Modul _Station_ eingetragen.
 
-#### NetatmoSecurityDevice
+#### NetatmoWeatherDevice
 
 Dieses Modul gibt es in verschiedenen Ausprägungen:
 _Netatmo Wetterstation_: repräsentiert die Wetterstation als übergeordnete Instanz, sowie _Basismodul_, _Außenmodul_:, _Innenmodul_:, _Windmesser_:, _Regenmesser_;
