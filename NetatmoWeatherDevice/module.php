@@ -507,6 +507,21 @@ class NetatmoWeatherDevice extends IPSModule
         }
 
         switch ($module_type) {
+            case 'Station':
+                $items = [];
+                $items[] = ['type' => 'ValidationTextBox', 'name' => 'station_id', 'caption' => 'Station-ID'];
+                $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'Basic configuration (don\'t change)'];
+                break;
+            default:
+                $items = [];
+                $items[] = ['type' => 'ValidationTextBox', 'name' => 'module_type', 'caption' => 'Module-Type'];
+                $items[] = ['type' => 'ValidationTextBox', 'name' => 'module_id', 'caption' => 'Module-ID'];
+                $items[] = ['type' => 'ValidationTextBox', 'name' => 'station_id', 'caption' => 'Station-ID'];
+                $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'Basic configuration (don\'t change)'];
+                break;
+        }
+
+        switch ($module_type) {
             case 'NAMain':
                 $items = [];
                 $items[] = ['type' => 'CheckBox', 'name' => 'with_absolute_pressure', 'caption' => ' ... absolute Pressure'];

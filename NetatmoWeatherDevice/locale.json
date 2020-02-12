@@ -1,6 +1,7 @@
 {
 	"translations": {
 		"de": {
+			"Netatmo Weather-Station": "Netatmo Wetterstation",
 			"Netatmo Weather-Station - Module: base module":
 				"Netatmo Wetterstation - Basismodul",
 			"Netatmo Weather-Station - Module: outdoor module":
@@ -11,6 +12,11 @@
 				"Netatmo Wetterstation - Regenmesser",
 			"Netatmo Weather-Station - Module: indoor module":
 				"Netatmo Wetterstation - Innenmodul",
+
+			"Basic configuration (don't change)": "Basis-Konfiguration (nicht ändern)",
+			"Module-Type": "Modul-Typ",
+			"Module-ID": "Modul-ID",
+			"Station-ID": "Stations-ID",
 
 			"optional weather data": "optionale Wetterdaten",
 			" ... absolute Pressure": " ... absoluter Luftdruck",

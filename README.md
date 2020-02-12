@@ -47,6 +47,8 @@ Hinweis: Wunderground gibt an, das Daten von Netatmo automatisch übernommen wer
    Version 4.4 mit Branch _ips_4.4_ (nur noch Fehlerkorrekturen)
  - eine Netatmo Wetterstation
  - den "normalen" Benutzer-Account, der bei der Anmeldung der Geräte bei Netatmo erzeugt wird (https://my.netatmo.com)
+ - IP-Symcon Connect<br>
+   **oder**<br>
  - einen Account sowie eine "App" bei Netatmo Connect, um die Werte abrufen zu können (https://dev.netatmo.com)<br>
    Achtung: diese App ist nur für den Zugriff auf Netatmo-Weather-Produkte gedacht; das Modul benutzt den Scope _read_station_.
    Eine gleichzeitige Benutzung der gleichen Netatmo-App für andere Bereiche (z.B. Security) stört sich gegenseitig.
@@ -59,6 +61,16 @@ Hinweis: Wunderground gibt an, das Daten von Netatmo automatisch übernommen wer
 ## 3. Installation
 
 ### a. Laden des Moduls
+
+**Installieren über den Module-Store**
+
+Die Webconsole von IP-Symcon mit http://<IP-Symcon IP>:3777/console/ öffnen.
+
+Anschließend oben rechts auf das Symbol für den Modulstore (IP-Symcon > 5.1) klicken
+
+Im Suchfeld nun NetatmoSecurity eingeben, das Modul auswählen und auf Installieren drücken.
+
+**Installieren über die Modules-Instanz**
 
 Die Konsole von IP-Symcon öffnen. Im Objektbaum unter Kerninstanzen die Instanz __*Modules*__ durch einen doppelten Mausklick öffnen.
 
@@ -74,23 +86,49 @@ Anschließend erscheint ein Eintrag für das Modul in der Liste der Instanz _Mod
 
 ### b. Einrichtung in IPS
 
+#### NetatmoSecurityIO
+
 In IP-Symcon nun unterhalb von _I/O Instanzen_ die Funktion _Instanz hinzufügen_ (_CTRL+1_) auswählen, als Hersteller _Netatmo_ und als Gerät _NetatmoWeather I/O_ auswählen.
+
+In dem Konfigurationsformular nun den gewünschten Zugang wählen, entweder als Nutzer über IP-Symcon Connect oder als Entwickler mit eigenem Entwicklerschlüssel.
+
+**Zugriff mit Netatmo-Benutzerdaten über IP-Symcon Connect**
+
+Hierzu _bei Netatmo anmelden_ auswählen. Es öffnet sich ein Browserfenster mit der Anmeldeseite von Netatmo; hier bitte anmelden. Dann erscheint ein weiteres Fenster
+
+![OAUTH1](docs/netatmo_login_1.png?raw=true "oauth 1")
+
+Hier bitte den Zugriff des _IP-Symcon Netatmo Connector_ akzeptieren; es erscheint 
+
+![OAUTH1](docs/netatmo_login_2.png?raw=true "oauth 2")
+
+Das Browserfenster schliessen.
+
+Anmerkung: auch wenn hier alle möglichen Netamo-Produkte aufgelistet sind, bezieht sich das Login nur auf die Produkte dieses Moduls.
+
+**Zugriff als Entwickler mit eigenem Entwicklerschlüssel**
 
 In dem Konfigurationsdialog die Netatmo-Zugangsdaten eintragen.
 
+#### NetatmoSecurityConfig
+
 Dann unter _Konfigurator Instanzen_ analog den Konfigurator _NetatmoWeather Konfigurator_ hinzufügen.
 
-Hier werden alle Stationen, die mit dem, in der I/O-Instanz angegebenen, Netatmo-Konto verknüpft sind, angeboten; aus denen wählt man eine aus.
-
-Mit Betätigen der Schaltfläche _Importieren der Station_ werden für jedes Modul, das zu dieser Station im Netatmo registriert ist, eine Geräte-Instanzen unterhalb von _IP-Symcon_ angelegt.
-Der Namen der Instanzen ist der der Netatmo-Module, in derm Feld _Beschreibung_ der Instanzen ist der Modultyp sowie der Namen der Station und des Moduls eingetragen.
-
-Der Aufruf des Konfigurators kann jederzeit wiederholt werden, es werden dann fehlende Module angelegt.
+Hier werden alle Stationen, die mit dem, in der I/O-Instanz angegebenen, Netatmo-Konto verknüpft sind, angeboten. Durch _Erstellen_ wird die Wetterstation-Basis in der angegebenen _Kategorie_ angelegt.
 
 Die Module werden aufgrund der internen _ID_ der Module identifiziert, d.h. eine Änderung des Modulnamens muss in IPS nachgeführt werden.
 Ein Ersatz eines Moduls wird beim Aufruf des Konfigurators dazuführen, das eine weitere Instanz angelegt wird.
 
 Die im Netatmo eingetragenen Höhe der Station sowie die geographische Position wird als Property zu dem virtuellen Modul _Station_ eingetragen.
+
+#### NetatmoSecurityDevice
+
+Dieses Modul gibt es in verschiedenen Ausprägungen:
+_Netatmo Wetterstation_: repräsentiert die Wetterstation als übergeordnete Instanz, sowie _Basismodul_, _Außenmodul_:, _Innenmodul_:, _Windmesser_:, _Regenmesser_;
+
+In der übergeordneten Wetterstation-Instanz werden alle Module zu dieser Wettersttaion unter dem Panel _Module_ angeboten und können hier erzeugt werden.
+
+Je nach Modultyp stehen bestimmte weitere Einstellungen zur Verfügung.
 
 Zu den Geräte-Instanzen werden im Rahmen der Konfiguration Modultyp-abhängig Variablen angelegt. Zusätzlich kann man in den Modultyp-spezifischen Konfigurationsdialog weitere Variablen aktivieren.
 
@@ -186,12 +224,14 @@ Die gelieferte Struktur ist _station_; kein Array, weil es immer nur um eine bes
 
 ## 5. Konfiguration
 
-### I/O-Modul
+### NetatmoWeatherIO
 
 #### Variablen
 
 | Eigenschaft            | Typ     | Standardwert | Beschreibung |
 | :--------------------- | :-----  | :----------- | :----------- |
+| Verbindungstyp         | integer | 0            | _Netatmo über IP-Symcon Connect_ oder _Netatmo Entwickler-Schlüssel_ |
+|                        |         |              | |
 | Netatmo-Zugangsdaten   | string  |              | Benutzername und Passwort von https://my.netatmo.com sowie Client-ID und -Secret von https://dev.netatmo.com |
 |                        |         |              | |
 | Ignoriere HTTP-Fehler  | integer | 0            | Da Netatmo häufiger HTTP-Fehler meldet, wird erst ab dem X. Fehler in Folge reagiert |
@@ -205,21 +245,19 @@ Bei einer Angabe von 5m sind die Werte nicht älter als 15m.
 
 | Bezeichnung              | Beschreibung |
 | :----------------------- | :----------- |
+| bei Netatmo anmelden     | durch Anmeldung bei Netatmo via IP-Symcon Connect |
 | Aktualisiere Wetterdaten | führt eine sofortige Aktualisierung durch |
 
-### Konfigurator
+### NetatmoWeatherConfig
 
-#### Auswahl
+#### Properties
 
-Es werden alle Stationen zu dem konfigurierten Account zur Auswahl angeboten. Es muss allerdings nur eine Auswahl getroffen werden, wenn es mehr als eine Station gibt.
+| Eigenschaft               | Typ      | Standardwert | Beschreibung |
+| :------------------------ | :------  | :----------- | :----------- |
+| Kategorie                 | integer  | 0            | Kategorie im Objektbaum, unter dem die Instanzen angelegt werden |
+| Stationen                 | list     |              | Liste der verfügbaren Stationen |
 
-#### Schaltflächen
-
-| Bezeichnung        | Beschreibung |
-| :----------------- | :----------- |
-| Import der Station | richtet die Geräte-Instanzen ein |
-
-### Geräte
+### NetatmoWeatherDevice
 
 #### Properties
 
@@ -233,9 +271,7 @@ werden vom Konfigurator beim Anlegen der Instanz gesetzt.
 
 _module_type_: _NAMain_=Basis, _NAModule1_=Außen, _NAModule2_=Wind, _NAModule3_=Regen, _NAModule4_=Innen sowie _Station_, die für die Netatmo-Station als Ganzes steht.
 
-#### Variablen
-
-stehen je nach Typ des Moduls zur Verfügung
+Weiterhin stehen je nach Typ des Moduls zur Verfügung
 
 | Eigenschaft               | Typ     | Standardwert | Beschreibung |
 | :------------------------ | :------ | :----------- | :----------- |
@@ -265,12 +301,16 @@ stehen je nach Typ des Moduls zur Verfügung
 | minutes2fail              | integer | 30           | Dauer, bis die Kommunikation als gestört gilt |
 |                           |         |              | |
 | Wunderground-Zugangsdaten | string  |              | Station-ID und -Key von https://www.wunderground.com/personal-weather-station/mypws |
+|                           |         |              | |
+| Module                    |         |              | **nur im übergeordneten Modul** |
+| Kategorie                 | integer | 0            | Kategorie im Objektbaum, unter dem die Instanzen angelegt werden |
+| Module                    | list    |              | Liste der verfügbaren Module zu dieser Station |
 
 Das hier angebbare Minuten-Intervall dient zu Überprüfung der Kommunikation zwischen
  - den Modulen und dem Basismodul
  - dem Basismodul und dem Netatmo-Server
-  ist die Zeit überschritten, wird die Variable _Status_ des Basismoduls auf Fehler gesetzt.
-  Anmerkung: die Variable _Status_ wird auch auf Fehler gesetzt wenn das IO-Modul einen Fehler feststellt.
+ist die Zeit überschritten, wird die Variable _Status_ des Basismoduls auf Fehler gesetzt.
+Anmerkung: die Variable _Status_ wird auch auf Fehler gesetzt wenn das IO-Modul einen Fehler feststellt.
 
 Erläuterung zu _statusbox_script_, _webhook_script_:
 mit diesen Scripten kann man eine alternative Darstellung realisieren.
