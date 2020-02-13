@@ -3,6 +3,24 @@
 		"de": {
 			"Instance is disabled": "Instanz ist deaktiviert",
 
+			"Status: Symcon Connect is OK!": "Status: Symcon Connect ist OK!",
+			"Error: Symcon Connect is not active!": "Fehler: Symcon Connect ist nicht aktiv!",
+
+			"Connection Type": "Verbindungstyp",
+			"Please select a connection type": "Bitte einen Verbindungstyp auswählen",
+			"Netatmo via IP-Symcon Connect": "Netatmo über IP-Symcon Connect",
+			"Netatmo Developer Key": "Netatmo Developer Key",
+			"Push \"Login at Netatmo\" in the action part of this configuration form.":
+				"\"Anmelden bei Netatmo\" in dem Aktionsbereich dieses Konfigurationsformulares drücken.",
+			"At the webpage from Netatmo log in with your Netatmo username and password.":
+				"Auf der Webseite von Netatmo mit dem Netatmo Benutzernamen und Passwort anmelden.",
+			"If the connection to IP-Symcon was successfull you get the message: \"Netatmo successfully connected!\". Close the browser window.":
+				"Wenn die Verbindung zu IP-Symcon erfolgreich war erscheint die Meldung: \"Netatmo successfully connected!\". Das Browserfenster kann nun geschlossen werden.",
+			"Return to this configuration form.":
+				"Danach zu diesem Konfigurationsformular zurückkehren und fortfahren.",
+
+			"Netatmo Login": "Netatmo Anmeldung",
+
 			"Netatmo Access-Details": "Netatmo Zugangsdaten",
 
 			"Netatmo-Account from https://my.netatmo.com":
@@ -15,15 +33,16 @@
 			"Client ID": "Client ID",
 			"Client Secret": "Client Secret",
 
+			"Call settings": "Abrufeinstellungen",
+
 			"Ignore HTTP-Error X times": "HTTP-Fehler X-fach ignorieren",
 			"Count": "Anzahl",
 
 			"Update weatherdata every X minutes": "Aktualisiere Wetterdaten alle X Minuten",
 			"Minutes": "Minuten",
 
+			"Login at Netatmo": "Bei Netatmo anmelden",
 			"Update weatherdata": "Aktualisiere Wetterdaten",
-
-			"Module description": "Modulbeschreibung",
 
 			"Instance getting created": "Instanz wird erstellt",
 			"Instance is active": "Instanz ist aktiv",
@@ -38,7 +57,10 @@
 			"Instance is inactive (http error)": "Instanz ist inaktiv (HTTP-Fehler)",
 			"Instance is inactive (invalid data)": "Instanz ist inaktiv (ungültige Daten)",
 			"Instance is inactive (no station)": "Instanz ist inaktiv (keine Station)",
-			"Instance is inactive (station missing)": "Instanz ist inaktiv (Station ist unbekannt)"
+			"Instance is inactive (station missing)": "Instanz ist inaktiv (Station ist unbekannt)",
+			"Instance is inactive (invalid config)": "Instanz ist inaktiv (ungültige Konfiguration)",
+			"Instance is inactive (no Symcon-Connect)": "Instanz ist inaktiv (kein Symcon-Connect)",
+			"Instance is inactive (not logged in)": "Instanz ist inaktiv (nicht angemeldet)"
 		}
 	}
 }

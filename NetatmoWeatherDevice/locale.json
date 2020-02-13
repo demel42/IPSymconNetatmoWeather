@@ -1,16 +1,29 @@
 {
 	"translations": {
 		"de": {
-			"Netatmo Weather-Station - Module: base module":
+			"Netatmo Weatherstation": "Netatmo Wetterstation",
+			"Netatmo Weatherstation - Module: base module":
 				"Netatmo Wetterstation - Basismodul",
-			"Netatmo Weather-Station - Module: outdoor module":
+			"Netatmo Weatherstation - Module: outdoor module":
 				"Netatmo Wetterstation - Außenmodul",
-			"Netatmo Weather-Station - Module: wind gauge":
+			"Netatmo Weatherstation - Module: wind gauge":
 				"Netatmo Wetterstation - Windmesser",
-			"Netatmo Weather-Station - Module: rain gauge":
+			"Netatmo Weatherstation - Module: rain gauge":
 				"Netatmo Wetterstation - Regenmesser",
-			"Netatmo Weather-Station - Module: indoor module":
+			"Netatmo Weatherstation - Module: indoor module":
 				"Netatmo Wetterstation - Innenmodul",
+
+			"Basic configuration (don't change)": "Basis-Konfiguration (nicht ändern)",
+			"Module-Type": "Modul-Typ",
+			"Module-ID": "Modul-ID",
+			"Station-ID": "Stations-ID",
+
+			"Weather-station": "Wetterstation",
+			"Base module": "Basismodul",
+			"Outdoor module": "Außenmodul",
+			"Wind gauge": "Windmesser",
+			"Rain gauge": "Regenmesser",
+			"Indoor module": "Innenmodul",
 
 			"optional weather data": "optionale Wetterdaten",
 			" ... absolute Pressure": " ... absoluter Luftdruck",
@@ -29,8 +42,6 @@
 			"Duration until the connection to netatmo or between stations is marked disturbed":
 				"Dauer bis die Verbindung zu Netatmo oder zwischen den Stationen als gestört gilt",
 			"Minutes": "Minuten",
-
-			"Module description": "Modulbeschreibung",
 
 			"station data": "Angaben zur Station",
 			"Altitude" : "Höhe",
@@ -52,12 +63,22 @@
 			" ... \"StatusBox\"": " ... \"StatusBox\"",
 			" ... Webhook": " ... Webhook",
 
+			"Processing information": "Angaben zur Verarbeitung",
+
+			"Wunderground": "Wunderground",
 			"Konfiguration to update Wunderground (only if filled)":
 				"Konfiguration von Wunderground zum Update (nur wenn gefüllt)",
 			"Wunderground Access-Details from https://www.wunderground.com/personal-weather-station/mypws":
 				"Wunderground Zugangsdaten von https://www.wunderground.com/personal-weather-station/mypws",
 			"Station ID": "Station ID",
 			"Station Key": "Station Key",
+
+			"Modules": "Module",
+			"category for modules to be created:": "Kategorie für anzulegende Module:",
+			"category": "Kategorie",
+			"available modules": "verfügbare Module",
+			"Name": "Name",
+			"Id": "Id",
 
 			"absolute humidity": "absolute Luftfeuchtigkeit",
 			"absolute pressure": "absoluter Luftdruck",
@@ -170,7 +191,10 @@
 			"Instance is inactive (http error)": "Instanz ist inaktiv (HTTP-Fehler)",
 			"Instance is inactive (invalid data)": "Instanz ist inaktiv (ungültige Daten)",
 			"Instance is inactive (no station)": "Instanz ist inaktiv (keine Station)",
-			"Instance is inactive (station missing)": "Instanz ist inaktiv (Station ist unbekannt)"
+			"Instance is inactive (station missing)": "Instanz ist inaktiv (Station ist unbekannt)",
+			"Instance is inactive (invalid config)": "Instanz ist inaktiv (ungültige Konfiguration)",
+			"Instance is inactive (no Symcon-Connect)": "Instanz ist inaktiv (kein Symcon-Connect)",
+			"Instance is inactive (not logged in)": "Instanz ist inaktiv (nicht angemeldet)"
 		}
 	}
 }
