@@ -410,6 +410,10 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.24 @ 14.02.2020 11:26
+  - Bugfix zu 1.23: Zugriff mit Entwicklerschlüssel funktionierte nicht
+  - Funktion in der IO-Konfiguration, um die Token zu löschen
+
 - 1.23 @ 12.02.2020 16:53
   - Ergänzung um die Möglichkeit per OAuth anzumelden
     Achtung: in der IO-Instanz den Verbindungstyp nach dem Update auf _Developer Key_ setzen!

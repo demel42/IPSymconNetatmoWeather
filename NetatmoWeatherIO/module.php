@@ -444,6 +444,11 @@ class NetatmoWeatherIO extends IPSModule
                 'onClick' => 'echo NetatmoWeather_Login($id);'
             ];
         }
+        $formActions[] = [
+            'type'    => 'Button',
+            'caption' => 'Clear Token',
+            'onClick' => 'NetatmoWeather_ClearToken($id);'
+        ];
 
         $formActions[] = [
             'type'    => 'Button',
@@ -523,7 +528,7 @@ class NetatmoWeatherIO extends IPSModule
                             'client_secret' => $secret,
                             'username'      => $user,
                             'password'      => $password,
-                            'scope'         => 'read_presence write_presence access_presence read_camera write_camera access_camera read_smokedetector'
+                            'scope'         => 'read_station'
                         ];
                     } else {
                         $postdata = [
@@ -727,5 +732,16 @@ class NetatmoWeatherIO extends IPSModule
         $this->SendDebug(__FUNCTION__, '    statuscode=' . $statuscode . ', err=' . $err, 0);
         $this->SendDebug(__FUNCTION__, '    data=' . $data, 0);
         return $statuscode;
+    }
+
+    public function ClearToken()
+    {
+        $refresh_token = $this->ReadAttributeString('ApiRefreshToken');
+        $this->SendDebug(__FUNCTION__, 'clear refresh_token=' . $refresh_token, 0);
+        $this->WriteAttributeString('ApiRefreshToken', '');
+
+        $access_token = $this->GetApiAccessToken();
+        $this->SendDebug(__FUNCTION__, 'clear access_token=' . $access_token, 0);
+        $this->SetBuffer('ApiAccessToken', '');
     }
 }
