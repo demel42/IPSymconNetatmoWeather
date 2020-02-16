@@ -590,6 +590,7 @@ class NetatmoWeatherIO extends IPSModule
     {
         $inst = IPS_GetInstance($this->InstanceID);
         if ($inst['InstanceStatus'] == IS_INACTIVE) {
+            $this->SetTimerInterval('UpdateData', 0);
             $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
             return;
         }
@@ -597,7 +598,7 @@ class NetatmoWeatherIO extends IPSModule
         $this->SendDebug(__FUNCTION__, '', 0);
         $access_token = $this->GetApiAccessToken();
         if ($access_token == false) {
-            $this->SetUpdateInterval();
+            $this->SetTimerInterval('UpdateData', 0);
             return;
         }
 
@@ -643,6 +644,7 @@ class NetatmoWeatherIO extends IPSModule
         $this->SendData($data);
         $this->SetBuffer('LastData', $data);
 
+        $this->SetUpdateInterval();
         $this->SetStatus(IS_ACTIVE);
     }
 
