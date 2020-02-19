@@ -410,6 +410,9 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.25 @ 19.02.2020 21:39
+  - Bugfix zu 1.23: Problem beim Ablauf des Access-Tokens
+
 - 1.24 @ 14.02.2020 11:26
   - Bugfix zu 1.23: Zugriff mit Entwicklerschlüssel funktionierte nicht
   - Funktion in der IO-Konfiguration, um die Token zu löschen

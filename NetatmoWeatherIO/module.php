@@ -576,7 +576,6 @@ class NetatmoWeatherIO extends IPSModule
                     }
 
                     $this->SetStatus(IS_ACTIVE);
-                    $this->do_AddWebhook($access_token);
                 }
                 break;
             default:
