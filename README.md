@@ -410,6 +410,9 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.26 @ 25.02.2020 08:31
+  - Bugfix: bei inaktiver Instanz wurde der falsche Timer auf 0 gesetzt
+
 - 1.25 @ 19.02.2020 21:39
   - Bugfix zu 1.23: Problem beim Ablauf des Access-Tokens
 
