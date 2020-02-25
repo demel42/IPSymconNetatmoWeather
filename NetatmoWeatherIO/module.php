@@ -589,7 +589,7 @@ class NetatmoWeatherIO extends IPSModule
     {
         $inst = IPS_GetInstance($this->InstanceID);
         if ($inst['InstanceStatus'] == IS_INACTIVE) {
-			$this->SetTimerInterval('UpdateDataWeather', 0);
+            $this->SetTimerInterval('UpdateDataWeather', 0);
             $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
             return;
         }
