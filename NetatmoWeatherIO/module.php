@@ -150,11 +150,11 @@ class NetatmoWeatherIO extends IPSModule
         if ($cdata == false) {
             $this->LogMessage('file_get_contents() failed: url=' . $url . ', context=' . print_r($context, true), KL_WARNING);
             $this->SendDebug(__FUNCTION__, 'file_get_contents() failed: url=' . $url . ', context=' . print_r($context, true), 0);
-        } elseif (!isset($http_response_header[0]) && preg_match('/HTTP\/[0-9\.]+\s+([0-9]*)/', $http_response_header[0], $r)) {
+        } elseif (isset($http_response_header[0]) && preg_match('/HTTP\/[0-9\.]+\s+([0-9]*)/', $http_response_header[0], $r)) {
+            $httpcode = $r[1];
+        } else {
             $this->LogMessage('missing http_response_header, cdata=' . $cdata, KL_WARNING);
             $this->SendDebug(__FUNCTION__, 'missing http_response_header, cdata=' . $cdata, 0);
-        } else {
-            $httpcode = $r[1];
         }
         $this->SendDebug(__FUNCTION__, ' => httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
         $this->SendDebug(__FUNCTION__, '    cdata=' . $cdata, 0);
