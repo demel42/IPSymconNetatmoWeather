@@ -9,7 +9,7 @@
 			"Connection Type": "Verbindungstyp",
 			"Please select a connection type": "Bitte einen Verbindungstyp auswählen",
 			"Netatmo via IP-Symcon Connect": "Netatmo über IP-Symcon Connect",
-			"Netatmo Developer Key": "Netatmo Developer Key",
+			"Netatmo Developer Key": "Netatmo Entwickler-Schlüssel",
 			"Push \"Login at Netatmo\" in the action part of this configuration form.":
 				"\"Anmelden bei Netatmo\" in dem Aktionsbereich dieses Konfigurationsformulares drücken.",
 			"At the webpage from Netatmo log in with your Netatmo username and password.":

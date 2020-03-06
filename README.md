@@ -410,7 +410,7 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.27 @ 06.03.2020 10:36
+- 1.27 @ 06.03.2020 20:14
   - Wechsel des Verbindungstyp wird nun automatisch erkannt
   - Verwendung des OAuth-AccessToken korrigiert
 

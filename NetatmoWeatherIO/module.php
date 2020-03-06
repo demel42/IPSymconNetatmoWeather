@@ -28,7 +28,7 @@ class NetatmoWeatherIO extends IPSModule
 
         $this->RegisterAttributeString('ApiRefreshToken', '');
 
-        $this->RegisterTimer('UpdateDataWeather', 0, 'NetatmoWeather_UpdateData(' . $this->InstanceID . ');');
+        $this->RegisterTimer('UpdateData', 0, 'NetatmoWeather_UpdateData(' . $this->InstanceID . ');');
         $this->RegisterMessage(0, IPS_KERNELMESSAGE);
     }
 
@@ -51,7 +51,7 @@ class NetatmoWeatherIO extends IPSModule
 
         $module_disable = $this->ReadPropertyBoolean('module_disable');
         if ($module_disable) {
-            $this->SetTimerInterval('UpdateDataWeather', 0);
+            $this->SetTimerInterval('UpdateData', 0);
             $this->SetStatus(IS_INACTIVE);
             return;
         }
@@ -224,25 +224,29 @@ class NetatmoWeatherIO extends IPSModule
                 $access_token = isset($jtoken['access_token']) ? $jtoken['access_token'] : '';
                 $expiration = isset($jtoken['expiration']) ? $jtoken['expiration'] : 0;
                 $type = isset($jtoken['type']) ? $jtoken['type'] : CONNECTION_UNDEFINED;
-                if ($type == CONNECTION_OAUTH && time() < $expiration) {
+                if ($type != CONNECTION_OAUTH) {
+                    $this->WriteAttributeString('ApiRefreshToken', '');
+                    $this->SendDebug(__FUNCTION__, 'connection-type changed', 0);
+                    $access_token = '';
+                } elseif ($expiration < time()) {
+                    $this->SendDebug(__FUNCTION__, 'access_token expired', 0);
+                    $access_token = '';
+                }
+                if ($access_token != '') {
                     $this->SendDebug(__FUNCTION__, 'access_token=' . $access_token . ', valid until ' . date('d.m.y H:i:s', $expiration), 0);
                     return $access_token;
-                } else {
-                    $this->SendDebug(__FUNCTION__, 'access_token expired', 0);
                 }
             } else {
-                $this->SendDebug(__FUNCTION__, 'access_token not saved', 0);
+                $this->SendDebug(__FUNCTION__, 'no saved access_token', 0);
             }
             $refresh_token = $this->ReadAttributeString('ApiRefreshToken');
             $this->SendDebug(__FUNCTION__, 'refresh_token=' . print_r($refresh_token, true), 0);
-            if ($refresh_token == 'False') {
-                $this->SendDebug(__FUNCTION__, 'has no refresh_token', 0);
-                $this->WriteAttributeString('ApiRefreshToken', '');
-                return false;
-            }
             if ($refresh_token == '') {
                 $this->SendDebug(__FUNCTION__, 'has no refresh_token', 0);
+                $this->WriteAttributeString('ApiRefreshToken', '');
                 $this->SetBuffer('ApiAccessToken', '');
+                $this->SetTimerInterval('UpdateData', 0);
+                $this->SetStatus(IS_NOLOGIN);
                 return false;
             }
             $jdata = $this->Call4AccessToken(['refresh_token' => $refresh_token]);
@@ -273,14 +277,17 @@ class NetatmoWeatherIO extends IPSModule
     {
         if (!isset($_GET['code'])) {
             $this->SendDebug(__FUNCTION__, 'code missing, _GET=' . print_r($_GET, true), 0);
-            $this->SetStatus(IS_NOLOGIN);
             $this->WriteAttributeString('ApiRefreshToken', '');
+            $this->SetBuffer('ApiAccessToken', '');
+            $this->SetTimerInterval('UpdateData', 0);
+            $this->SetStatus(IS_NOLOGIN);
             return;
         }
         $refresh_token = $this->FetchRefreshToken($_GET['code']);
         $this->SendDebug(__FUNCTION__, 'refresh_token=' . $refresh_token, 0);
         $this->WriteAttributeString('ApiRefreshToken', $refresh_token);
         if ($this->GetStatus() == IS_NOLOGIN) {
+            $this->SetTimerInterval('UpdateData', 1000);
             $this->SetStatus(IS_ACTIVE);
         }
     }
@@ -474,7 +481,7 @@ class NetatmoWeatherIO extends IPSModule
     {
         $min = $this->ReadPropertyInteger('UpdateDataInterval');
         $msec = $min > 0 ? $min * 1000 * 60 : 0;
-        $this->SetTimerInterval('UpdateDataWeather', $msec);
+        $this->SetTimerInterval('UpdateData', $msec);
     }
 
     protected function SendData($data)
@@ -530,8 +537,15 @@ class NetatmoWeatherIO extends IPSModule
                 $access_token = isset($jtoken['access_token']) ? $jtoken['access_token'] : '';
                 $expiration = isset($jtoken['expiration']) ? $jtoken['expiration'] : 0;
                 $type = isset($jtoken['type']) ? $jtoken['type'] : CONNECTION_UNDEFINED;
-
-                if ($type != CONNECTION_DEVELOPER || $expiration < time()) {
+                if ($type != CONNECTION_DEVELOPER) {
+                    $this->WriteAttributeString('ApiRefreshToken', '');
+                    $this->SendDebug(__FUNCTION__, 'connection-type changed', 0);
+                    $access_token = '';
+                } elseif ($expiration < time()) {
+                    $this->SendDebug(__FUNCTION__, 'access_token expired', 0);
+                    $access_token = '';
+                }
+                if ($access_token == '') {
                     $refresh_token = $this->ReadAttributeString('ApiRefreshToken');
                     if ($refresh_token == '') {
                         $postdata = [
@@ -600,17 +614,25 @@ class NetatmoWeatherIO extends IPSModule
 
     public function UpdateData()
     {
-        $inst = IPS_GetInstance($this->InstanceID);
-        if ($inst['InstanceStatus'] == IS_INACTIVE) {
-            $this->SetTimerInterval('UpdateDataWeather', 0);
-            $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
+        if ($this->CheckStatus() == STATUS_INVALID) {
+            if ($this->GetStatus() == IS_NOLOGIN) {
+                $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => pause', 0);
+                $this->SetTimerInterval('UpdateData', 0);
+            } else {
+                $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => skip', 0);
+            }
             return;
         }
 
         $this->SendDebug(__FUNCTION__, '', 0);
         $access_token = $this->GetApiAccessToken();
         if ($access_token == false) {
-            $this->SetTimerInterval('UpdateDataWeather', 0);
+            if ($this->GetStatus() == IS_NOLOGIN) {
+                $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => pause', 0);
+                $this->SetTimerInterval('UpdateData', 0);
+            } else {
+                $this->SetUpdateInterval();
+            }
             return;
         }
 
