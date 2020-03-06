@@ -220,7 +220,7 @@ class NetatmoWeatherIO extends IPSModule
         if ($access_token == '' && $expiration == 0) {
             $data = $this->GetBuffer('ApiAccessToken');
             if ($data != '') {
-                $jdata = json_decode($data, true);
+                $jtoken = json_decode($data, true);
                 $access_token = isset($jtoken['access_token']) ? $jtoken['access_token'] : '';
                 $expiration = isset($jtoken['expiration']) ? $jtoken['expiration'] : 0;
                 $type = isset($jtoken['type']) ? $jtoken['type'] : CONNECTION_UNDEFINED;

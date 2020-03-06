@@ -410,8 +410,9 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.27 @ 05.03.2020 17:43
+- 1.27 @ 06.03.2020 10:36
   - Wechsel des Verbindungstyp wird nun automatisch erkannt
+  - Verwendung des OAuth-AccessToken korrigiert
 
 - 1.26 @ 25.02.2020 08:31
   - Bugfix: bei inaktiver Instanz wurde der falsche Timer auf 0 gesetzt
