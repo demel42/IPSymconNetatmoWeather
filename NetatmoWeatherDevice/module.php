@@ -1310,12 +1310,12 @@ class NetatmoWeatherDevice extends IPSModule
             }
             if ($station_found == false) {
                 $err = "station_id \"$station_id\" not found";
-                $statuscode = IS_STATIONMISSІNG;
+                $statuscode = self::$IS_STATIONMISSІNG;
                 $do_abort = true;
             }
         } else {
             $err = 'no data';
-            $statuscode = IS_NODATA;
+            $statuscode = self::$IS_NODATA;
             $do_abort = true;
         }
 
