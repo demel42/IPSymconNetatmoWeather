@@ -26,18 +26,18 @@
 			"Indoor module": "Innenmodul",
 
 			"optional weather data": "optionale Wetterdaten",
-			" ... absolute Pressure": " ... absoluter Luftdruck",
-			" ... absolute Humidity": " ... absolute Luftfeuchte",
-			" ... Dewpoint": " ... Taupunkt",
-			" ... Windchill": " ... Windchill (Windkühle)",
-			" ... Heatindex": " ... Hitzeindex",
-			" ... Windstrength": " ... Windstärke",
-			" ... Winddirection in degrees": " ... Windrichtung in Grad",
-			" ... Winddirection with label": " ... Windrichtung mit Text",
-			" ... Min/Max of temperature": " ... Temperatur-Minimun/Maximum",
-			" ... Strongest gust of today": " ... stärkste heutige Böe",
-			" ... Trend of temperature": " ... Trend der Temperatur",
-			" ... Trend of temperature and pressure": " ... Trend von Temperatur und Luftdruck",
+			"absolute Pressure": "absoluter Luftdruck",
+			"absolute Humidity": "absolute Luftfeuchte",
+			"Dewpoint": "Taupunkt",
+			"Windchill": "Windchill (Windkühle)",
+			"Heatindex": "Hitzeindex",
+			"Windstrength": "Windstärke",
+			"Winddirection in degrees": "Windrichtung in Grad",
+			"Winddirection with label": "Windrichtung mit Text",
+			"Min/Max of temperature": "Temperatur-Minimun/Maximum",
+			"Strongest gust of today": "stärkste heutige Böe",
+			"Trend of temperature": "Trend der Temperatur",
+			"Trend of temperature and pressure": "Trend von Temperatur und Luftdruck",
 
 			"Duration until the connection to netatmo or between stations is marked disturbed":
 				"Dauer bis die Verbindung zu Netatmo oder zwischen den Stationen als gestört gilt",
@@ -49,15 +49,15 @@
 			"Latitude" : "Breitengrad",
 
 			"optional station data": "optionale Zusatzdaten zur Station",
-			" ... last transmission to Netatmo": " ... letzte Übertragung an Netatmo",
-			" ... html-box with state of station and modules": " ... HTML-Box mit Status der Station und Module",
+			"last transmission to Netatmo": "letzte Übertragung an Netatmo",
+			"html-box with state of station and modules": "HTML-Box mit Status der Station und Module",
 
 			"optional module data": "optionale Zusatzdaten zum Modul",
-			" ... Measurement-Timestamp": " ... Messzeitpunkt",
-			" ... Wifi-Signal": " ... Wifi-Signalstärke",
-			" ... RF-Signal": " ... Funk-Signalstärke",
-			" ... Battery (a global battery indicator is always present)":
-				" ... Batterie-Status (ein globaler Batterie-Indikator ist immer vorhanden)",
+			"Measurement-Timestamp": "Messzeitpunkt",
+			"Wifi-Signal": "Wifi-Signalstärke",
+			"RF-Signal": "Funk-Signalstärke",
+			"Battery (a global battery indicator is always present)":
+				"Batterie-Status (ein globaler Batterie-Indikator ist immer vorhanden)",
 
 			"alternate script to use for ...": "alternative Scripte zur Verwendung für ...",
 			" ... \"StatusBox\"": " ... \"StatusBox\"",

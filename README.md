@@ -410,6 +410,9 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.29 @ 20.06.2020 18:05
+  - kleine redaktionelle Korrektur
+
 - 1.28 @ 08.04.2020 12:18
   - define's durch statische Klassen-Variablen ersetzt
 

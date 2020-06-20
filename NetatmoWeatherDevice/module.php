@@ -539,30 +539,30 @@ class NetatmoWeatherDevice extends IPSModule
         switch ($module_type) {
             case 'NAMain':
                 $items = [];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_absolute_pressure', 'caption' => ' ... absolute Pressure'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_absolute_humidity', 'caption' => ' ... absolute Humidity'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_dewpoint', 'caption' => ' ... Dewpoint'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_heatindex', 'caption' => ' ... Heatindex'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_minmax', 'caption' => ' ... Min/Max of temperature'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_trend', 'caption' => ' ... Trend of temperature and pressure'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_absolute_pressure', 'caption' => 'absolute Pressure'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_absolute_humidity', 'caption' => 'absolute Humidity'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_dewpoint', 'caption' => 'Dewpoint'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_heatindex', 'caption' => 'Heatindex'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_minmax', 'caption' => 'Min/Max of temperature'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_trend', 'caption' => 'Trend of temperature and pressure'];
                 $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'optional weather data'];
                 break;
             case 'NAModule1':
                 $items = [];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_absolute_humidity', 'caption' => ' ... absolute Humidity'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_dewpoint', 'caption' => ' ... Dewpoint'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_windchill', 'caption' => ' ... Windchill'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_heatindex', 'caption' => ' ... Heatindex'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_minmax', 'caption' => ' ... Min/Max of temperature'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_trend', 'caption' => ' ... Trend of temperature'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_absolute_humidity', 'caption' => 'absolute Humidity'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_dewpoint', 'caption' => 'Dewpoint'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_windchill', 'caption' => 'Windchill'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_heatindex', 'caption' => 'Heatindex'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_minmax', 'caption' => 'Min/Max of temperature'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_trend', 'caption' => 'Trend of temperature'];
                 $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'optional weather data'];
                 break;
             case 'NAModule2':
                 $items = [];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_windstrength', 'caption' => ' ... Windstrength'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_windangle', 'caption' => ' ... Winddirection in degrees'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_winddirection', 'caption' => ' ... Winddirection with label'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_minmax', 'caption' => ' ... Strongest gust of today'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_windstrength', 'caption' => 'Windstrength'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_windangle', 'caption' => 'Winddirection in degrees'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_winddirection', 'caption' => 'Winddirection with label'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_minmax', 'caption' => 'Strongest gust of today'];
                 $items[] = ['type' => 'Label', 'caption' => 'optional weather data'];
                 $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'optional weather data'];
                 break;
@@ -570,11 +570,11 @@ class NetatmoWeatherDevice extends IPSModule
                 break;
             case 'NAModule4':
                 $items = [];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_absolute_humidity', 'caption' => ' ... absolute Humidity'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_dewpoint', 'caption' => ' ... Dewpoint'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_heatindex', 'caption' => ' ... Heatindex'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_minmax', 'caption' => ' ... Min/Max of temperature'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_trend', 'caption' => ' ... Trend of temperature'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_absolute_humidity', 'caption' => 'absolute Humidity'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_dewpoint', 'caption' => 'Dewpoint'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_heatindex', 'caption' => 'Heatindex'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_minmax', 'caption' => 'Min/Max of temperature'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_trend', 'caption' => 'Trend of temperature'];
                 $items[] = ['type' => 'Label', 'caption' => 'optional weather data'];
                 $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'optional weather data'];
                 break;
@@ -589,9 +589,9 @@ class NetatmoWeatherDevice extends IPSModule
                 $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'station data'];
 
                 $items = [];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_last_contact', 'caption' => ' ... last transmission to Netatmo'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_status_box', 'caption' => ' ... html-box with state of station and modules'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_signal', 'caption' => ' ... Wifi-Signal'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_last_contact', 'caption' => 'last transmission to Netatmo'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_status_box', 'caption' => 'html-box with state of station and modules'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_signal', 'caption' => 'Wifi-Signal'];
                 $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'optional station data'];
 
                 $items = [];
@@ -621,7 +621,7 @@ class NetatmoWeatherDevice extends IPSModule
                 break;
             case 'NAMain':
                 $items = [];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_last_measure', 'caption' => ' ... Measurement-Timestamp'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_last_measure', 'caption' => 'Measurement-Timestamp'];
                 $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'optional module data'];
                 break;
             case 'NAModule1':
@@ -629,9 +629,9 @@ class NetatmoWeatherDevice extends IPSModule
             case 'NAModule3':
             case 'NAModule4':
                 $items = [];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_last_measure', 'caption' => ' ... Measurement-Timestamp'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_signal', 'caption' => ' ... RF-Signal'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_battery', 'caption' => ' ... Battery (a global battery indicator is always present)'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_last_measure', 'caption' => 'Measurement-Timestamp'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_signal', 'caption' => 'RF-Signal'];
+                $items[] = ['type' => 'CheckBox', 'name' => 'with_battery', 'caption' => 'Battery (a global battery indicator is always present)'];
                 $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'optional module data'];
                 break;
         }
