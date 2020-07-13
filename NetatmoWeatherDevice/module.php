@@ -747,23 +747,44 @@ class NetatmoWeatherDevice extends IPSModule
         $this->SendDebug(__FUNCTION__, 'http-get: url=' . $url, 0);
         $time_start = microtime(true);
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $wstatus = curl_exec($ch);
-        $cerrno = curl_errno($ch);
-        $cerror = $cerrno ? curl_error($ch) : '';
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        $retries = 0;
+        do {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_HEADER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $wstatus = curl_exec($ch);
+            $cerrno = curl_errno($ch);
+            $cerror = $cerrno ? curl_error($ch) : '';
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            if ($cerrno) {
+                $this->SendDebug(__FUNCTION__, ' => retry=' . $retries . ', got curl-errno ' . $cerrno . ' (' . $cerror . ')', 0);
+            }
+        } while ($cerrno && $retries++ < 2);
 
         $duration = round(microtime(true) - $time_start, 2);
+
         $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
 
         $do_abort = false;
 
         if ($cerrno) {
             $err = ' => got curl-errno ' . $cerrno . ' (' . $cerror . ')';
+            if ($cerrno == 6 /* CURLE_COULDNT_RESOLVE_HOST */) {
+                if (preg_match('?^.*://([^/]*)|(.*)$?', $url, $r)) {
+                    $err .= PHP_EOL;
+                    $host = $r[1];
+                    $err .= PHP_EOL;
+                    $err .= 'host=' . $host . ': dns-lookup ';
+                    $dns_records = @dns_get_record($host, DNS_ALL);
+                    if ($dns_records == false) {
+                        $err .= 'failed' . PHP_EOL;
+                    } else {
+                        $err .= print_r($dns_records, true) . PHP_EOL;
+                    }
+                }
+            }
             $this->SendDebug(__FUNCTION__, $err, 0);
             $this->LogMessage($err, KL_WARNING);
             $do_abort = true;
