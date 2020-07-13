@@ -663,11 +663,14 @@ class NetatmoWeatherIO extends IPSModule
                     $statuscode = self::$IS_NOSTATION;
                 }
             }
-        } elseif ($statuscode == self::$IS_FORBIDDEN) {
-            $this->SetBuffer('ApiAccessToken', '');
         }
 
         if ($statuscode) {
+            if ($statuscode == self::$IS_FORBIDDEN) {
+                $err .= ' => 15min pause';
+                $this->SetTimerInterval('UpdateData', 15 * 60 * 1000);
+                $this->SetBuffer('ApiAccessToken', '');
+            }
             $this->LogMessage('url=' . $url . ', statuscode=' . $statuscode . ', err=' . $err, KL_WARNING);
             $this->SendDebug(__FUNCTION__, $err, 0);
             $this->SetStatus($statuscode);
