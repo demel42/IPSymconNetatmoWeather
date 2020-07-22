@@ -7,8 +7,8 @@ require_once __DIR__ . '/../libs/local.php';   // lokale Funktionen
 
 class NetatmoWeatherIO extends IPSModule
 {
-    use NetatmoWeatherCommon;
-    use NetatmoWeatherLocal;
+    use NetatmoWeatherCommonLib;
+    use NetatmoWeatherLocalLib;
 
     private $oauthIdentifer = 'netatmo';
 

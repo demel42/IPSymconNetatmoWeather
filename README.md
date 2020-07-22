@@ -420,6 +420,7 @@ GUIDs
   - Nutzung von HasActiveParent(): Anzeige im Konfigurationsformular sowie entsprechende Absicherung von SendDataToParent()
   - intere Funktionen sind nun "private"
   - lokale Funktionen aus common.php in locale.php verlagert
+  - Traits des Moduls haben nun Postfix "Lib"
 
 - 1.28 @ 08.04.2020 12:18
   - define's durch statische Klassen-Variablen ersetzt

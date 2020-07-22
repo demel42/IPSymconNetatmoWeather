@@ -7,8 +7,8 @@ require_once __DIR__ . '/../libs/local.php';   // lokale Funktionen
 
 class NetatmoWeatherDevice extends IPSModule
 {
-    use NetatmoWeatherCommon;
-    use NetatmoWeatherLocal;
+    use NetatmoWeatherCommonLib;
+    use NetatmoWeatherLocalLib;
 
     public function Create()
     {

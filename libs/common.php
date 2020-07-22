@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-trait NetatmoWeatherCommon
+trait NetatmoWeatherCommonLib
 {
     protected function SetValue($Ident, $Value)
     {
