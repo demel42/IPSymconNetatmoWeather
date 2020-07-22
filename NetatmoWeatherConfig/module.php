@@ -70,7 +70,7 @@ class NetatmoWeatherConfig extends IPSModule
         return $tree_position;
     }
 
-    public function getConfiguratorValues()
+    private function getConfiguratorValues()
     {
         $entries = [];
 
