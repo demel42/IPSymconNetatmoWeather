@@ -316,127 +316,152 @@ class NetatmoWeatherDevice extends IPSModule
 
     private function buildEntry($module_name, $module_id, $desc, $info, $properties)
     {
-        $guid = '{1023DB4A-D491-A0D5-17CD-380D3578D0FA}';
-
         $station_id = $properties['station_id'];
         $module_type = $properties['module_type'];
-
-        $instID = 0;
-        $instIDs = IPS_GetInstanceListByModuleID($guid);
-        foreach ($instIDs as $id) {
-            if (IPS_GetProperty($id, 'station_id') != $station_id) {
-                continue;
-            }
-            if (IPS_GetProperty($id, 'module_id') != $module_id) {
-                continue;
-            }
-            $instID = $id;
-            break;
-        }
-
-        $create = [
-            'moduleID'       => $guid,
-            'location'       => $this->SetLocation(),
-            'configuration'  => $properties
-        ];
-        $create['info'] = $info;
-
-        $entry = [
-            'name'         => $module_name,
-            'module_desc'  => $desc,
-            'module_id'    => $module_id,
-            'instanceID'   => $instID,
-            'create'       => $create,
-        ];
 
         return $entry;
     }
 
     private function GetConfigurator4Station()
     {
+        $entries = [];
+
+        if ($this->HasActiveParent() == false) {
+            $this->SendDebug(__FUNCTION__, 'has no active parent', 0);
+            $this->LogMessage('has no active parent instance', KL_WARNING);
+            return $entries;
+        }
+
         $SendData = ['DataID' => '{DC5A0AD3-88A5-CAED-3CA9-44C20CC20610}', 'Function' => 'LastData'];
         $data = $this->SendDataToParent(json_encode($SendData));
 
-        $this->SendDebug(__FUNCTION__, "data=$data", 0);
+        $this->SendDebug(__FUNCTION__, 'data=' . $data, 0);
 
-        $entries = [];
         if ($data != '') {
             $netatmo = json_decode($data, true);
             $this->SendDebug(__FUNCTION__, 'netatmo=' . print_r($netatmo, true), 0);
 
             $devices = $netatmo['body']['devices'];
             $this->SendDebug(__FUNCTION__, 'devices=' . print_r($devices, true), 0);
+            if ($devices != '') {
+                $guid = '{1023DB4A-D491-A0D5-17CD-380D3578D0FA}';
+                $instIDs = IPS_GetInstanceListByModuleID($guid);
 
-            $station_id = $this->ReadPropertyString('station_id');
+                $station_id = $this->ReadPropertyString('station_id');
 
-            foreach ($devices as $device) {
-                $_id = $device['_id'];
-                if ($station_id != $_id) {
-                    continue;
-                }
-                $station_name = $device['station_name'];
+                foreach ($devices as $device) {
+                    $_id = $device['_id'];
+                    if ($station_id != $_id) {
+                        continue;
+                    }
+                    $station_name = $device['station_name'];
 
-                $module_type = 'NAMain';
-                $module_id = $device['_id'];
-                $module_name = $device['module_name'];
-                $module_desc = $this->Translate('Base module');
-                $module_info = $module_desc . ' (' . $station_name . '\\' . $module_name . ')';
+                    $module_type = 'NAMain';
+                    $module_id = $device['_id'];
+                    $module_name = $device['module_name'];
+                    $module_desc = $this->Translate('Base module');
+                    $module_info = $module_desc . ' (' . $station_name . '\\' . $module_name . ')';
 
-                $properties = [
-                    'module_id'   => $module_id,
-                    'module_type' => $module_type,
-                    'station_id'  => $station_id,
-                ];
-                $entry = $this->buildEntry($module_name, $module_id, $module_desc, $module_info, $properties);
-                $entries[] = $entry;
-
-                $modules = $device['modules'];
-                foreach (['NAModule4', 'NAModule1', 'NAModule3', 'NAModule2'] as $types) {
-                    foreach ($modules as $module) {
-                        if ($module['type'] != $types) {
+                    $instID = 0;
+                    foreach ($instIDs as $id) {
+                        if (IPS_GetProperty($id, 'station_id') != $station_id) {
                             continue;
                         }
-                        $module_type = $module['type'];
-                        switch ($module_type) {
-                            case 'NAModule1':
-                                $module_id = $module['_id'];
-                                $module_name = $module['module_name'];
-                                $module_desc = $this->Translate('Outdoor module');
-                                break;
-                            case 'NAModule2':
-                                $module_id = $module['_id'];
-                                $module_name = $module['module_name'];
-                                $module_desc = $this->Translate('Wind gauge');
-                                break;
-                            case 'NAModule3':
-                                $module_id = $module['_id'];
-                                $module_name = $module['module_name'];
-                                $module_desc = $this->Translate('Rain gauge');
-                                break;
-                            case 'NAModule4':
-                                $module_id = $module['_id'];
-                                $module_name = $module['module_name'];
-                                $module_desc = $this->Translate('Indoor module');
-                                break;
-                            default:
-                                $module_id = '';
-                                echo 'unknown module_type ' . $module_type;
-                                $this->SendDebug(__FUNCTION__, 'unknown module_type ' . $module_type, 0);
-                                break;
-                        }
-                        if ($module_id == '') {
+                        if (IPS_GetProperty($id, 'module_id') != $module_id) {
                             continue;
                         }
+                        $instID = $id;
+                        break;
+                    }
 
-                        $module_info = $module_desc . ' (' . $station_name . '\\' . $module_name . ')';
+                    $entry = [
+                        'name'         => $module_name,
+                        'module_desc'  => $module_desc,
+                        'module_id'    => $module_id,
+                        'instanceID'   => $instID,
+                        'create'       => [
+                            'moduleID'       => $guid,
+                            'location'       => $this->SetLocation(),
+                            'info'           => $module_info,
+                            'configuration'  => [
+                                'module_id'   => $module_id,
+                                'module_type' => $module_type,
+                                'station_id'  => $station_id,
+                            ]
+                        ]
+                    ];
+                    $entries[] = $entry;
 
-                        $properties = [
-                            'module_id'   => $module_id,
-                            'module_type' => $module_type,
-                            'station_id'  => $station_id,
-                        ];
-                        $entry = $this->buildEntry($module_name, $module_id, $module_desc, $module_info, $properties);
-                        $entries[] = $entry;
+                    $modules = $device['modules'];
+                    foreach (['NAModule4', 'NAModule1', 'NAModule3', 'NAModule2'] as $types) {
+                        foreach ($modules as $module) {
+                            if ($module['type'] != $types) {
+                                continue;
+                            }
+                            $module_type = $module['type'];
+                            switch ($module_type) {
+                                case 'NAModule1':
+                                    $module_id = $module['_id'];
+                                    $module_name = $module['module_name'];
+                                    $module_desc = $this->Translate('Outdoor module');
+                                    break;
+                                case 'NAModule2':
+                                    $module_id = $module['_id'];
+                                    $module_name = $module['module_name'];
+                                    $module_desc = $this->Translate('Wind gauge');
+                                    break;
+                                case 'NAModule3':
+                                    $module_id = $module['_id'];
+                                    $module_name = $module['module_name'];
+                                    $module_desc = $this->Translate('Rain gauge');
+                                    break;
+                                case 'NAModule4':
+                                    $module_id = $module['_id'];
+                                    $module_name = $module['module_name'];
+                                    $module_desc = $this->Translate('Indoor module');
+                                    break;
+                                default:
+                                    $module_id = '';
+                                    echo 'unknown module_type ' . $module_type;
+                                    $this->SendDebug(__FUNCTION__, 'unknown module_type ' . $module_type, 0);
+                                    break;
+                            }
+                            if ($module_id == '') {
+                                continue;
+                            }
+
+                            $module_info = $module_desc . ' (' . $station_name . '\\' . $module_name . ')';
+
+                            $instID = 0;
+                            foreach ($instIDs as $id) {
+                                if (IPS_GetProperty($id, 'station_id') != $station_id) {
+                                    continue;
+                                }
+                                if (IPS_GetProperty($id, 'module_id') != $module_id) {
+                                    continue;
+                                }
+                                $instID = $id;
+                                break;
+                            }
+
+                            $entry = [
+                                'name'         => $module_name,
+                                'module_desc'  => $module_desc,
+                                'module_id'    => $module_id,
+                                'instanceID'   => $instID,
+                                'create'       => [
+                                    'moduleID'       => $guid,
+                                    'location'       => $this->SetLocation(),
+                                    'info'           => $module_info,
+                                    'configuration'  => [
+                                        'module_id'   => $module_id,
+                                        'module_type' => $module_type,
+                                        'station_id'  => $station_id,
+                                    ]
+                                ]
+                            ];
+                            $entries[] = $entry;
+                        }
                     }
                 }
             }
@@ -496,9 +521,16 @@ class NetatmoWeatherDevice extends IPSModule
 
     protected function GetFormElements()
     {
-        $module_type = $this->ReadPropertyString('module_type');
-
         $formElements = [];
+
+        if ($this->HasActiveParent() == false) {
+            $formElements[] = [
+                'type'    => 'Label',
+                'caption' => 'Instance has no active parent instance',
+            ];
+        }
+
+        $module_type = $this->ReadPropertyString('module_type');
 
         switch ($module_type) {
             case 'Station':

@@ -36,6 +36,22 @@ class NetatmoWeatherConfig extends IPSModule
         $this->SetStatus(IS_ACTIVE);
     }
 
+    public function GetConfigurationForm()
+    {
+        $formElements = $this->GetFormElements();
+        $formActions = $this->GetFormActions();
+        $formStatus = $this->GetFormStatus();
+
+        $form = json_encode(['elements' => $formElements, 'actions' => $formActions, 'status' => $formStatus]);
+        if ($form == '') {
+            $this->SendDebug(__FUNCTION__, 'json_error=' . json_last_error_msg(), 0);
+            $this->SendDebug(__FUNCTION__, '=> formElements=' . print_r($formElements, true), 0);
+            $this->SendDebug(__FUNCTION__, '=> formActions=' . print_r($formActions, true), 0);
+            $this->SendDebug(__FUNCTION__, '=> formStatus=' . print_r($formStatus, true), 0);
+        }
+        return $form;
+    }
+
     private function SetLocation()
     {
         $category = $this->ReadPropertyInteger('ImportCategoryID');
@@ -54,100 +70,105 @@ class NetatmoWeatherConfig extends IPSModule
         return $tree_position;
     }
 
-    private function buildEntry($station_name, $station_id, $info, $city, $properties)
+    public function getConfiguratorValues()
     {
-        $guid = '{1023DB4A-D491-A0D5-17CD-380D3578D0FA}';
+        $entries = [];
 
-        $module_id = $properties['module_id'];
-
-        $instID = 0;
-        $instIDs = IPS_GetInstanceListByModuleID($guid);
-        foreach ($instIDs as $id) {
-            if (IPS_GetProperty($id, 'station_id') != $station_id) {
-                continue;
-            }
-            if (IPS_GetProperty($id, 'module_id') != $module_id) {
-                continue;
-            }
-            $instID = $id;
-            break;
+        if ($this->HasActiveParent() == false) {
+            $this->SendDebug(__FUNCTION__, 'has no active parent', 0);
+            $this->LogMessage('has no active parent instance', KL_WARNING);
+            return $entries;
         }
 
-        $create = [
-            'moduleID'       => $guid,
-            'location'       => $this->SetLocation(),
-            'configuration'  => $properties
-        ];
-        $create['info'] = $info;
-
-        $entry = [
-            'name'       => $station_name,
-            'city'       => $city,
-            'station_id' => $station_id,
-            'instanceID' => $instID,
-            'create'     => $create,
-        ];
-
-        return $entry;
-    }
-
-    public function GetConfigurationForm()
-    {
-        $formElements = $this->GetFormElements();
-        $formActions = $this->GetFormActions();
-        $formStatus = $this->GetFormStatus();
-
-        $form = json_encode(['elements' => $formElements, 'actions' => $formActions, 'status' => $formStatus]);
-        if ($form == '') {
-            $this->SendDebug(__FUNCTION__, 'json_error=' . json_last_error_msg(), 0);
-            $this->SendDebug(__FUNCTION__, '=> formElements=' . print_r($formElements, true), 0);
-            $this->SendDebug(__FUNCTION__, '=> formActions=' . print_r($formActions, true), 0);
-            $this->SendDebug(__FUNCTION__, '=> formStatus=' . print_r($formStatus, true), 0);
-        }
-        return $form;
-    }
-
-    protected function GetFormElements()
-    {
         $SendData = ['DataID' => '{DC5A0AD3-88A5-CAED-3CA9-44C20CC20610}', 'Function' => 'LastData'];
         $data = $this->SendDataToParent(json_encode($SendData));
 
-        $this->SendDebug(__FUNCTION__, "data=$data", 0);
+        $this->SendDebug(__FUNCTION__, 'data=' . $data, 0);
 
-        $entries = [];
         if ($data != '') {
             $netatmo = json_decode($data, true);
             $this->SendDebug(__FUNCTION__, 'netatmo=' . print_r($netatmo, true), 0);
 
             $devices = $netatmo['body']['devices'];
             $this->SendDebug(__FUNCTION__, 'devices=' . print_r($devices, true), 0);
+            if ($devices != '') {
+                $guid = '{1023DB4A-D491-A0D5-17CD-380D3578D0FA}';
+                $instIDs = IPS_GetInstanceListByModuleID($guid);
 
-            foreach ($devices as $device) {
-                $module_type = 'Station';
-                $station_name = $device['station_name'];
-                $station_id = $device['_id'];
-                $place = $device['place'];
-                $city = $place['city'];
-                $altitude = $place['altitude'];
-                $longitude = $place['location'][0];
-                $latitude = $place['location'][1];
+                foreach ($devices as $device) {
+                    $module_type = 'Station';
+                    $station_name = $device['station_name'];
+                    $station_id = $device['_id'];
+                    $module_id = '';
+                    $place = $device['place'];
+                    $city = $place['city'];
+                    $altitude = $place['altitude'];
+                    $longitude = $place['location'][0];
+                    $latitude = $place['location'][1];
 
-                $info = 'Station (' . $station_name . ')';
+                    $info = 'Station (' . $station_name . ')';
 
-                $properties = [
-                    'module_id'       	 => '',
-                    'module_type'       => $module_type,
-                    'station_id'        => $station_id,
-                    'station_altitude'  => $altitude,
-                    'station_longitude' => $longitude,
-                    'station_latitude'  => $latitude,
-                ];
+                    $instID = 0;
+                    foreach ($instIDs as $id) {
+                        if (IPS_GetProperty($id, 'station_id') != $station_id) {
+                            continue;
+                        }
+                        if (IPS_GetProperty($id, 'module_id') != $module_id) {
+                            continue;
+                        }
+                        $instID = $id;
+                        break;
+                    }
 
-                $entry = $this->buildEntry($station_name, $station_id, $info, $city, $properties);
-                $entries[] = $entry;
+                    $entry = [
+                        'name'       => $station_name,
+                        'city'       => $city,
+                        'station_id' => $station_id,
+                        'instanceID' => $instID,
+                        'create'     => [
+                            'moduleID'       => $guid,
+                            'location'       => $this->SetLocation(),
+                            'info'           => $info,
+                            'configuration'  => [
+                                'module_id'       	 => $module_id,
+                                'module_type'       => $module_type,
+                                'station_id'        => $station_id,
+                                'station_altitude'  => $altitude,
+                                'station_longitude' => $longitude,
+                                'station_latitude'  => $latitude,
+                            ]
+                        ]
+                    ];
+
+                    $entries[] = $entry;
+                }
             }
         }
+        return $entries;
+    }
 
+    protected function GetFormElements()
+    {
+        $formElements = [];
+
+        if ($this->HasActiveParent() == false) {
+            $formElements[] = [
+                'type'    => 'Label',
+                'caption' => 'Instance has no active parent instance',
+            ];
+        }
+
+        $formElements[] = [
+            'type'    => 'Label',
+            'caption' => 'category for weatherstations to be created:',
+        ];
+        $formElements[] = [
+            'type'    => 'SelectCategory',
+            'name'    => 'ImportCategoryID',
+            'caption' => 'category'
+        ];
+
+        $entries = $this->getConfiguratorValues();
         $configurator = [
             'type'    => 'Configurator',
             'name'    => 'stations',
@@ -181,9 +202,6 @@ class NetatmoWeatherConfig extends IPSModule
             'values' => $entries,
         ];
 
-        $formElements = [];
-        $formElements[] = ['type' => 'Label', 'caption' => 'category for weatherstations to be created:'];
-        $formElements[] = ['name' => 'ImportCategoryID', 'type' => 'SelectCategory', 'caption' => 'category'];
         $formElements[] = $configurator;
 
         return $formElements;

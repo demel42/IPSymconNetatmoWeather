@@ -4,6 +4,8 @@
 			"category for weatherstations to be created:": "Kategorie für anzulegende Wetterstationen:",
 			"category": "Kategorie",
 
+			"Instance has no active parent instance": "Instanz hat keine aktive übergeordnete Instanz",
+
 			"Weatherstations": "Wetterstationen",
 			"available weatherstations": "verfügbare Wetterstationen",
 			"City": "Stadt",

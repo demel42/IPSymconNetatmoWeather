@@ -410,15 +410,14 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.30 @ 13.07.2020 14:56
+- 1.29 @ 22.07.2020 10:12 (beta)
+  - kleine redaktionelle Korrektur
   - LICENSE.md hinzugefügt
   - bei HTTP-Error 403 (FORBIDDEN), 15m warten
   - CURL-Handling verbessert
     - bei curl-error bis zu 2x wiederholen
 	- bei CURLE_COULDNT_RESOLVE_HOST dns-lookup machen
-
-- 1.29 @ 20.06.2020 18:05
-  - kleine redaktionelle Korrektur
+  - Nutzung von HasActiveParent(): Anzeige im Konfigurationsformular sowie entsprechende Absicherung von SendDataToParent()
 
 - 1.28 @ 08.04.2020 12:18
   - define's durch statische Klassen-Variablen ersetzt

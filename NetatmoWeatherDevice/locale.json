@@ -13,6 +13,8 @@
 			"Netatmo Weatherstation - Module: indoor module":
 				"Netatmo Wetterstation - Innenmodul",
 
+			"Instance has no active parent instance": "Instanz hat keine aktive übergeordnete Instanz",
+
 			"Basic configuration (don't change)": "Basis-Konfiguration (nicht ändern)",
 			"Module-Type": "Modul-Typ",
 			"Module-ID": "Modul-ID",
