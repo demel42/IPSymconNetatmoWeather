@@ -169,7 +169,7 @@ class NetatmoWeatherConfig extends IPSModule
         ];
 
         $entries = $this->getConfiguratorValues();
-        $configurator = [
+        $formElements[] = [
             'type'    => 'Configurator',
             'name'    => 'stations',
             'caption' => 'available weatherstations',
@@ -201,8 +201,6 @@ class NetatmoWeatherConfig extends IPSModule
             ],
             'values' => $entries,
         ];
-
-        $formElements[] = $configurator;
 
         return $formElements;
     }
