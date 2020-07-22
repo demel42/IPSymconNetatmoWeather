@@ -419,6 +419,7 @@ GUIDs
 	- bei CURLE_COULDNT_RESOLVE_HOST dns-lookup machen
   - Nutzung von HasActiveParent(): Anzeige im Konfigurationsformular sowie entsprechende Absicherung von SendDataToParent()
   - intere Funktionen sind nun "private"
+  - lokale Funktionen aus common.php in locale.php verlagert
 
 - 1.28 @ 08.04.2020 12:18
   - define's durch statische Klassen-Variablen ersetzt
