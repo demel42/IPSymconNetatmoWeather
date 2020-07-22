@@ -418,6 +418,7 @@ GUIDs
     - bei curl-error bis zu 2x wiederholen
 	- bei CURLE_COULDNT_RESOLVE_HOST dns-lookup machen
   - Nutzung von HasActiveParent(): Anzeige im Konfigurationsformular sowie entsprechende Absicherung von SendDataToParent()
+  - intere Funktionen sind nun "private"
 
 - 1.28 @ 08.04.2020 12:18
   - define's durch statische Klassen-Variablen ersetzt
