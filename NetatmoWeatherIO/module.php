@@ -308,7 +308,7 @@ class NetatmoWeatherIO extends IPSModule
         return $form;
     }
 
-    protected function GetFormElements()
+    private function GetFormElements()
     {
         $oauth_type = $this->ReadPropertyInteger('OAuth_Type');
 
@@ -449,7 +449,7 @@ class NetatmoWeatherIO extends IPSModule
         return $formElements;
     }
 
-    protected function GetFormActions()
+    private function GetFormActions()
     {
         $oauth_type = $this->ReadPropertyInteger('OAuth_Type');
 
