@@ -2,18 +2,6 @@
 
 declare(strict_types=1);
 
-if (!defined('CONNECTION_UNDEFINED')) {
-    define('CONNECTION_UNDEFINED', 0);
-    define('CONNECTION_OAUTH', 1);
-    define('CONNECTION_DEVELOPER', 2);
-}
-
-if (!defined('STATUS_INVALID')) {
-    define('STATUS_INVALID', 0);
-    define('STATUS_VALID', 1);
-    define('STATUS_RETRYABLE', 2);
-}
-
 trait NetatmoWeatherLocalLib
 {
     public static $IS_NODATA = IS_EBASE + 1;
@@ -27,6 +15,14 @@ trait NetatmoWeatherLocalLib
     public static $IS_INVALIDCONFIG = IS_EBASE + 9;
     public static $IS_NOSYMCONCONNECT = IS_EBASE + 10;
     public static $IS_NOLOGIN = IS_EBASE + 11;
+
+    public static $CONNECTION_UNDEFINED = 0;
+    public static $CONNECTION_OAUTH = 1;
+    public static $CONNECTION_DEVELOPER = 2;
+
+    public static $STATUS_INVALID = 0;
+    public static $STATUS_VALID = 1;
+    public static $STATUS_RETRYABLE = 2;
 
     private function GetFormStatus()
     {
@@ -56,7 +52,7 @@ trait NetatmoWeatherLocalLib
     {
         switch ($this->GetStatus()) {
             case IS_ACTIVE:
-                $class = STATUS_VALID;
+                $class = self::$STATUS_VALID;
                 break;
             case self::$IS_NODATA:
             case self::$IS_UNAUTHORIZED:
@@ -64,10 +60,10 @@ trait NetatmoWeatherLocalLib
             case self::$IS_SERVERERROR:
             case self::$IS_HTTPERROR:
             case self::$IS_INVALIDDATA:
-                $class = STATUS_RETRYABLE;
+                $class = self::$STATUS_RETRYABLE;
                 break;
             default:
-                $class = STATUS_INVALID;
+                $class = self::$STATUS_INVALID;
                 break;
         }
 
