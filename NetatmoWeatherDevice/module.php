@@ -703,7 +703,11 @@ class NetatmoWeatherDevice extends IPSModule
         $windgustdir = '';
         $windgust = '';
 
-        $dashboard = $device['dashboard_data'];
+        $dashboard = $this->GetArrayElem($device, 'dashboard_data', '');
+        if ($dashboard == '') {
+            $this->SendDebug(__FUNCTION__, 'no dashboard_data, device=' . print_r($device, true), 0);
+            $this->LogMessage('update wunderground: no dashboard_data', KL_WARNING);
+        }
 
         $pressure = $this->GetArrayElem($dashboard, 'AbsolutePressure', 0);
         $time_utc = $dashboard['time_utc'];
@@ -866,7 +870,11 @@ class NetatmoWeatherDevice extends IPSModule
         $station_name = $device['station_name'];
         $module_name = $device['module_name'];
 
-        $dashboard = $device['dashboard_data'];
+        $dashboard = $this->GetArrayElem($device, 'dashboard_data', '');
+        if ($dashboard == '') {
+            $this->SendDebug(__FUNCTION__, 'no dashboard_data, device=' . print_r($device, true), 0);
+            $this->LogMessage('module ' . $station_name . '.' . $module_name . ': no dashboard_data', KL_WARNING);
+        }
 
         $last_measure = $dashboard['time_utc'];
 
@@ -990,7 +998,11 @@ class NetatmoWeatherDevice extends IPSModule
         $station_name = $device['station_name'];
         $module_name = $device['module_name'];
 
-        $dashboard = $device['dashboard_data'];
+        $dashboard = $this->GetArrayElem($device, 'dashboard_data', '');
+        if ($dashboard == '') {
+            $this->SendDebug(__FUNCTION__, 'no dashboard_data, device=' . print_r($device, true), 0);
+            $this->LogMessage('module ' . $station_name . '.' . $module_name . ': no dashboard_data', KL_WARNING);
+        }
 
         $Temperature = $this->GetArrayElem($dashboard, 'Temperature', 0);
         $CO2 = $this->GetArrayElem($dashboard, 'CO2', 0);
