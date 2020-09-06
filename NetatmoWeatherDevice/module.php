@@ -707,6 +707,7 @@ class NetatmoWeatherDevice extends IPSModule
         if ($dashboard == '') {
             $this->SendDebug(__FUNCTION__, 'no dashboard_data, device=' . print_r($device, true), 0);
             $this->LogMessage('update wunderground: no dashboard_data', KL_WARNING);
+            return;
         }
 
         $pressure = $this->GetArrayElem($dashboard, 'AbsolutePressure', 0);
@@ -873,7 +874,8 @@ class NetatmoWeatherDevice extends IPSModule
         $dashboard = $this->GetArrayElem($device, 'dashboard_data', '');
         if ($dashboard == '') {
             $this->SendDebug(__FUNCTION__, 'no dashboard_data, device=' . print_r($device, true), 0);
-            $this->LogMessage('module ' . $station_name . '.' . $module_name . ': no dashboard_data', KL_WARNING);
+            $this->LogMessage('module ' . $station_name . '.' . $module_name . ': no dashboard_data', KL_NOTIFY);
+            return $statuscode;
         }
 
         $last_measure = $dashboard['time_utc'];
@@ -1001,7 +1003,8 @@ class NetatmoWeatherDevice extends IPSModule
         $dashboard = $this->GetArrayElem($device, 'dashboard_data', '');
         if ($dashboard == '') {
             $this->SendDebug(__FUNCTION__, 'no dashboard_data, device=' . print_r($device, true), 0);
-            $this->LogMessage('module ' . $station_name . '.' . $module_name . ': no dashboard_data', KL_WARNING);
+            $this->LogMessage('module ' . $station_name . '.' . $module_name . ': no dashboard_data', KL_NOTIFY);
+            return $statuscode;
         }
 
         $Temperature = $this->GetArrayElem($dashboard, 'Temperature', 0);
