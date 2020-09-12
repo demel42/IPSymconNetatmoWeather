@@ -410,7 +410,7 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.29 @ 06.09.2020 11:38
+- 1.29 @ 12.09.2020 12:24
   - kleine redaktionelle Korrektur
   - LICENSE.md hinzugefügt
   - bei HTTP-Error 403 (FORBIDDEN), 15m warten
