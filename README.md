@@ -410,7 +410,7 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.29 @ 12.09.2020 12:24
+- 1.29 @ 26.09.2020 12:22 (beta)
   - kleine redaktionelle Korrektur
   - LICENSE.md hinzugefügt
   - bei HTTP-Error 403 (FORBIDDEN), 15m warten
@@ -422,7 +422,7 @@ GUIDs
   - lokale Funktionen aus common.php in locale.php verlagert
   - Traits des Moduls haben nun Postfix "Lib"
   - define's durch statische Klassen-Variablen ersetzt
-  - fehlende 'dashboard_data' abgefangen
+  - fehlende 'dashboard_data' und 'modules' abgefangen
 
 - 1.28 @ 08.04.2020 12:18
   - define's durch statische Klassen-Variablen ersetzt

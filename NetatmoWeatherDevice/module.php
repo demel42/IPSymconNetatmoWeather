@@ -912,44 +912,46 @@ class NetatmoWeatherDevice extends IPSModule
             $this->SetValue('Wifi', $wifi_status);
         }
 
-        $modules = $device['modules'];
-        foreach (['NAModule4', 'NAModule1', 'NAModule3', 'NAModule2'] as $types) {
-            foreach ($modules as $module) {
-                if ($module['type'] != $types) {
-                    continue;
-                }
-                $module_name = $module['module_name'];
-
-                if (isset($module['dashboard_data'])) {
-                    $dashboard = $module['dashboard_data'];
-                    $last_measure = $dashboard['time_utc'];
-                } else {
-                    $last_measure = 0;
-                }
-
-                $last_message = $module['last_message'];
-                if (is_int($last_message)) {
-                    $sec = $now - $last_message;
-                    $min = floor($sec / 60);
-                    if ($min > $minutes2fail) {
-                        $module_alarm = true;
+        $modules = $this->GetArrayElem($modules, 'device', '');
+        if ($modules != '') {
+            foreach (['NAModule4', 'NAModule1', 'NAModule3', 'NAModule2'] as $types) {
+                foreach ($modules as $module) {
+                    if ($module['type'] != $types) {
+                        continue;
                     }
-                }
+                    $module_name = $module['module_name'];
 
-                $rf_status = $this->map_rf_status($module['rf_status']);
-                $battery_status = $this->map_battery_status($module['type'], $module['battery_vp']);
-                if ($battery_status < 2) {
-                    $battery_alarm = true;
-                }
+                    if (isset($module['dashboard_data'])) {
+                        $dashboard = $module['dashboard_data'];
+                        $last_measure = $dashboard['time_utc'];
+                    } else {
+                        $last_measure = 0;
+                    }
 
-                $module_data[] = [
-                    'module_type'     => $module['type'],
-                    'module_name'     => $module_name,
-                    'last_measure'    => $last_measure,
-                    'last_message'    => $last_message,
-                    'rf_status'       => $rf_status,
-                    'battery_status'  => $battery_status,
-                ];
+                    $last_message = $module['last_message'];
+                    if (is_int($last_message)) {
+                        $sec = $now - $last_message;
+                        $min = floor($sec / 60);
+                        if ($min > $minutes2fail) {
+                            $module_alarm = true;
+                        }
+                    }
+
+                    $rf_status = $this->map_rf_status($module['rf_status']);
+                    $battery_status = $this->map_battery_status($module['type'], $module['battery_vp']);
+                    if ($battery_status < 2) {
+                        $battery_alarm = true;
+                    }
+
+                    $module_data[] = [
+                        'module_type'     => $module['type'],
+                        'module_name'     => $module_name,
+                        'last_measure'    => $last_measure,
+                        'last_message'    => $last_message,
+                        'rf_status'       => $rf_status,
+                        'battery_status'  => $battery_status,
+                    ];
+                }
             }
         }
 
