@@ -394,14 +394,15 @@ class NetatmoWeatherDevice extends IPSModule
                     ];
                     $entries[] = $entry;
 
-                    $modules = $device['modules'];
-                    foreach (['NAModule4', 'NAModule1', 'NAModule3', 'NAModule2'] as $types) {
-                        foreach ($modules as $module) {
-                            if ($module['type'] != $types) {
-                                continue;
-                            }
-                            $module_type = $module['type'];
-                            switch ($module_type) {
+                    $modules = $this->GetArrayElem($device, 'modules', '');
+                    if ($modules != '') {
+                        foreach (['NAModule4', 'NAModule1', 'NAModule3', 'NAModule2'] as $types) {
+                            foreach ($modules as $module) {
+                                if ($module['type'] != $types) {
+                                    continue;
+                                }
+                                $module_type = $module['type'];
+                                switch ($module_type) {
                                 case 'NAModule1':
                                     $module_id = $module['_id'];
                                     $module_name = $module['module_name'];
@@ -428,41 +429,42 @@ class NetatmoWeatherDevice extends IPSModule
                                     $this->SendDebug(__FUNCTION__, 'unknown module_type ' . $module_type, 0);
                                     break;
                             }
-                            if ($module_id == '') {
-                                continue;
-                            }
-
-                            $module_info = $module_desc . ' (' . $station_name . '\\' . $module_name . ')';
-
-                            $instID = 0;
-                            foreach ($instIDs as $id) {
-                                if (IPS_GetProperty($id, 'station_id') != $station_id) {
+                                if ($module_id == '') {
                                     continue;
                                 }
-                                if (IPS_GetProperty($id, 'module_id') != $module_id) {
-                                    continue;
-                                }
-                                $instID = $id;
-                                break;
-                            }
 
-                            $entry = [
-                                'name'         => $module_name,
-                                'module_desc'  => $module_desc,
-                                'module_id'    => $module_id,
-                                'instanceID'   => $instID,
-                                'create'       => [
-                                    'moduleID'       => $guid,
-                                    'location'       => $this->SetLocation(),
-                                    'info'           => $module_info,
-                                    'configuration'  => [
-                                        'module_id'   => $module_id,
-                                        'module_type' => $module_type,
-                                        'station_id'  => $station_id,
+                                $module_info = $module_desc . ' (' . $station_name . '\\' . $module_name . ')';
+
+                                $instID = 0;
+                                foreach ($instIDs as $id) {
+                                    if (IPS_GetProperty($id, 'station_id') != $station_id) {
+                                        continue;
+                                    }
+                                    if (IPS_GetProperty($id, 'module_id') != $module_id) {
+                                        continue;
+                                    }
+                                    $instID = $id;
+                                    break;
+                                }
+
+                                $entry = [
+                                    'name'         => $module_name,
+                                    'module_desc'  => $module_desc,
+                                    'module_id'    => $module_id,
+                                    'instanceID'   => $instID,
+                                    'create'       => [
+                                        'moduleID'       => $guid,
+                                        'location'       => $this->SetLocation(),
+                                        'info'           => $module_info,
+                                        'configuration'  => [
+                                            'module_id'   => $module_id,
+                                            'module_type' => $module_type,
+                                            'station_id'  => $station_id,
+                                        ]
                                     ]
-                                ]
-                            ];
-                            $entries[] = $entry;
+                                ];
+                                $entries[] = $entry;
+                            }
                         }
                     }
                 }
@@ -536,137 +538,394 @@ class NetatmoWeatherDevice extends IPSModule
 
         switch ($module_type) {
             case 'Station':
-                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weatherstation'];
+                $formElements[] = [
+                    'type'    => 'Label',
+                    'caption' => 'Netatmo Weatherstation'
+                ];
                 break;
             case 'NAMain':
-                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weatherstation - Module: base module'];
+                $formElements[] = [
+                    'type'    => 'Label',
+                    'caption' => 'Netatmo Weatherstation - Module: base module'
+                ];
                 break;
             case 'NAModule1':
-                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weatherstation - Module: outdoor module'];
+                $formElements[] = [
+                    'type'    => 'Label',
+                    'caption' => 'Netatmo Weatherstation - Module: outdoor module'
+                ];
                 break;
             case 'NAModule2':
-                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weatherstation - Module: wind gauge'];
+                $formElements[] = [
+                    'type'    => 'Label',
+                    'caption' => 'Netatmo Weatherstation - Module: wind gauge'
+                ];
                 break;
             case 'NAModule3':
-                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weatherstation - Module: rain gauge'];
+                $formElements[] = [
+                    'type'    => 'Label',
+                    'caption' => 'Netatmo Weatherstation - Module: rain gauge'
+                ];
                 break;
             case 'NAModule4':
-                $formElements[] = ['type' => 'Label', 'caption' => 'Netatmo Weatherstation - Module: indoor module'];
+                $formElements[] = [
+                    'type'    => 'Label',
+                    'caption' => 'Netatmo Weatherstation - Module: indoor module'
+                ];
                 break;
         }
 
         switch ($module_type) {
             case 'Station':
                 $items = [];
-                $items[] = ['type' => 'ValidationTextBox', 'name' => 'station_id', 'caption' => 'Station-ID'];
-                $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'Basic configuration (don\'t change)'];
+                $items[] = [
+                    'type'    => 'ValidationTextBox',
+                    'name'    => 'station_id',
+                    'caption' => 'Station-ID'
+                ];
+                $formElements[] = [
+                    'type'    => 'ExpansionPanel',
+                    'items'   => $items,
+                    'caption' => 'Basic configuration (don\'t change)'
+                ];
                 break;
             default:
                 $items = [];
-                $items[] = ['type' => 'ValidationTextBox', 'name' => 'module_type', 'caption' => 'Module-Type'];
-                $items[] = ['type' => 'ValidationTextBox', 'name' => 'module_id', 'caption' => 'Module-ID'];
-                $items[] = ['type' => 'ValidationTextBox', 'name' => 'station_id', 'caption' => 'Station-ID'];
-                $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'Basic configuration (don\'t change)'];
+                $items[] = [
+                    'type'    => 'ValidationTextBox',
+                    'name'    => 'module_type',
+                    'caption' => 'Module-Type'
+                ];
+                $items[] = [
+                    'type'    => 'ValidationTextBox',
+                    'name'    => 'module_id',
+                    'caption' => 'Module-ID'
+                ];
+                $items[] = [
+                    'type'    => 'ValidationTextBox',
+                    'name'    => 'station_id',
+                    'caption' => 'Station-ID'
+                ];
+                $formElements[] = [
+                    'type'    => 'ExpansionPanel',
+                    'items'   => $items,
+                    'caption' => 'Basic configuration (don\'t change)'
+                ];
                 break;
         }
 
         switch ($module_type) {
             case 'NAMain':
                 $items = [];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_absolute_pressure', 'caption' => 'absolute Pressure'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_absolute_humidity', 'caption' => 'absolute Humidity'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_dewpoint', 'caption' => 'Dewpoint'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_heatindex', 'caption' => 'Heatindex'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_minmax', 'caption' => 'Min/Max of temperature'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_trend', 'caption' => 'Trend of temperature and pressure'];
-                $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'optional weather data'];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_absolute_pressure',
+                    'caption' => 'absolute Pressure'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_absolute_humidity',
+                    'caption' => 'absolute Humidity'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_dewpoint',
+                    'caption' => 'Dewpoint'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_heatindex',
+                    'caption' => 'Heatindex'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_minmax',
+                    'caption' => 'Min/Max of temperature'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_trend',
+                    'caption' => 'Trend of temperature and pressure'
+                ];
+                $formElements[] = [
+                    'type'    => 'ExpansionPanel',
+                    'items'   => $items,
+                    'caption' => 'optional weather data'
+                ];
                 break;
             case 'NAModule1':
                 $items = [];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_absolute_humidity', 'caption' => 'absolute Humidity'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_dewpoint', 'caption' => 'Dewpoint'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_windchill', 'caption' => 'Windchill'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_heatindex', 'caption' => 'Heatindex'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_minmax', 'caption' => 'Min/Max of temperature'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_trend', 'caption' => 'Trend of temperature'];
-                $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'optional weather data'];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_absolute_humidity',
+                    'caption' => 'absolute Humidity'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_dewpoint',
+                    'caption' => 'Dewpoint'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_windchill',
+                    'caption' => 'Windchill'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_heatindex',
+                    'caption' => 'Heatindex'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_minmax',
+                    'caption' => 'Min/Max of temperature'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_trend',
+                    'caption' => 'Trend of temperature'
+                ];
+                $formElements[] = [
+                    'type'    => 'ExpansionPanel',
+                    'items'   => $items,
+                    'caption' => 'optional weather data'
+                ];
                 break;
             case 'NAModule2':
                 $items = [];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_windstrength', 'caption' => 'Windstrength'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_windangle', 'caption' => 'Winddirection in degrees'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_winddirection', 'caption' => 'Winddirection with label'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_minmax', 'caption' => 'Strongest gust of today'];
-                $items[] = ['type' => 'Label', 'caption' => 'optional weather data'];
-                $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'optional weather data'];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_windstrength',
+                    'caption' => 'Windstrength'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_windangle',
+                    'caption' => 'Winddirection in degrees'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_winddirection',
+                    'caption' => 'Winddirection with label'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_minmax',
+                    'caption' => 'Strongest gust of today'
+                ];
+                $items[] = [
+                    'type'    => 'Label',
+                    'caption' => 'optional weather data'
+                ];
+                $formElements[] = [
+                    'type'    => 'ExpansionPanel',
+                    'items'   => $items,
+                    'caption' => 'optional weather data'
+                ];
                 break;
             case 'NAModule3':
                 break;
             case 'NAModule4':
                 $items = [];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_absolute_humidity', 'caption' => 'absolute Humidity'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_dewpoint', 'caption' => 'Dewpoint'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_heatindex', 'caption' => 'Heatindex'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_minmax', 'caption' => 'Min/Max of temperature'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_trend', 'caption' => 'Trend of temperature'];
-                $items[] = ['type' => 'Label', 'caption' => 'optional weather data'];
-                $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'optional weather data'];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_absolute_humidity',
+                    'caption' => 'absolute Humidity'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_dewpoint',
+                    'caption' => 'Dewpoint'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_heatindex',
+                    'caption' => 'Heatindex'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_minmax',
+                    'caption' => 'Min/Max of temperature'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_trend',
+                    'caption' => 'Trend of temperature'
+                ];
+                $items[] = [
+                    'type'    => 'Label',
+                    'caption' => 'optional weather data'
+                ];
+                $formElements[] = [
+                    'type'    => 'ExpansionPanel',
+                    'items'   => $items,
+                    'caption' => 'optional weather data'
+                ];
                 break;
         }
 
         switch ($module_type) {
             case 'Station':
                 $items = [];
-                $items[] = ['type' => 'NumberSpinner', 'name' => 'station_altitude', 'caption' => 'Altitude'];
-                $items[] = ['type' => 'NumberSpinner', 'digits' => 5, 'name' => 'station_longitude', 'caption' => 'Longitude'];
-                $items[] = ['type' => 'NumberSpinner', 'digits' => 5, 'name' => 'station_latitude', 'caption' => 'Latitude'];
-                $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'station data'];
+                $items[] = [
+                    'type'    => 'NumberSpinner',
+                    'name'    => 'station_altitude',
+                    'caption' => 'Altitude'
+                ];
+                $items[] = [
+                    'type'    => 'NumberSpinner',
+                    'digits'  => 5,
+                    'name'    => 'station_longitude',
+                    'caption' => 'Longitude'
+                ];
+                $items[] = [
+                    'type'    => 'NumberSpinner',
+                    'digits'  => 5,
+                    'name'    => 'station_latitude',
+                    'caption' => 'Latitude'
+                ];
+                $formElements[] = [
+                    'type'    => 'ExpansionPanel',
+                    'items'   => $items,
+                    'caption' => 'station data'
+                ];
 
                 $items = [];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_last_contact', 'caption' => 'last transmission to Netatmo'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_status_box', 'caption' => 'html-box with state of station and modules'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_signal', 'caption' => 'Wifi-Signal'];
-                $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'optional station data'];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_last_contact',
+                    'caption' => 'last transmission to Netatmo'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_status_box',
+                    'caption' => 'html-box with state of station and modules'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_signal',
+                    'caption' => 'Wifi-Signal'
+                ];
+                $formElements[] = [
+                    'type'    => 'ExpansionPanel',
+                    'items'   => $items,
+                    'caption' => 'optional station data'
+                ];
 
                 $items = [];
-                $items[] = ['type' => 'Label', 'caption' => 'alternate script to use for ...'];
-                $items[] = ['type' => 'SelectScript', 'name' => 'statusbox_script', 'caption' => ' ... "StatusBox"'];
-                $items[] = ['type' => 'SelectScript', 'name' => 'webhook_script', 'caption' => ' ... Webhook'];
+                $items[] = [
+                    'type'    => 'Label',
+                    'caption' => 'alternate script to use for ...'
+                ];
+                $items[] = [
+                    'type'    => 'SelectScript',
+                    'name'    => 'statusbox_script',
+                    'caption' => ' ... "StatusBox"'
+                ];
+                $items[] = [
+                    'type'    => 'SelectScript',
+                    'name'    => 'webhook_script',
+                    'caption' => ' ... Webhook'
+                ];
 
-                $items[] = ['type' => 'Label', 'caption' => 'Duration until the connection to netatmo or between stations is marked disturbed'];
-                $items[] = ['type' => 'NumberSpinner', 'name' => 'minutes2fail', 'caption' => 'Minutes'];
-                $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'Processing information'];
+                $items[] = [
+                    'type'    => 'Label',
+                    'caption' => 'Duration until the connection to netatmo or between stations is marked disturbed'
+                ];
+                $items[] = [
+                    'type'    => 'NumberSpinner',
+                    'name'    => 'minutes2fail',
+                    'caption' => 'Minutes'
+                ];
+                $formElements[] = [
+                    'type'    => 'ExpansionPanel',
+                    'items'   => $items,
+                    'caption' => 'Processing information'
+                ];
 
                 $items = [];
-                $items[] = ['type' => 'Label', 'caption' => 'Konfiguration to update Wunderground (only if filled)'];
-                $items[] = ['type' => 'Label', 'caption' => 'Wunderground Access-Details from https://www.wunderground.com/personal-weather-station/mypws'];
-                $items[] = ['type' => 'ValidationTextBox', 'name' => 'Wunderground_ID', 'caption' => 'Station ID'];
-                $items[] = ['type' => 'ValidationTextBox', 'name' => 'Wunderground_Key', 'caption' => 'Station Key'];
-                $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'Wunderground'];
+                $items[] = [
+                    'type'    => 'Label',
+                    'caption' => 'Konfiguration to update Wunderground (only if filled)'
+                ];
+                $items[] = [
+                    'type'    => 'Label',
+                    'caption' => 'Wunderground Access-Details from https://www.wunderground.com/personal-weather-station/mypws'
+                ];
+                $items[] = [
+                    'type'    => 'ValidationTextBox',
+                    'name'    => 'Wunderground_ID',
+                    'caption' => 'Station ID'
+                ];
+                $items[] = [
+                    'type'    => 'ValidationTextBox',
+                    'name'    => 'Wunderground_Key',
+                    'caption' => 'Station Key'
+                ];
+                $formElements[] = [
+                    'type'    => 'ExpansionPanel',
+                    'items'   => $items,
+                    'caption' => 'Wunderground'
+                ];
 
                 $configurator = $this->GetConfigurator4Station();
                 if ($configurator != false) {
                     $items = [];
-                    $items[] = ['type' => 'Label', 'caption' => 'category for modules to be created:'];
-                    $items[] = ['name' => 'ImportCategoryID', 'type' => 'SelectCategory', 'caption' => 'category'];
+                    $items[] = [
+                        'type'    => 'Label',
+                        'caption' => 'category for modules to be created:'
+                    ];
+                    $items[] = [
+                        'name'    => 'ImportCategoryID',
+                        'type'    => 'SelectCategory',
+                        'caption' => 'category'
+                    ];
                     $items[] = $configurator;
-                    $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'Modules'];
+                    $formElements[] = [
+                        'type'    => 'ExpansionPanel',
+                        'items'   => $items,
+                        'caption' => 'Modules'
+                    ];
                 }
                 break;
             case 'NAMain':
                 $items = [];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_last_measure', 'caption' => 'Measurement-Timestamp'];
-                $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'optional module data'];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_last_measure',
+                    'caption' => 'Measurement-Timestamp'
+                ];
+                $formElements[] = [
+                    'type'    => 'ExpansionPanel',
+                    'items'   => $items,
+                    'caption' => 'optional module data'
+                ];
                 break;
             case 'NAModule1':
             case 'NAModule2':
             case 'NAModule3':
             case 'NAModule4':
                 $items = [];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_last_measure', 'caption' => 'Measurement-Timestamp'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_signal', 'caption' => 'RF-Signal'];
-                $items[] = ['type' => 'CheckBox', 'name' => 'with_battery', 'caption' => 'Battery (a global battery indicator is always present)'];
-                $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'optional module data'];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_last_measure',
+                    'caption' => 'Measurement-Timestamp'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_signal',
+                    'caption' => 'RF-Signal'
+                ];
+                $items[] = [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_battery',
+                    'caption' => 'Battery (a global battery indicator is always present)'
+                ];
+                $formElements[] = [
+                    'type'    => 'ExpansionPanel',
+                    'items'   => $items,
+                    'caption' => 'optional module data'
+                ];
                 break;
         }
 
@@ -713,7 +972,13 @@ class NetatmoWeatherDevice extends IPSModule
         $pressure = $this->GetArrayElem($dashboard, 'AbsolutePressure', 0);
         $time_utc = $dashboard['time_utc'];
 
-        $modules = $device['modules'];
+        $modules = $this->GetArrayElem($device, 'modules', '');
+        if ($modules == '') {
+            $this->SendDebug(__FUNCTION__, 'no modules, device=' . print_r($device, true), 0);
+            $this->LogMessage('update wunderground: no modules', KL_WARNING);
+            return;
+        }
+
         foreach ($modules as $i => $value) {
             $module = $modules[$i];
             if (!isset($module['dashboard_data'])) {
@@ -912,7 +1177,7 @@ class NetatmoWeatherDevice extends IPSModule
             $this->SetValue('Wifi', $wifi_status);
         }
 
-        $modules = $this->GetArrayElem($modules, 'device', '');
+        $modules = $this->GetArrayElem($device, 'modules', '');
         if ($modules != '') {
             foreach (['NAModule4', 'NAModule1', 'NAModule3', 'NAModule2'] as $types) {
                 foreach ($modules as $module) {
@@ -1103,200 +1368,202 @@ class NetatmoWeatherDevice extends IPSModule
 
         $module_found = false;
         $module_nodata = false;
-        $modules = $device['modules'];
-        foreach ($modules as $module) {
-            $id = $module['_id'];
-            if ($module_id != $module['_id']) {
-                continue;
-            }
+        $modules = $this->GetArrayElem($device, 'modules', '');
+        if ($modules != '') {
+            foreach ($modules as $module) {
+                $id = $module['_id'];
+                if ($module_id != $module['_id']) {
+                    continue;
+                }
 
-            $module_found = true;
+                $module_found = true;
 
-            $module_name = $module['module_name'];
+                $module_name = $module['module_name'];
 
-            $last_message = $module['last_message'];
+                $last_message = $module['last_message'];
 
-            $rf_status = $this->map_rf_status($module['rf_status']);
-            if ($with_signal) {
-                $this->SetValue('RfSignal', $rf_status);
-            }
+                $rf_status = $this->map_rf_status($module['rf_status']);
+                if ($with_signal) {
+                    $this->SetValue('RfSignal', $rf_status);
+                }
 
-            $battery_status = $this->map_battery_status($module_type, $module['battery_vp']);
-            if ($with_battery) {
-                $this->SetValue('Battery', $battery_status);
-            }
+                $battery_status = $this->map_battery_status($module_type, $module['battery_vp']);
+                if ($with_battery) {
+                    $this->SetValue('Battery', $battery_status);
+                }
 
-            if (!isset($module['dashboard_data'])) {
-                $module_nodata = true;
+                if (!isset($module['dashboard_data'])) {
+                    $module_nodata = true;
 
-                $module_type_text = $this->module_type2text($module_type);
-                $msg = "  module_type=$module_type($module_type_text), module_name=$module_name, rf_status=$rf_status, battery_status=$battery_status";
-                $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
-                break;
-            }
-
-            $dashboard = $module['dashboard_data'];
-
-            $last_measure = $dashboard['time_utc'];
-            if ($with_last_measure) {
-                $this->SetValue('LastMeasure', $last_measure);
-            }
-
-            switch ($module_type) {
-                case 'NAModule1':
-                    // Außenmodul
-                    $Temperature = $this->GetArrayElem($dashboard, 'Temperature', 0);
-                    $Humidity = $this->GetArrayElem($dashboard, 'Humidity', 0);
-
-                    $min_temp = $this->GetArrayElem($dashboard, 'min_temp', 0);
-                    $date_min_temp = $this->GetArrayElem($dashboard, 'date_min_temp', 0);
-                    $max_temp = $this->GetArrayElem($dashboard, 'max_temp', 0);
-                    $date_max_temp = $this->GetArrayElem($dashboard, 'date_max_temp', 0);
-                    $temp_trend = $this->GetArrayElem($dashboard, 'temp_trend', '');
-
-                    $this->SetValue('Temperature', $Temperature);
-                    $this->SetValue('Humidity', $Humidity);
-                    if ($with_absolute_humidity) {
-                        $abs_humidity = $this->CalcAbsoluteHumidity($Temperature, $Humidity);
-                        $this->SetValue('AbsoluteHumidity', $abs_humidity);
-                    }
-                    if ($with_dewpoint) {
-                        $dewpoint = $this->CalcDewpoint($Temperature, $Humidity);
-                        $this->SetValue('Dewpoint', $dewpoint);
-                    }
-                    if ($with_heatindex) {
-                        $heatindex = $this->CalcHeatindex($Temperature, $Humidity);
-                        $this->SetValue('Heatindex', $heatindex);
-                    }
-                    if ($with_dewpoint) {
-                        $dewpoint = $this->CalcDewpoint($Temperature, $Humidity);
-                        $this->SetValue('Dewpoint', $dewpoint);
-                    }
-                    if ($with_minmax) {
-                        $this->SetValue('TemperatureMax', $max_temp);
-                        $this->SetValue('TemperatureMaxTimestamp', $date_max_temp);
-                        $this->SetValue('TemperatureMin', $min_temp);
-                        $this->SetValue('TemperatureMinTimestamp', $date_min_temp);
-                    }
-                    if ($with_trend) {
-                        $trend = $this->map_trend($temp_trend);
-                        if (is_int($trend)) {
-                            $this->SetValue('TemperatureTrend', $trend);
-                        }
-                    }
-
-                    $msg = "outdoor module \"$module_name\": Temperature=$Temperature, Humidity=$Humidity";
+                    $module_type_text = $this->module_type2text($module_type);
+                    $msg = "  module_type=$module_type($module_type_text), module_name=$module_name, rf_status=$rf_status, battery_status=$battery_status";
                     $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
                     break;
-                case 'NAModule2':
-                    // Windmesser
-                    $WindSpeed = $this->GetArrayElem($dashboard, 'WindStrength', 0);
-                    $WindAngle = $this->GetArrayElem($dashboard, 'WindAngle', 0);
-                    $GustSpeed = $this->GetArrayElem($dashboard, 'GustStrength', 0);
-                    $GustAngle = $this->GetArrayElem($dashboard, 'GustAngle', 0);
+                }
 
-                    $wind_max = $this->GetArrayElem($dashboard, 'max_wind_str', 0);
-                    $wind_max_angle = $this->GetArrayElem($dashboard, 'max_wind_angle', 0);
-                    $wind_max_date = $this->GetArrayElem($dashboard, 'date_max_wind_str', 0);
+                $dashboard = $module['dashboard_data'];
 
-                    $this->SetValue('WindSpeed', $WindSpeed);
-                    $this->SetValue('GustSpeed', $GustSpeed);
-                    if ($with_windangle) {
-                        $this->SetValue('WindAngle', $WindAngle);
-                        $this->SetValue('GustAngle', $GustAngle);
-                    }
-                    if ($with_windstrength) {
-                        $windstrength = $this->ConvertWindSpeed2Strength($WindSpeed);
-                        $this->SetValue('WindStrength', $windstrength);
-                        $guststrength = $this->ConvertWindSpeed2Strength($GustSpeed);
-                        $this->SetValue('GustStrength', $guststrength);
-                    }
-                    if ($with_winddirection) {
-                        $dir = $this->ConvertWindDirection2Text($WindAngle) . ' (' . $WindAngle . '°)';
-                        $this->SetValue('WindDirection', $dir);
-                        $dir = $this->ConvertWindDirection2Text($GustAngle) . ' (' . $GustAngle . '°)';
-                        $this->SetValue('GustDirection', $dir);
-                    }
-                    if ($with_minmax) {
-                        $this->SetValue('GustMaxSpeed', $wind_max);
+                $last_measure = $dashboard['time_utc'];
+                if ($with_last_measure) {
+                    $this->SetValue('LastMeasure', $last_measure);
+                }
+
+                switch ($module_type) {
+                    case 'NAModule1':
+                        // Außenmodul
+                        $Temperature = $this->GetArrayElem($dashboard, 'Temperature', 0);
+                        $Humidity = $this->GetArrayElem($dashboard, 'Humidity', 0);
+
+                        $min_temp = $this->GetArrayElem($dashboard, 'min_temp', 0);
+                        $date_min_temp = $this->GetArrayElem($dashboard, 'date_min_temp', 0);
+                        $max_temp = $this->GetArrayElem($dashboard, 'max_temp', 0);
+                        $date_max_temp = $this->GetArrayElem($dashboard, 'date_max_temp', 0);
+                        $temp_trend = $this->GetArrayElem($dashboard, 'temp_trend', '');
+
+                        $this->SetValue('Temperature', $Temperature);
+                        $this->SetValue('Humidity', $Humidity);
+                        if ($with_absolute_humidity) {
+                            $abs_humidity = $this->CalcAbsoluteHumidity($Temperature, $Humidity);
+                            $this->SetValue('AbsoluteHumidity', $abs_humidity);
+                        }
+                        if ($with_dewpoint) {
+                            $dewpoint = $this->CalcDewpoint($Temperature, $Humidity);
+                            $this->SetValue('Dewpoint', $dewpoint);
+                        }
+                        if ($with_heatindex) {
+                            $heatindex = $this->CalcHeatindex($Temperature, $Humidity);
+                            $this->SetValue('Heatindex', $heatindex);
+                        }
+                        if ($with_dewpoint) {
+                            $dewpoint = $this->CalcDewpoint($Temperature, $Humidity);
+                            $this->SetValue('Dewpoint', $dewpoint);
+                        }
+                        if ($with_minmax) {
+                            $this->SetValue('TemperatureMax', $max_temp);
+                            $this->SetValue('TemperatureMaxTimestamp', $date_max_temp);
+                            $this->SetValue('TemperatureMin', $min_temp);
+                            $this->SetValue('TemperatureMinTimestamp', $date_min_temp);
+                        }
+                        if ($with_trend) {
+                            $trend = $this->map_trend($temp_trend);
+                            if (is_int($trend)) {
+                                $this->SetValue('TemperatureTrend', $trend);
+                            }
+                        }
+
+                        $msg = "outdoor module \"$module_name\": Temperature=$Temperature, Humidity=$Humidity";
+                        $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
+                        break;
+                    case 'NAModule2':
+                        // Windmesser
+                        $WindSpeed = $this->GetArrayElem($dashboard, 'WindStrength', 0);
+                        $WindAngle = $this->GetArrayElem($dashboard, 'WindAngle', 0);
+                        $GustSpeed = $this->GetArrayElem($dashboard, 'GustStrength', 0);
+                        $GustAngle = $this->GetArrayElem($dashboard, 'GustAngle', 0);
+
+                        $wind_max = $this->GetArrayElem($dashboard, 'max_wind_str', 0);
+                        $wind_max_angle = $this->GetArrayElem($dashboard, 'max_wind_angle', 0);
+                        $wind_max_date = $this->GetArrayElem($dashboard, 'date_max_wind_str', 0);
+
+                        $this->SetValue('WindSpeed', $WindSpeed);
+                        $this->SetValue('GustSpeed', $GustSpeed);
                         if ($with_windangle) {
-                            $this->SetValue('GustMaxAngle', $wind_max_angle);
+                            $this->SetValue('WindAngle', $WindAngle);
+                            $this->SetValue('GustAngle', $GustAngle);
                         }
                         if ($with_windstrength) {
-                            $windstrength = $this->ConvertWindSpeed2Strength($wind_max);
-                            $this->SetValue('GustMaxStrength', $windstrength);
+                            $windstrength = $this->ConvertWindSpeed2Strength($WindSpeed);
+                            $this->SetValue('WindStrength', $windstrength);
+                            $guststrength = $this->ConvertWindSpeed2Strength($GustSpeed);
+                            $this->SetValue('GustStrength', $guststrength);
                         }
                         if ($with_winddirection) {
-                            $dir = $this->ConvertWindDirection2Text($wind_max_angle) . ' (' . $wind_max_angle . '°)';
-                            $this->SetValue('GustMaxDirection', $dir);
+                            $dir = $this->ConvertWindDirection2Text($WindAngle) . ' (' . $WindAngle . '°)';
+                            $this->SetValue('WindDirection', $dir);
+                            $dir = $this->ConvertWindDirection2Text($GustAngle) . ' (' . $GustAngle . '°)';
+                            $this->SetValue('GustDirection', $dir);
                         }
-                        $this->SetValue('GustMaxTimestamp', $wind_max_date);
-                    }
-
-                    $msg = "wind gauge \"$module_name\": WindSpeed=$WindSpeed, WindAngle=$WindAngle, GustSpeed=$GustSpeed, GustAngle=$GustAngle";
-                    $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
-                    break;
-                case 'NAModule3':
-                    // Regenmesser
-                    $Rain = $this->GetArrayElem($dashboard, 'Rain', 0);
-                    $sum_rain_1 = $this->GetArrayElem($dashboard, 'sum_rain_1', 0);
-                    $sum_rain_24 = $this->GetArrayElem($dashboard, 'sum_rain_24', 0);
-
-                    $this->SetValue('Rain', $Rain);
-                    $this->SetValue('Rain_1h', $sum_rain_1);
-                    $this->SetValue('Rain_24h', $sum_rain_24);
-
-                    $msg = "rain gauge \"$module_name\": Rain=$Rain, sum_rain_1=$sum_rain_1, sum_rain_24=$sum_rain_24";
-                    $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
-                    break;
-                case 'NAModule4':
-                    // Innenmodul
-                    $Temperature = $this->GetArrayElem($dashboard, 'Temperature', 0);
-                    $Humidity = $this->GetArrayElem($dashboard, 'Humidity', 0);
-                    $CO2 = $this->GetArrayElem($dashboard, 'CO2', 0);
-
-                    $min_temp = $this->GetArrayElem($dashboard, 'min_temp', 0);
-                    $date_min_temp = $this->GetArrayElem($dashboard, 'date_min_temp', 0);
-                    $max_temp = $this->GetArrayElem($dashboard, 'max_temp', 0);
-                    $date_max_temp = $this->GetArrayElem($dashboard, 'date_max_temp', 0);
-                    $temp_trend = $this->GetArrayElem($dashboard, 'temp_trend', '');
-
-                    $this->SetValue('Temperature', $Temperature);
-                    $this->SetValue('CO2', $CO2);
-                    $this->SetValue('Humidity', $Humidity);
-                    if ($with_absolute_humidity) {
-                        $abs_humidity = $this->CalcAbsoluteHumidity($Temperature, $Humidity);
-                        $this->SetValue('AbsoluteHumidity', $abs_humidity);
-                    }
-                    if ($with_dewpoint) {
-                        $dewpoint = $this->CalcDewpoint($Temperature, $Humidity);
-                        $this->SetValue('Dewpoint', $dewpoint);
-                    }
-                    if ($with_heatindex) {
-                        $heatindex = $this->CalcHeatindex($Temperature, $Humidity);
-                        $this->SetValue('Heatindex', $heatindex);
-                    }
-                    if ($with_minmax) {
-                        $this->SetValue('TemperatureMax', $max_temp);
-                        $this->SetValue('TemperatureMaxTimestamp', $date_max_temp);
-                        $this->SetValue('TemperatureMin', $min_temp);
-                        $this->SetValue('TemperatureMinTimestamp', $date_min_temp);
-                    }
-                    if ($with_trend) {
-                        $trend = $this->map_trend($temp_trend);
-                        if (is_int($trend)) {
-                            $this->SetValue('TemperatureTrend', $trend);
+                        if ($with_minmax) {
+                            $this->SetValue('GustMaxSpeed', $wind_max);
+                            if ($with_windangle) {
+                                $this->SetValue('GustMaxAngle', $wind_max_angle);
+                            }
+                            if ($with_windstrength) {
+                                $windstrength = $this->ConvertWindSpeed2Strength($wind_max);
+                                $this->SetValue('GustMaxStrength', $windstrength);
+                            }
+                            if ($with_winddirection) {
+                                $dir = $this->ConvertWindDirection2Text($wind_max_angle) . ' (' . $wind_max_angle . '°)';
+                                $this->SetValue('GustMaxDirection', $dir);
+                            }
+                            $this->SetValue('GustMaxTimestamp', $wind_max_date);
                         }
-                    }
 
-                    $msg = "indoor module \"$module_name\": Temperature=$Temperature, Humidity=$Humidity, CO2=$CO2";
-                    $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
-                    break;
+                        $msg = "wind gauge \"$module_name\": WindSpeed=$WindSpeed, WindAngle=$WindAngle, GustSpeed=$GustSpeed, GustAngle=$GustAngle";
+                        $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
+                        break;
+                    case 'NAModule3':
+                        // Regenmesser
+                        $Rain = $this->GetArrayElem($dashboard, 'Rain', 0);
+                        $sum_rain_1 = $this->GetArrayElem($dashboard, 'sum_rain_1', 0);
+                        $sum_rain_24 = $this->GetArrayElem($dashboard, 'sum_rain_24', 0);
+
+                        $this->SetValue('Rain', $Rain);
+                        $this->SetValue('Rain_1h', $sum_rain_1);
+                        $this->SetValue('Rain_24h', $sum_rain_24);
+
+                        $msg = "rain gauge \"$module_name\": Rain=$Rain, sum_rain_1=$sum_rain_1, sum_rain_24=$sum_rain_24";
+                        $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
+                        break;
+                    case 'NAModule4':
+                        // Innenmodul
+                        $Temperature = $this->GetArrayElem($dashboard, 'Temperature', 0);
+                        $Humidity = $this->GetArrayElem($dashboard, 'Humidity', 0);
+                        $CO2 = $this->GetArrayElem($dashboard, 'CO2', 0);
+
+                        $min_temp = $this->GetArrayElem($dashboard, 'min_temp', 0);
+                        $date_min_temp = $this->GetArrayElem($dashboard, 'date_min_temp', 0);
+                        $max_temp = $this->GetArrayElem($dashboard, 'max_temp', 0);
+                        $date_max_temp = $this->GetArrayElem($dashboard, 'date_max_temp', 0);
+                        $temp_trend = $this->GetArrayElem($dashboard, 'temp_trend', '');
+
+                        $this->SetValue('Temperature', $Temperature);
+                        $this->SetValue('CO2', $CO2);
+                        $this->SetValue('Humidity', $Humidity);
+                        if ($with_absolute_humidity) {
+                            $abs_humidity = $this->CalcAbsoluteHumidity($Temperature, $Humidity);
+                            $this->SetValue('AbsoluteHumidity', $abs_humidity);
+                        }
+                        if ($with_dewpoint) {
+                            $dewpoint = $this->CalcDewpoint($Temperature, $Humidity);
+                            $this->SetValue('Dewpoint', $dewpoint);
+                        }
+                        if ($with_heatindex) {
+                            $heatindex = $this->CalcHeatindex($Temperature, $Humidity);
+                            $this->SetValue('Heatindex', $heatindex);
+                        }
+                        if ($with_minmax) {
+                            $this->SetValue('TemperatureMax', $max_temp);
+                            $this->SetValue('TemperatureMaxTimestamp', $date_max_temp);
+                            $this->SetValue('TemperatureMin', $min_temp);
+                            $this->SetValue('TemperatureMinTimestamp', $date_min_temp);
+                        }
+                        if ($with_trend) {
+                            $trend = $this->map_trend($temp_trend);
+                            if (is_int($trend)) {
+                                $this->SetValue('TemperatureTrend', $trend);
+                            }
+                        }
+
+                        $msg = "indoor module \"$module_name\": Temperature=$Temperature, Humidity=$Humidity, CO2=$CO2";
+                        $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
+                        break;
+                }
+
+                $module_type_text = $this->module_type2text($module_type);
+                $msg = "  module_type=$module_type($module_type_text), module_name=$module_name, last_measure=$last_measure, rf_status=$rf_status, battery_status=$battery_status";
+                $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
             }
-
-            $module_type_text = $this->module_type2text($module_type);
-            $msg = "  module_type=$module_type($module_type_text), module_name=$module_name, last_measure=$last_measure, rf_status=$rf_status, battery_status=$battery_status";
-            $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
         }
 
         if ($module_found == false) {

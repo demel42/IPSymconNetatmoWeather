@@ -409,8 +409,7 @@ GUIDs
   - `{2D42552F-2545-9145-D3C8-A299E3FDC6EA}`: an NetatmoWeatherConfig, NetatmoWeatherDevice
 
 ## 7. Versions-Historie
-
-- 1.29 @ 26.09.2020 12:22 (beta)
+- 1.29 @ 26.09.2020 14:34 (beta)
   - kleine redaktionelle Korrektur
   - LICENSE.md hinzugefügt
   - bei HTTP-Error 403 (FORBIDDEN), 15m warten
