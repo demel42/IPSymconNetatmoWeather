@@ -346,6 +346,11 @@ class NetatmoWeatherDevice extends IPSModule
             $devices = $netatmo['body']['devices'];
             $this->SendDebug(__FUNCTION__, 'devices=' . print_r($devices, true), 0);
             if ($devices != '') {
+                /*
+                   Ausnahme zu Reviewrichtlinien (Feinheiten des Modul-Reviews), wurde per Mail vom 09.10.2020 von Niels genehmigt.
+                   Grund: im Konfigurator (NetatmoWeatherConfig) legt man Basisstationen an. Hier legt man die zu der Basisstation
+                   gehörenden und nur mit der Basisstation zu betreibenden Netatmo-Module an
+                 */
                 $guid = '{1023DB4A-D491-A0D5-17CD-380D3578D0FA}';
                 $instIDs = IPS_GetInstanceListByModuleID($guid);
 
