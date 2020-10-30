@@ -83,7 +83,11 @@ class NetatmoWeatherConfig extends IPSModule
 
                 foreach ($devices as $device) {
                     $module_type = 'Station';
-                    $station_name = $device['station_name'];
+                    $station_name = $this->GetArrayElem($device, 'station_name', '');
+                    $home_name = $this->GetArrayElem($device, 'home_name', '');
+                    if ($station_name == '') {
+                        $station_name = $home_name;
+                    }
                     $station_id = $device['_id'];
                     $module_id = '';
                     $place = $device['place'];
