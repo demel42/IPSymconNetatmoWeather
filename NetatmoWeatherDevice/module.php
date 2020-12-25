@@ -369,7 +369,7 @@ class NetatmoWeatherDevice extends IPSModule
 
                     $module_type = 'NAMain';
                     $module_id = $device['_id'];
-                    $module_name = $device['module_name'];
+                    $module_name = $this->GetArrayElem($device, 'module_name', '');
                     $module_desc = $this->Translate('Base module');
                     $module_info = $module_desc . ' (' . $station_name . '\\' . $module_name . ')';
 
@@ -414,22 +414,22 @@ class NetatmoWeatherDevice extends IPSModule
                                 switch ($module_type) {
                                     case 'NAModule1':
                                         $module_id = $module['_id'];
-                                        $module_name = $module['module_name'];
+                                        $module_name = $this->GetArrayElem($module, 'module_name', '');
                                         $module_desc = $this->Translate('Outdoor module');
                                         break;
                                     case 'NAModule2':
                                         $module_id = $module['_id'];
-                                        $module_name = $module['module_name'];
+                                        $module_name = $this->GetArrayElem($module, 'module_name', '');
                                         $module_desc = $this->Translate('Wind gauge');
                                         break;
                                     case 'NAModule3':
                                         $module_id = $module['_id'];
-                                        $module_name = $module['module_name'];
+                                        $module_name = $this->GetArrayElem($module, 'module_name', '');
                                         $module_desc = $this->Translate('Rain gauge');
                                         break;
                                     case 'NAModule4':
                                         $module_id = $module['_id'];
-                                        $module_name = $module['module_name'];
+                                        $module_name = $this->GetArrayElem($module, 'module_name', '');
                                         $module_desc = $this->Translate('Indoor module');
                                         break;
                                     default:
@@ -1147,7 +1147,7 @@ class NetatmoWeatherDevice extends IPSModule
         if ($station_name == '') {
             $station_name = $home_name;
         }
-        $module_name = $device['module_name'];
+        $module_name = $this->GetArrayElem($device, 'module_name', '');
 
         $dashboard = $this->GetArrayElem($device, 'dashboard_data', '');
         if ($dashboard == '') {
@@ -1197,7 +1197,7 @@ class NetatmoWeatherDevice extends IPSModule
                     if ($module['type'] != $types) {
                         continue;
                     }
-                    $module_name = $module['module_name'];
+                    $module_name = $this->GetArrayElem($module_name, 'module_name', '');
 
                     if (isset($module['dashboard_data'])) {
                         $dashboard = $module['dashboard_data'];
@@ -1282,7 +1282,7 @@ class NetatmoWeatherDevice extends IPSModule
         if ($station_name == '') {
             $station_name = $home_name;
         }
-        $module_name = $device['module_name'];
+        $module_name = $this->GetArrayElem($device, 'module_name', '');
 
         $dashboard = $this->GetArrayElem($device, 'dashboard_data', '');
         if ($dashboard == '') {
@@ -1399,7 +1399,7 @@ class NetatmoWeatherDevice extends IPSModule
 
                 $module_found = true;
 
-                $module_name = $module['module_name'];
+                $module_name = $this->GetArrayElem($module, 'module_name', '');
 
                 $last_message = $module['last_message'];
 
@@ -1797,7 +1797,7 @@ class NetatmoWeatherDevice extends IPSModule
             $module_type = $module['module_type'];
             $module_type_text = $this->module_type2text($module_type);
             $module_type_img = $img_path . $this->module_type2img($module_type);
-            $module_name = $module['module_name'];
+            $module_name = $this->GetArrayElem($module, 'module_name', '');
             $module_type = $module['module_type'];
 
             $last_measure = $module['last_measure'];
@@ -1914,7 +1914,7 @@ class NetatmoWeatherDevice extends IPSModule
                 $module_type = $module['module_type'];
                 $module_type_text = $this->module_type2text($module_type);
                 $module_type_img = $img_path . $this->module_type2img($module_type);
-                $module_name = $module['module_name'];
+                $module_name = $this->GetArrayElem($module, 'module_name', '');
 
                 $last_measure = $module['last_measure'];
                 $s = $this->seconds2duration($now - $last_measure);

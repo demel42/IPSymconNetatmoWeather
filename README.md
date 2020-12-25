@@ -410,8 +410,9 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.31 @ 18.12.2020 14:57 (beta)
+- 1.31 @ 25.12.2020 14:27 (beta)
   - PHP_CS_FIXER_IGNORE_ENV=1 in github/workflows/style.yml eingefügt
+  - es kann sein, das das Element 'module_name' in den Daten fehlt
 
 - 1.30 @ 30.10.2020 13:50
   - es kann sein, das das Element 'station_name' in den Daten fehlt
