@@ -1,7 +1,7 @@
 {
 	"translations": {
 		"de": {
-			"Instance is disabled": "Instanz ist deaktiviert",
+			"Disable instance": "Instanz deaktivieren",
 
 			"Status: Symcon Connect is OK!": "Status: Symcon Connect ist OK!",
 			"Error: Symcon Connect is not active!": "Fehler: Symcon Connect ist nicht aktiv!",

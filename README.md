@@ -410,6 +410,10 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.32 @ 14.07.2021 18:06
+  - Zugriff auf 'module_type' abgesichert
+  - Schalter "Instanz ist deaktiviert" umbenannt in "Instanz deaktivieren"
+
 - 1.31 @ 25.12.2020 14:27
   - PHP_CS_FIXER_IGNORE_ENV=1 in github/workflows/style.yml eingefügt
   - es kann sein, das das Element 'module_name' in den Daten fehlt
