@@ -1798,7 +1798,6 @@ class NetatmoWeatherDevice extends IPSModule
             $module_type_text = $this->module_type2text($module_type);
             $module_type_img = $img_path . $this->module_type2img($module_type);
             $module_name = $this->GetArrayElem($module, 'module_name', '');
-            $module_type = $module['module_type'];
 
             $last_measure = $module['last_measure'];
             $s = $this->seconds2duration($now - $last_measure);
