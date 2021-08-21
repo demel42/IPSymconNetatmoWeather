@@ -120,7 +120,7 @@ class NetatmoWeatherConfig extends IPSModule
                             'location'       => $this->SetLocation(),
                             'info'           => $info,
                             'configuration'  => [
-                                'module_id'       	 => $module_id,
+                                'module_id'         => $module_id,
                                 'module_type'       => $module_type,
                                 'station_id'        => $station_id,
                                 'station_altitude'  => $altitude,

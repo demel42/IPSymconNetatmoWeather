@@ -369,9 +369,7 @@ class NetatmoWeatherDevice extends IPSModule
 
                     $module_type = 'NAMain';
                     $module_id = $device['_id'];
-                    $module_name = $this->GetArrayElem($device, 'module_name', '');
                     $module_desc = $this->Translate('Base module');
-                    $module_info = $module_desc . ' (' . $station_name . '\\' . $module_name . ')';
 
                     $instID = 0;
                     foreach ($instIDs as $id) {
@@ -384,6 +382,12 @@ class NetatmoWeatherDevice extends IPSModule
                         $instID = $id;
                         break;
                     }
+
+                    $module_name = $this->GetArrayElem($device, 'module_name', '');
+                    if ($module_name == '') {
+                        $module_name = IPS_GetName($instID);
+                    }
+                    $module_info = $module_desc . ' (' . $station_name . '\\' . $module_name . ')';
 
                     $entry = [
                         'name'         => $module_name,
@@ -414,22 +418,18 @@ class NetatmoWeatherDevice extends IPSModule
                                 switch ($module_type) {
                                     case 'NAModule1':
                                         $module_id = $module['_id'];
-                                        $module_name = $this->GetArrayElem($module, 'module_name', '');
                                         $module_desc = $this->Translate('Outdoor module');
                                         break;
                                     case 'NAModule2':
                                         $module_id = $module['_id'];
-                                        $module_name = $this->GetArrayElem($module, 'module_name', '');
                                         $module_desc = $this->Translate('Wind gauge');
                                         break;
                                     case 'NAModule3':
                                         $module_id = $module['_id'];
-                                        $module_name = $this->GetArrayElem($module, 'module_name', '');
                                         $module_desc = $this->Translate('Rain gauge');
                                         break;
                                     case 'NAModule4':
                                         $module_id = $module['_id'];
-                                        $module_name = $this->GetArrayElem($module, 'module_name', '');
                                         $module_desc = $this->Translate('Indoor module');
                                         break;
                                     default:
@@ -442,8 +442,6 @@ class NetatmoWeatherDevice extends IPSModule
                                     continue;
                                 }
 
-                                $module_info = $module_desc . ' (' . $station_name . '\\' . $module_name . ')';
-
                                 $instID = 0;
                                 foreach ($instIDs as $id) {
                                     if (IPS_GetProperty($id, 'station_id') != $station_id) {
@@ -455,6 +453,12 @@ class NetatmoWeatherDevice extends IPSModule
                                     $instID = $id;
                                     break;
                                 }
+
+                                $module_name = $this->GetArrayElem($module, 'module_name', '');
+                                if ($module_name == '') {
+                                    $module_name = IPS_GetName($instID);
+                                }
+                                $module_info = $module_desc . ' (' . $station_name . '\\' . $module_name . ')';
 
                                 $entry = [
                                     'name'         => $module_name,
@@ -1192,12 +1196,31 @@ class NetatmoWeatherDevice extends IPSModule
 
         $modules = $this->GetArrayElem($device, 'modules', '');
         if ($modules != '') {
+            $guid = '{1023DB4A-D491-A0D5-17CD-380D3578D0FA}';
+            $instIDs = IPS_GetInstanceListByModuleID($guid);
+            $station_id = $this->ReadPropertyString('station_id');
             foreach (['NAModule4', 'NAModule1', 'NAModule3', 'NAModule2'] as $types) {
                 foreach ($modules as $module) {
                     if ($module['type'] != $types) {
                         continue;
                     }
-                    $module_name = $this->GetArrayElem($module_name, 'module_name', '');
+
+                    $module_id = $module['_id'];
+                    $instID = 0;
+                    foreach ($instIDs as $id) {
+                        if (IPS_GetProperty($id, 'station_id') != $station_id) {
+                            continue;
+                        }
+                        if (IPS_GetProperty($id, 'module_id') != $module_id) {
+                            continue;
+                        }
+                        $instID = $id;
+                        break;
+                    }
+                    $module_name = $this->GetArrayElem($module, 'module_name', '');
+                    if ($module_name == '') {
+                        $module_name = IPS_GetName($instID);
+                    }
 
                     if (isset($module['dashboard_data'])) {
                         $dashboard = $module['dashboard_data'];
@@ -1229,6 +1252,7 @@ class NetatmoWeatherDevice extends IPSModule
                         'rf_status'       => $rf_status,
                         'battery_status'  => $battery_status,
                     ];
+                    $this->SendDebug(__FUNCTION__, 'module_data=' . print_r($module_data, true), 0);
                 }
             }
         }
@@ -1734,9 +1758,10 @@ class NetatmoWeatherDevice extends IPSModule
         $html .= "<style>\n";
         $html .= "body { margin: 1; padding: 0; }\n";
         $html .= "table { border-collapse: collapse; border: 0px solid; margin: 0.5em; width: 100%; }\n";
-        $html .= "th, td { padding: 1; }\n";
+        $html .= "th, td { padding: 1;}\n";
         $html .= "tbody th { text-align: left; }\n";
-        $html .= "#spalte_caption { width: 250px; }\n";
+        $html .= "tbody td { text-align: left; }\n";
+        $html .= "#spalte_caption { width: 350px; }\n";
         $html .= "#spalte_type { width: 25px; }\n";
         $html .= "#spalte_signal { width: 60px; }\n";
         $html .= "#spalte_battery { width: 50px; }\n";

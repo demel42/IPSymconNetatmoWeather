@@ -410,6 +410,9 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.33 @ 21.08.2021 15:13 (beta)
+  - bei fehlendem 'module_module' Name der Instanz verwenden
+
 - 1.32 @ 14.07.2021 18:06
   - Zugriff auf 'module_type' abgesichert
   - Schalter "Instanz ist deaktiviert" umbenannt in "Instanz deaktivieren"
