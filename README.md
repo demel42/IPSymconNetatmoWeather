@@ -410,7 +410,7 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.33 @ 21.08.2021 15:13 (beta)
+- 1.33 @ 21.08.2021 15:13
   - bei fehlendem 'module_module' Name der Instanz verwenden
 
 - 1.32 @ 14.07.2021 18:06
