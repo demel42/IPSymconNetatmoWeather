@@ -79,6 +79,7 @@ class NetatmoWeatherDevice extends IPSModule
         parent::MessageSink($tstamp, $senderID, $message, $data);
 
         if ($message == IPS_KERNELMESSAGE && $data[0] == KR_READY) {
+			$module_type = $this->ReadPropertyString('module_type');
             if ($module_type == 'Station') {
                 $hook = $this->ReadPropertyString('hook');
                 if ($hook != '') {
