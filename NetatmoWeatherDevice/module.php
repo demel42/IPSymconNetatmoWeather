@@ -2,17 +2,28 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
-require_once __DIR__ . '/../libs/local.php';   // lokale Funktionen
+require_once __DIR__ . '/../libs/common.php';
+require_once __DIR__ . '/../libs/local.php';
 
 class NetatmoWeatherDevice extends IPSModule
 {
-    use NetatmoWeatherCommonLib;
+    use NetatmoWeather\StubsCommonLib;
     use NetatmoWeatherLocalLib;
+
+    private $ModuleDir;
+
+    public function __construct(string $InstanceID)
+    {
+        parent::__construct($InstanceID);
+
+        $this->ModuleDir = __DIR__;
+    }
 
     public function Create()
     {
         parent::Create();
+
+        $this->RegisterPropertyBoolean('module_disable', false);
 
         $this->RegisterPropertyString('Wunderground_ID', '');
         $this->RegisterPropertyString('Wunderground_Key', '');
@@ -50,97 +61,95 @@ class NetatmoWeatherDevice extends IPSModule
         $this->RegisterPropertyBoolean('with_signal', false);
         $this->RegisterPropertyBoolean('with_battery', false);
 
+        $this->RegisterPropertyString('hook', '/hook/NetatmoWeather');
+
         $this->RegisterPropertyInteger('ImportCategoryID', 0);
 
-        $this->CreateVarProfile('Netatmo.Temperatur', VARIABLETYPE_FLOAT, ' °C', -10, 30, 0, 1, 'Temperature');
-        $this->CreateVarProfile('Netatmo.Humidity', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, 'Drops');
-        $this->CreateVarProfile('Netatmo.absHumidity', VARIABLETYPE_FLOAT, ' g/m³', 10, 100, 0, 0, 'Drops');
-        $this->CreateVarProfile('Netatmo.Dewpoint', VARIABLETYPE_FLOAT, ' °C', 0, 30, 0, 0, 'Drops');
-        $this->CreateVarProfile('Netatmo.Heatindex', VARIABLETYPE_FLOAT, ' °C', 0, 100, 0, 0, 'Temperature');
-        $this->CreateVarProfile('Netatmo.Pressure', VARIABLETYPE_FLOAT, ' mbar', 500, 1200, 0, 0, 'Gauge');
-        $this->CreateVarProfile('Netatmo.WindSpeed', VARIABLETYPE_FLOAT, ' km/h', 0, 100, 0, 0, 'WindSpeed');
-        $this->CreateVarProfile('Netatmo.WindStrength', VARIABLETYPE_INTEGER, ' bft', 0, 13, 0, 0, 'WindSpeed');
-        $this->CreateVarProfile('Netatmo.WindAngle', VARIABLETYPE_INTEGER, ' °', 0, 360, 0, 0, 'WindDirection');
-        $this->CreateVarProfile('Netatmo.WindDirection', VARIABLETYPE_STRING, '', 0, 0, 0, 0, 'WindDirection');
-        $this->CreateVarProfile('Netatmo.Rainfall', VARIABLETYPE_FLOAT, ' mm', 0, 60, 0, 1, 'Rainfall');
+        $this->RegisterAttributeString('UpdateInfo', '');
 
-        $associations = [];
-        $associations[] = ['Wert' =>  0, 'Name' => '%d', 'Farbe' => 0x008040];
-        $associations[] = ['Wert' => 40, 'Name' => '%d', 'Farbe' => 0xFFFF31];
-        $associations[] = ['Wert' => 65, 'Name' => '%d', 'Farbe' => 0xFF8000];
-        $associations[] = ['Wert' => 95, 'Name' => '%d', 'Farbe' => 0xFF0000];
-        $this->CreateVarProfile('Netatmo.Noise', VARIABLETYPE_INTEGER, ' dB', 0, 130, 0, 1, 'Speaker', $associations);
-
-        $associations = [];
-        $associations[] = ['Wert' =>    0, 'Name' => '%d', 'Farbe' => 0x008000];
-        $associations[] = ['Wert' => 1000, 'Name' => '%d', 'Farbe' => 0xFFFF00];
-        $associations[] = ['Wert' => 1250, 'Name' => '%d', 'Farbe' => 0xFF8000];
-        $associations[] = ['Wert' => 1300, 'Name' => '%d', 'Farbe' => 0xFF0000];
-        $this->CreateVarProfile('Netatmo.CO2', VARIABLETYPE_INTEGER, ' ppm', 250, 2000, 0, 1, 'Gauge', $associations);
-
-        $associations = [];
-        $associations[] = ['Wert' => false, 'Name' => $this->Translate('No'), 'Farbe' => -1];
-        $associations[] = ['Wert' => true, 'Name' => $this->Translate('Yes'), 'Farbe' => 0xEE0000];
-        $this->CreateVarProfile('Netatmo.Alarm', VARIABLETYPE_BOOLEAN, '', 0, 0, 0, 1, 'Alert', $associations);
-
-        $associations = [];
-        $associations[] = ['Wert' => 0, 'Name' => $this->wifi_status2text(0), 'Farbe' => 0xEE0000];
-        $associations[] = ['Wert' => 1, 'Name' => $this->wifi_status2text(1), 'Farbe' => 0xFFFF00];
-        $associations[] = ['Wert' => 2, 'Name' => $this->wifi_status2text(2), 'Farbe' => 0x32CD32];
-        $associations[] = ['Wert' => 3, 'Name' => $this->wifi_status2text(3), 'Farbe' => 0x228B22];
-        $this->CreateVarProfile('Netatmo.Wifi', VARIABLETYPE_INTEGER, '', 0, 0, 0, 1, 'Intensity', $associations);
-
-        $associations = [];
-        $associations[] = ['Wert' => 0, 'Name' => $this->signal_status2text(0), 'Farbe' => 0xEE0000];
-        $associations[] = ['Wert' => 1, 'Name' => $this->signal_status2text(1), 'Farbe' => 0xFFA500];
-        $associations[] = ['Wert' => 2, 'Name' => $this->signal_status2text(2), 'Farbe' => 0xFFFF00];
-        $associations[] = ['Wert' => 3, 'Name' => $this->signal_status2text(3), 'Farbe' => 0x32CD32];
-        $associations[] = ['Wert' => 4, 'Name' => $this->signal_status2text(4), 'Farbe' => 0x228B22];
-        $this->CreateVarProfile('Netatmo.RfSignal', VARIABLETYPE_INTEGER, '', 0, 0, 0, 1, 'Intensity', $associations);
-
-        $associations = [];
-        $associations[] = ['Wert' => 0, 'Name' => $this->battery_status2text(0), 'Farbe' => 0xEE0000];
-        $associations[] = ['Wert' => 1, 'Name' => $this->battery_status2text(1), 'Farbe' => 0xFFA500];
-        $associations[] = ['Wert' => 2, 'Name' => $this->battery_status2text(2), 'Farbe' => 0xFFFF00];
-        $associations[] = ['Wert' => 3, 'Name' => $this->battery_status2text(3), 'Farbe' => 0x32CD32];
-        $associations[] = ['Wert' => 4, 'Name' => $this->battery_status2text(4), 'Farbe' => 0x228B22];
-        $associations[] = ['Wert' => 5, 'Name' => $this->battery_status2text(5), 'Farbe' => 0x228B22];
-        $this->CreateVarProfile('Netatmo.Battery', VARIABLETYPE_INTEGER, '', 0, 0, 0, 1, 'Intensity', $associations);
-
-        $associations = [];
-        $associations[] = ['Wert' => -1, 'Name' => $this->Translate('down'), 'Farbe' => -1];
-        $associations[] = ['Wert' => 0, 'Name' => $this->Translate('stable'), 'Farbe' => -1];
-        $associations[] = ['Wert' => 1, 'Name' => $this->Translate('up'), 'Farbe' => -1];
-        $this->CreateVarProfile('Netatmo.Trend', VARIABLETYPE_INTEGER, '', 0, 0, 0, 1, '', $associations);
+        $this->InstallVarProfiles(false);
 
         $this->ConnectParent('{26A55798-5CBC-88F6-5C7B-370B043B24F9}');
 
         $this->RegisterMessage(0, IPS_KERNELMESSAGE);
     }
 
-    public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+    public function MessageSink($tstamp, $senderID, $message, $data)
     {
-        parent::MessageSink($TimeStamp, $SenderID, $Message, $Data);
+        parent::MessageSink($tstamp, $senderID, $message, $data);
 
-        $module_type = $this->ReadPropertyString('module_type');
-
-        if ($Message == IPS_KERNELMESSAGE && $Data[0] == KR_READY) {
+        if ($message == IPS_KERNELMESSAGE && $data[0] == KR_READY) {
             if ($module_type == 'Station') {
-                $this->RegisterHook('/hook/NetatmoWeather');
+                $hook = $this->ReadPropertyString('hook');
+                if ($hook != '') {
+                    $this->RegisterHook($hook);
+                }
             }
         }
+    }
+
+    private function CheckModuleConfiguration()
+    {
+        $r = [];
+
+        $station_id = $this->ReadPropertyString('station_id');
+        if ($station_id == '') {
+            $this->SendDebug(__FUNCTION__, '"station_id" is empty', 0);
+            $r[] = $this->Translate('Station-ID must be specified');
+        }
+
+        $module_type = $this->ReadPropertyString('module_type');
+        switch ($module_type) {
+            case 'Station':
+                break;
+            case 'NAMain':
+            case 'NAModule1':
+            case 'NAModule2':
+            case 'NAModule3':
+            case 'NAModule4':
+                $module_id = $this->ReadPropertyString('module_id');
+                if ($module_id == '') {
+                    $this->SendDebug(__FUNCTION__, '"module_id" is empty', 0);
+                    $r[] = $this->Translate('Module-ID must be specified');
+                }
+                break;
+            default:
+                $this->SendDebug(__FUNCTION__, '"module_type" is unsupported', 0);
+                $r[] = $this->Translate('unknown Module-Type') . ' "' . $module_type . '"';
+                break;
+        }
+
+        $wunderground_id = $this->ReadPropertyString('Wunderground_ID');
+        $wunderground_key = $this->ReadPropertyString('Wunderground_Key');
+        if ($wunderground_id != '' && $wunderground_key == '') {
+            $this->SendDebug(__FUNCTION__, '"Wunderground_ID" only with "Wunderground_Key"', 0);
+            $r[] = $this->Translate('if given Wunderground Station ID, the Station Key is also needed');
+        }
+
+        return $r;
     }
 
     public function ApplyChanges()
     {
         parent::ApplyChanges();
 
-        $wunderground_id = $this->ReadPropertyString('Wunderground_ID');
-        $wunderground_key = $this->ReadPropertyString('Wunderground_Key');
+        $propertyNames = ['statusbox_script', 'webhook_script', 'ImportCategoryID'];
+        $this->MaintainReferences($propertyNames);
 
-        $station_id = $this->ReadPropertyString('station_id');
-        $module_id = $this->ReadPropertyString('module_id');
-        $module_type = $this->ReadPropertyString('module_type');
+        if ($this->CheckPrerequisites() != false) {
+            $this->SetStatus(self::$IS_INVALIDPREREQUISITES);
+            return;
+        }
+
+        if ($this->CheckUpdate() != false) {
+            $this->SetStatus(self::$IS_UPDATEUNCOMPLETED);
+            return;
+        }
+
+        if ($this->CheckConfiguration() != false) {
+            $this->SetStatus(self::$IS_INVALIDCONFIG);
+            return;
+        }
 
         $with_absolute_pressure = $this->ReadPropertyBoolean('with_absolute_pressure');
         $with_absolute_humidity = $this->ReadPropertyBoolean('with_absolute_humidity');
@@ -158,7 +167,13 @@ class NetatmoWeatherDevice extends IPSModule
         $with_signal = $this->ReadPropertyBoolean('with_signal');
         $with_battery = $this->ReadPropertyBoolean('with_battery');
 
+        $wunderground_id = $this->ReadPropertyString('Wunderground_ID');
+        $wunderground_key = $this->ReadPropertyString('Wunderground_Key');
+        $with_wunderground = $wunderground_id != '' && $wunderground_key != '';
+
         $vpos = 1;
+
+        $module_type = $this->ReadPropertyString('module_type');
         switch ($module_type) {
             case 'Station':
                 // station-global vars
@@ -168,7 +183,6 @@ class NetatmoWeatherDevice extends IPSModule
                 $this->MaintainVariable('ModuleAlarm', $this->Translate('station or modules don\'t communicate'), VARIABLETYPE_BOOLEAN, 'Netatmo.Alarm', $vpos++, true);
                 $this->MaintainVariable('BatteryAlarm', $this->Translate('Battery of one or more modules ist low or empty'), VARIABLETYPE_BOOLEAN, 'Netatmo.Alarm', $vpos++, true);
                 $this->MaintainVariable('StatusBox', $this->Translate('State of station and modules'), VARIABLETYPE_STRING, '~HTMLBox', $vpos++, $with_status_box);
-                $with_wunderground = $wunderground_id != '' && $wunderground_key != '';
                 $this->MaintainVariable('Wunderground', $this->Translate('State of upload to wunderground'), VARIABLETYPE_BOOLEAN, '~Alert.Reversed', $vpos++, $with_wunderground);
                 break;
             case 'NAMain':
@@ -257,6 +271,9 @@ class NetatmoWeatherDevice extends IPSModule
                 break;
         }
 
+        $station_id = $this->ReadPropertyString('station_id');
+        $module_id = $this->ReadPropertyString('module_id');
+
         switch ($module_type) {
             case 'Station':
                 $module_info = $this->module_type2text($module_type) . ' (' . $station_id . ')';
@@ -277,21 +294,18 @@ class NetatmoWeatherDevice extends IPSModule
 
         $this->SetSummary($module_info);
 
-        $refs = $this->GetReferenceList();
-        foreach ($refs as $ref) {
-            $this->UnregisterReference($ref);
-        }
-        $propertyNames = ['statusbox_script', 'webhook_script', 'ImportCategoryID'];
-        foreach ($propertyNames as $name) {
-            $oid = $this->ReadPropertyInteger($name);
-            if ($oid > 0) {
-                $this->RegisterReference($oid);
-            }
+        $module_disable = $this->ReadPropertyBoolean('module_disable');
+        if ($module_disable) {
+            $this->SetStatus(IS_INACTIVE);
+            return;
         }
 
-        if ($module_type == 'Station') {
-            if (IPS_GetKernelRunlevel() == KR_READY) {
-                $this->RegisterHook('/hook/NetatmoWeather');
+        if (IPS_GetKernelRunlevel() == KR_READY) {
+            if ($module_type == 'Station') {
+                $hook = $this->ReadPropertyString('hook');
+                if ($hook != '') {
+                    $this->RegisterHook($hook);
+                }
             }
         }
 
@@ -300,61 +314,56 @@ class NetatmoWeatherDevice extends IPSModule
 
     private function SetLocation()
     {
-        $category = $this->ReadPropertyInteger('ImportCategoryID');
+        $catID = $this->ReadPropertyInteger('ImportCategoryID');
         $tree_position = [];
-        if ($category > 0 && IPS_ObjectExists($category)) {
-            $tree_position[] = IPS_GetName($category);
-            $parent = IPS_GetObject($category)['ParentID'];
-            while ($parent > 0) {
-                if ($parent > 0) {
-                    $tree_position[] = IPS_GetName($parent);
+        if ($catID >= 10000 && IPS_ObjectExists($catID)) {
+            $tree_position[] = IPS_GetName($catID);
+            $parID = IPS_GetObject($catID)['ParentID'];
+            while ($parID > 0) {
+                if ($parID > 0) {
+                    $tree_position[] = IPS_GetName($parID);
                 }
-                $parent = IPS_GetObject($parent)['ParentID'];
+                $parID = IPS_GetObject($parID)['ParentID'];
             }
             $tree_position = array_reverse($tree_position);
         }
+        $this->SendDebug(__FUNCTION__, 'tree_position=' . print_r($tree_position, true), 0);
         return $tree_position;
     }
 
-    private function buildEntry($module_name, $module_id, $desc, $info, $properties)
-    {
-        $station_id = $properties['station_id'];
-        $module_type = $properties['module_type'];
-
-        return $entry;
-    }
-
-    private function GetConfigurator4Station()
+    private function getConfiguratorValues4Station()
     {
         $entries = [];
 
+        if ($this->CheckStatus() == self::$STATUS_INVALID) {
+            $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => skip', 0);
+            return $entries;
+        }
+
         if ($this->HasActiveParent() == false) {
             $this->SendDebug(__FUNCTION__, 'has no active parent', 0);
-            $this->LogMessage('has no active parent instance', KL_WARNING);
             return $entries;
         }
 
         $SendData = ['DataID' => '{DC5A0AD3-88A5-CAED-3CA9-44C20CC20610}', 'Function' => 'LastData'];
         $data = $this->SendDataToParent(json_encode($SendData));
+        $jdata = json_decode($data, true);
+        $this->SendDebug(__FUNCTION__, 'jdata=' . print_r($jdata, true), 0);
 
-        $this->SendDebug(__FUNCTION__, 'data=' . $data, 0);
+        $guid = '{1023DB4A-D491-A0D5-17CD-380D3578D0FA}';
+        $instIDs = IPS_GetInstanceListByModuleID($guid);
 
-        if ($data != '') {
-            $netatmo = json_decode($data, true);
-            $this->SendDebug(__FUNCTION__, 'netatmo=' . print_r($netatmo, true), 0);
+        $station_id = $this->ReadPropertyString('station_id');
 
-            $devices = $netatmo['body']['devices'];
+        if (is_array($jdata)) {
+            $devices = $jdata['body']['devices'];
             $this->SendDebug(__FUNCTION__, 'devices=' . print_r($devices, true), 0);
-            if ($devices != '') {
+            if (is_array($devices)) {
                 /*
                    Ausnahme zu Reviewrichtlinien (Feinheiten des Modul-Reviews), wurde per Mail vom 09.10.2020 von Niels genehmigt.
                    Grund: im Konfigurator (NetatmoWeatherConfig) legt man Basisstationen an. Hier legt man die zu der Basisstation
                    gehörenden und nur mit der Basisstation zu betreibenden Netatmo-Module an
                  */
-                $guid = '{1023DB4A-D491-A0D5-17CD-380D3578D0FA}';
-                $instIDs = IPS_GetInstanceListByModuleID($guid);
-
-                $station_id = $this->ReadPropertyString('station_id');
 
                 foreach ($devices as $device) {
                     $_id = $device['_id'];
@@ -484,419 +493,381 @@ class NetatmoWeatherDevice extends IPSModule
             }
         }
 
-        if (count($entries) > 0) {
-            $configurator = [
-                'type'    => 'Configurator',
-                'name'    => 'Modules',
-                'caption' => 'available modules',
-
-                'rowCount' => count($entries),
-
-                'add'     => false,
-                'delete'  => false,
-                'columns' => [
-                    [
-                        'caption' => 'Name',
-                        'name'    => 'name',
-                        'width'   => 'auto'
-                    ],
-                    [
-                        'caption' => 'Type',
-                        'name'    => 'module_desc',
-                        'width'   => '200px'
-                    ],
-                    [
-                        'caption' => 'Id',
-                        'name'    => 'module_id',
-                        'width'   => '200px'
-                    ]
-                ],
-                'values' => $entries,
-            ];
-        } else {
-            $configurator = false;
-        }
-
-        return $configurator;
-    }
-
-    public function GetConfigurationForm()
-    {
-        $formElements = $this->GetFormElements();
-        $formActions = $this->GetFormActions();
-        $formStatus = $this->GetFormStatus();
-
-        $form = json_encode(['elements' => $formElements, 'actions' => $formActions, 'status' => $formStatus]);
-        if ($form == '') {
-            $this->SendDebug(__FUNCTION__, 'json_error=' . json_last_error_msg(), 0);
-            $this->SendDebug(__FUNCTION__, '=> formElements=' . print_r($formElements, true), 0);
-            $this->SendDebug(__FUNCTION__, '=> formActions=' . print_r($formActions, true), 0);
-            $this->SendDebug(__FUNCTION__, '=> formStatus=' . print_r($formStatus, true), 0);
-        }
-        return $form;
+        return $entries;
     }
 
     private function GetFormElements()
     {
-        $formElements = [];
-
-        if ($this->HasActiveParent() == false) {
-            $formElements[] = [
-                'type'    => 'Label',
-                'caption' => 'Instance has no active parent instance',
-            ];
-        }
+        $title = 'Netatmo Weatherstation';
 
         $module_type = $this->ReadPropertyString('module_type');
-
         switch ($module_type) {
-            case 'Station':
-                $formElements[] = [
-                    'type'    => 'Label',
-                    'caption' => 'Netatmo Weatherstation'
-                ];
-                break;
             case 'NAMain':
-                $formElements[] = [
-                    'type'    => 'Label',
-                    'caption' => 'Netatmo Weatherstation - Module: base module'
-                ];
+                $title .= ' - base module';
                 break;
             case 'NAModule1':
-                $formElements[] = [
-                    'type'    => 'Label',
-                    'caption' => 'Netatmo Weatherstation - Module: outdoor module'
-                ];
+                $title .= ' - outdoor module';
                 break;
             case 'NAModule2':
-                $formElements[] = [
-                    'type'    => 'Label',
-                    'caption' => 'Netatmo Weatherstation - Module: wind gauge'
-                ];
+                $title .= ' - wind gauge';
                 break;
             case 'NAModule3':
-                $formElements[] = [
-                    'type'    => 'Label',
-                    'caption' => 'Netatmo Weatherstation - Module: rain gauge'
-                ];
+                $title .= ' - rain gauge';
                 break;
             case 'NAModule4':
-                $formElements[] = [
-                    'type'    => 'Label',
-                    'caption' => 'Netatmo Weatherstation - Module: indoor module'
-                ];
+                $title .= ' - indoor module';
                 break;
         }
 
+        $formElements = $this->GetCommonFormElements($title);
+
+        if ($this->GetStatus() == self::$IS_UPDATEUNCOMPLETED) {
+            return $formElements;
+        }
+
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'module_disable',
+            'caption' => 'Disable instance'
+        ];
+
         switch ($module_type) {
             case 'Station':
-                $items = [];
-                $items[] = [
-                    'type'    => 'ValidationTextBox',
-                    'name'    => 'station_id',
-                    'caption' => 'Station-ID'
-                ];
                 $formElements[] = [
                     'type'    => 'ExpansionPanel',
-                    'items'   => $items,
-                    'caption' => 'Basic configuration (don\'t change)'
+                    'items'   => [
+                        [
+                            'type'    => 'ValidationTextBox',
+                            'enabled' => false,
+                            'name'    => 'station_id',
+                            'caption' => 'Station-ID'
+                        ],
+                    ],
+                    'caption' => 'Basic configuration (don\'t change)',
                 ];
                 break;
             default:
-                $items = [];
-                $items[] = [
-                    'type'    => 'ValidationTextBox',
-                    'name'    => 'module_type',
-                    'caption' => 'Module-Type'
-                ];
-                $items[] = [
-                    'type'    => 'ValidationTextBox',
-                    'name'    => 'module_id',
-                    'caption' => 'Module-ID'
-                ];
-                $items[] = [
-                    'type'    => 'ValidationTextBox',
-                    'name'    => 'station_id',
-                    'caption' => 'Station-ID'
-                ];
                 $formElements[] = [
                     'type'    => 'ExpansionPanel',
-                    'items'   => $items,
-                    'caption' => 'Basic configuration (don\'t change)'
+                    'items'   => [
+                        [
+                            'type'    => 'ValidationTextBox',
+                            'enabled' => false,
+                            'name'    => 'module_type',
+                            'caption' => 'Module-Type'
+                        ],
+                        [
+                            'type'    => 'ValidationTextBox',
+                            'enabled' => false,
+                            'name'    => 'module_id',
+                            'caption' => 'Module-ID'
+                        ],
+                        [
+                            'type'    => 'ValidationTextBox',
+                            'enabled' => false,
+                            'name'    => 'station_id',
+                            'caption' => 'Station-ID'
+                        ],
+                    ],
+                    'caption' => 'Basic configuration (don\'t change)',
                 ];
                 break;
         }
 
         switch ($module_type) {
             case 'NAMain':
-                $items = [];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_absolute_pressure',
-                    'caption' => 'absolute Pressure'
-                ];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_absolute_humidity',
-                    'caption' => 'absolute Humidity'
-                ];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_dewpoint',
-                    'caption' => 'Dewpoint'
-                ];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_heatindex',
-                    'caption' => 'Heatindex'
-                ];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_minmax',
-                    'caption' => 'Min/Max of temperature'
-                ];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_trend',
-                    'caption' => 'Trend of temperature and pressure'
-                ];
                 $formElements[] = [
                     'type'    => 'ExpansionPanel',
-                    'items'   => $items,
-                    'caption' => 'optional weather data'
+                    'items'   => [
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_absolute_pressure',
+                            'caption' => 'absolute Pressure'
+                        ],
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_absolute_humidity',
+                            'caption' => 'absolute Humidity'
+                        ],
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_dewpoint',
+                            'caption' => 'Dewpoint'
+                        ],
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_heatindex',
+                            'caption' => 'Heatindex'
+                        ],
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_minmax',
+                            'caption' => 'Min/Max of temperature'
+                        ],
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_trend',
+                            'caption' => 'Trend of temperature and pressure'
+                        ],
+                    ],
+                    'caption' => 'optional weather data',
                 ];
                 break;
             case 'NAModule1':
-                $items = [];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_absolute_humidity',
-                    'caption' => 'absolute Humidity'
-                ];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_dewpoint',
-                    'caption' => 'Dewpoint'
-                ];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_windchill',
-                    'caption' => 'Windchill'
-                ];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_heatindex',
-                    'caption' => 'Heatindex'
-                ];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_minmax',
-                    'caption' => 'Min/Max of temperature'
-                ];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_trend',
-                    'caption' => 'Trend of temperature'
-                ];
                 $formElements[] = [
                     'type'    => 'ExpansionPanel',
-                    'items'   => $items,
+                    'items'   => [
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_absolute_humidity',
+                            'caption' => 'absolute Humidity'
+                        ],
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_dewpoint',
+                            'caption' => 'Dewpoint'
+                        ],
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_windchill',
+                            'caption' => 'Windchill'
+                        ],
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_heatindex',
+                            'caption' => 'Heatindex'
+                        ],
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_minmax',
+                            'caption' => 'Min/Max of temperature'
+                        ],
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_trend',
+                            'caption' => 'Trend of temperature'
+                        ],
+                    ],
                     'caption' => 'optional weather data'
                 ];
                 break;
             case 'NAModule2':
-                $items = [];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_windstrength',
-                    'caption' => 'Windstrength'
-                ];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_windangle',
-                    'caption' => 'Winddirection in degrees'
-                ];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_winddirection',
-                    'caption' => 'Winddirection with label'
-                ];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_minmax',
-                    'caption' => 'Strongest gust of today'
-                ];
-                $items[] = [
-                    'type'    => 'Label',
-                    'caption' => 'optional weather data'
-                ];
                 $formElements[] = [
                     'type'    => 'ExpansionPanel',
-                    'items'   => $items,
-                    'caption' => 'optional weather data'
+                    'items'   => [
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_windstrength',
+                            'caption' => 'Windstrength'
+                        ],
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_windangle',
+                            'caption' => 'Winddirection in degrees'
+                        ],
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_winddirection',
+                            'caption' => 'Winddirection with label'
+                        ],
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_minmax',
+                            'caption' => 'Strongest gust of today'
+                        ],
+                        [
+                            'type'    => 'Label',
+                            'caption' => 'optional weather data'
+                        ],
+                    ],
+                    'caption' => 'optional weather data',
                 ];
                 break;
             case 'NAModule3':
                 break;
             case 'NAModule4':
-                $items = [];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_absolute_humidity',
-                    'caption' => 'absolute Humidity'
-                ];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_dewpoint',
-                    'caption' => 'Dewpoint'
-                ];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_heatindex',
-                    'caption' => 'Heatindex'
-                ];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_minmax',
-                    'caption' => 'Min/Max of temperature'
-                ];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_trend',
-                    'caption' => 'Trend of temperature'
-                ];
-                $items[] = [
-                    'type'    => 'Label',
-                    'caption' => 'optional weather data'
-                ];
                 $formElements[] = [
                     'type'    => 'ExpansionPanel',
-                    'items'   => $items,
-                    'caption' => 'optional weather data'
+                    'items'   => [
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_absolute_humidity',
+                            'caption' => 'absolute Humidity'
+                        ],
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_dewpoint',
+                            'caption' => 'Dewpoint'
+                        ],
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_heatindex',
+                            'caption' => 'Heatindex'
+                        ],
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_minmax',
+                            'caption' => 'Min/Max of temperature'
+                        ],
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_trend',
+                            'caption' => 'Trend of temperature'
+                        ],
+                        [
+                            'type'    => 'Label',
+                            'caption' => 'optional weather data'
+                        ],
+                    ],
+                    'caption' => 'optional weather data',
                 ];
                 break;
         }
 
         switch ($module_type) {
             case 'Station':
-                $items = [];
-                $items[] = [
-                    'type'    => 'NumberSpinner',
-                    'name'    => 'station_altitude',
-                    'caption' => 'Altitude'
-                ];
-                $items[] = [
-                    'type'    => 'NumberSpinner',
-                    'digits'  => 5,
-                    'name'    => 'station_longitude',
-                    'caption' => 'Longitude'
-                ];
-                $items[] = [
-                    'type'    => 'NumberSpinner',
-                    'digits'  => 5,
-                    'name'    => 'station_latitude',
-                    'caption' => 'Latitude'
-                ];
                 $formElements[] = [
                     'type'    => 'ExpansionPanel',
-                    'items'   => $items,
+                    'items'   => [
+                        [
+                            'type'    => 'NumberSpinner',
+                            'name'    => 'station_altitude',
+                            'caption' => 'Altitude'
+                        ],
+                        [
+                            'type'    => 'NumberSpinner',
+                            'digits'  => 5,
+                            'name'    => 'station_longitude',
+                            'caption' => 'Longitude'
+                        ],
+                        [
+                            'type'    => 'NumberSpinner',
+                            'digits'  => 5,
+                            'name'    => 'station_latitude',
+                            'caption' => 'Latitude'
+                        ],
+                    ],
                     'caption' => 'station data'
                 ];
 
-                $items = [];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_last_contact',
-                    'caption' => 'last transmission to Netatmo'
-                ];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_status_box',
-                    'caption' => 'html-box with state of station and modules'
-                ];
-                $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_signal',
-                    'caption' => 'Wifi-Signal'
-                ];
                 $formElements[] = [
                     'type'    => 'ExpansionPanel',
-                    'items'   => $items,
+                    'items'   => [
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_last_contact',
+                            'caption' => 'last transmission to Netatmo'
+                        ],
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_status_box',
+                            'caption' => 'html-box with state of station and modules'
+                        ],
+                        [
+                            'type'    => 'CheckBox',
+                            'name'    => 'with_signal',
+                            'caption' => 'Wifi-Signal'
+                        ],
+                    ],
                     'caption' => 'optional station data'
                 ];
 
-                $items = [];
-                $items[] = [
-                    'type'    => 'Label',
-                    'caption' => 'alternate script to use for ...'
-                ];
-                $items[] = [
-                    'type'    => 'SelectScript',
-                    'name'    => 'statusbox_script',
-                    'caption' => ' ... "StatusBox"'
-                ];
-                $items[] = [
-                    'type'    => 'SelectScript',
-                    'name'    => 'webhook_script',
-                    'caption' => ' ... Webhook'
-                ];
-
-                $items[] = [
-                    'type'    => 'Label',
-                    'caption' => 'Duration until the connection to netatmo or between stations is marked disturbed'
-                ];
-                $items[] = [
-                    'type'    => 'NumberSpinner',
-                    'name'    => 'minutes2fail',
-                    'caption' => 'Minutes'
-                ];
                 $formElements[] = [
                     'type'    => 'ExpansionPanel',
-                    'items'   => $items,
+                    'items'   => [
+                        [
+                            'type'    => 'Label',
+                            'caption' => 'alternate script to use for ...'
+                        ],
+                        [
+                            'type'    => 'SelectScript',
+                            'name'    => 'statusbox_script',
+                            'caption' => ' ... "StatusBox"'
+                        ],
+                        [
+                            'type'    => 'SelectScript',
+                            'name'    => 'webhook_script',
+                            'caption' => ' ... Webhook'
+                        ],
+
+                        [
+                            'type'    => 'Label',
+                            'caption' => 'Duration until the connection to netatmo or between stations is marked disturbed'
+                        ],
+                        [
+                            'type'    => 'NumberSpinner',
+                            'minimum' => 0,
+                            'suffix'  => 'Minutes',
+                            'name'    => 'minutes2fail',
+                        ],
+                    ],
                     'caption' => 'Processing information'
                 ];
 
-                $items = [];
-                $items[] = [
-                    'type'    => 'Label',
-                    'caption' => 'Konfiguration to update Wunderground (only if filled)'
-                ];
-                $items[] = [
-                    'type'    => 'Label',
-                    'caption' => 'Wunderground Access-Details from https://www.wunderground.com/personal-weather-station/mypws'
-                ];
-                $items[] = [
-                    'type'    => 'ValidationTextBox',
-                    'name'    => 'Wunderground_ID',
-                    'caption' => 'Station ID'
-                ];
-                $items[] = [
-                    'type'    => 'ValidationTextBox',
-                    'name'    => 'Wunderground_Key',
-                    'caption' => 'Station Key'
-                ];
                 $formElements[] = [
                     'type'    => 'ExpansionPanel',
-                    'items'   => $items,
+                    'items'   => [
+                        [
+                            'type'    => 'Label',
+                            'caption' => 'Konfiguration to update Wunderground (only if filled)'
+                        ],
+                        [
+                            'type'    => 'Label',
+                            'caption' => 'Wunderground Access-Details from https://www.wunderground.com/personal-weather-station/mypws'
+                        ],
+                        [
+                            'type'    => 'ValidationTextBox',
+                            'name'    => 'Wunderground_ID',
+                            'caption' => 'Station ID'
+                        ],
+                        [
+                            'type'    => 'ValidationTextBox',
+                            'name'    => 'Wunderground_Key',
+                            'caption' => 'Station Key'
+                        ],
+                    ],
                     'caption' => 'Wunderground'
                 ];
 
-                $configurator = $this->GetConfigurator4Station();
-                if ($configurator != false) {
-                    $items = [];
-                    $items[] = [
-                        'type'    => 'Label',
-                        'caption' => 'category for modules to be created:'
-                    ];
-                    $items[] = [
-                        'name'    => 'ImportCategoryID',
-                        'type'    => 'SelectCategory',
-                        'caption' => 'category'
-                    ];
-                    $items[] = $configurator;
+                $entries = $this->getConfiguratorValues4Station();
+                if (count($entries) > 0) {
                     $formElements[] = [
                         'type'    => 'ExpansionPanel',
-                        'items'   => $items,
+                        'items'   => [
+                            [
+                                'name'    => 'ImportCategoryID',
+                                'type'    => 'SelectCategory',
+                                'caption' => 'category for modules to be created'
+                            ],
+                            [
+                                'type'    => 'Configurator',
+                                'name'    => 'Modules',
+                                'caption' => 'available modules',
+
+                                'rowCount' => count($entries),
+
+                                'add'     => false,
+                                'delete'  => false,
+                                'columns' => [
+                                    [
+                                        'caption' => 'Name',
+                                        'name'    => 'name',
+                                        'width'   => 'auto'
+                                    ],
+                                    [
+                                        'caption' => 'Type',
+                                        'name'    => 'module_desc',
+                                        'width'   => '200px'
+                                    ],
+                                    [
+                                        'caption' => 'Id',
+                                        'name'    => 'module_id',
+                                        'width'   => '200px'
+                                    ]
+                                ],
+                                'values' => $entries,
+                            ],
+                        ],
                         'caption' => 'Modules'
                     ];
                 }
@@ -949,7 +920,44 @@ class NetatmoWeatherDevice extends IPSModule
     {
         $formActions = [];
 
+        if ($this->GetStatus() == self::$IS_UPDATEUNCOMPLETED) {
+            $formActions[] = $this->GetCompleteUpdateFormAction();
+
+            $formActions[] = $this->GetInformationFormAction();
+            $formActions[] = $this->GetReferencesFormAction();
+
+            return $formActions;
+        }
+
+        $formActions[] = [
+            'type'      => 'ExpansionPanel',
+            'caption'   => 'Expert area',
+            'expanded ' => false,
+            'items'     => [
+                [
+                    'type'    => 'Button',
+                    'caption' => 'Re-install variable-profiles',
+                    'onClick' => $this->GetModulePrefix() . '_InstallVarProfiles($id, true);'
+                ],
+            ],
+        ];
+
+        $formActions[] = $this->GetInformationFormAction();
+        $formActions[] = $this->GetReferencesFormAction();
+
         return $formActions;
+    }
+
+    public function RequestAction($ident, $value)
+    {
+        if ($this->CommonRequestAction($ident, $value)) {
+            return;
+        }
+        switch ($ident) {
+            default:
+                $this->SendDebug(__FUNCTION__, 'invalid ident ' . $ident, 0);
+                break;
+        }
     }
 
     private function update_Wunderground($netatmo, $device)
@@ -1273,7 +1281,7 @@ class NetatmoWeatherDevice extends IPSModule
 
         if ($with_status_box) {
             $statusbox_script = $this->ReadPropertyInteger('statusbox_script');
-            if ($statusbox_script > 0) {
+            if ($statusbox_script >= 10000) {
                 $html = IPS_RunScriptWaitEx($statusbox_script, ['InstanceID' => $this->InstanceID]);
             } else {
                 $html = $this->Build_StatusBox($station_data);
@@ -1440,11 +1448,13 @@ class NetatmoWeatherDevice extends IPSModule
                 $dashboard = $this->GetArrayElem($module, 'dashboard_data', '');
                 if ($dashboard == '') {
                     $module_nodata = true;
-
-                    $module_type_text = $this->module_type2text($module_type);
-                    $msg = "  module_type=$module_type($module_type_text), module_name=$module_name, rf_status=$rf_status, battery_status=$battery_status";
-                    $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
                     break;
+                }
+
+                if (isset($dashboard['time_utc']) == false) {
+                    $msg = "instance $this->InstanceID: defect dasboard=" . print_r($dashboard, true);
+                    $this->LogMessage($msg, KL_NOTIFY);
+                    $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
                 }
 
                 $last_measure = $dashboard['time_utc'];
@@ -1748,7 +1758,7 @@ class NetatmoWeatherDevice extends IPSModule
 
     private function Build_StatusBox($station_data)
     {
-        $img_path = '/hook/NetatmoWeather/imgs/';
+        $img_path = $this->ReadPropertyString('hook') . '/imgs/';
 
         $now = time();
 
@@ -1931,7 +1941,7 @@ class NetatmoWeatherDevice extends IPSModule
             $html .= "<colgroup><col id='spalte_battry'></colgroup>\n";
             $html .= "<tdata>\n";
 
-            $img_path = '/hook/NetatmoWeather/imgs/';
+            $img_path = $this->ReadPropertyString('hook') . '/imgs/';
 
             $modules = $station_data['modules'];
             foreach ($modules as $module) {
@@ -1980,7 +1990,7 @@ class NetatmoWeatherDevice extends IPSModule
 
     public function GetRawData()
     {
-        $img_path = '/hook/NetatmoWeather/imgs/';
+        $img_path = $this->ReadPropertyString('hook') . '/imgs/';
 
         $s = $this->GetBuffer('Data');
         if ($s) {
@@ -2025,10 +2035,15 @@ class NetatmoWeatherDevice extends IPSModule
             http_response_code(404);
             die('File not found!');
         }
-        $basename = substr($uri, strlen('/hook/NetatmoWeather/'));
+        $hook = $this->ReadPropertyString('hook');
+        if ($hook == '') {
+            http_response_code(404);
+            die('File not found!');
+        }
+        $basename = substr($uri, strlen($hook . '/'));
         if ($basename == 'status') {
             $webhook_script = $this->ReadPropertyInteger('webhook_script');
-            if ($webhook_script > 0) {
+            if ($webhook_script >= 10000) {
                 $html = IPS_RunScriptWaitEx($webhook_script, ['InstanceID' => $this->InstanceID]);
                 echo $html;
             } else {
@@ -2092,17 +2107,13 @@ class NetatmoWeatherDevice extends IPSModule
     private function map_wifi_status($status)
     {
         if ($status <= 56) {
-            // "high"
-            $val = 3;
+            $val = self::$WIFI_HIGH;
         } elseif ($status <= 71) {
-            // "good"
-            $val = 2;
+            $val = self::$WIFI_GOOD;
         } elseif ($status <= 86) {
-            // "average"
-            $val = 1;
+            $val = self::$WIFI_AVERAGE;
         } else {
-            // "bad"
-            $val = 0;
+            $val = self::$WIFI_BAD;
         }
 
         return $val;
@@ -2110,19 +2121,7 @@ class NetatmoWeatherDevice extends IPSModule
 
     private function wifi_status2text($status)
     {
-        $status2txt = [
-            'bad',
-            'average',
-            'good',
-            'high'
-        ];
-
-        if ($status >= 0 && $status < count($status2txt)) {
-            $txt = $this->Translate($status2txt[$status]);
-        } else {
-            $txt = '';
-        }
-        return $txt;
+        return $this->CheckVarProfile4Value('Netatmo.Wifi', $status);
     }
 
     private function wifi_status2img($status)
@@ -2146,20 +2145,15 @@ class NetatmoWeatherDevice extends IPSModule
     private function map_rf_status($status)
     {
         if ($status <= 60) {
-            // "full"
-            $val = 4;
+            $val = self::$SIGNAL_STATUS_FULL;
         } elseif ($status <= 70) {
-            // "high"
-            $val = 3;
+            $val = self::$SIGNAL_STATUS_HIGH;
         } elseif ($status <= 80) {
-            // "medium"
-            $val = 2;
+            $val = self::$SIGNAL_STATUS_MEDIUM;
         } elseif ($status <= 90) {
-            // "low"
-            $val = 1;
+            $val = self::$SIGNAL_STATUS_LOW;
         } else {
-            // "empty"
-            $val = 0;
+            $val = self::$SIGNAL_STATUS_VERYLOW;
         }
 
         return $val;
@@ -2167,20 +2161,7 @@ class NetatmoWeatherDevice extends IPSModule
 
     private function signal_status2text($status)
     {
-        $status2txt = [
-            'empty',
-            'low',
-            'medium',
-            'high',
-            'full',
-        ];
-
-        if ($status >= 0 && $status < count($status2txt)) {
-            $txt = $this->Translate($status2txt[$status]);
-        } else {
-            $txt = '';
-        }
-        return $txt;
+        return $this->CheckVarProfile4Value('Netatmo.RfSignal', $status);
     }
 
     private function signal_status2img($status)
@@ -2222,23 +2203,17 @@ class NetatmoWeatherDevice extends IPSModule
         }
 
         if ($battery_vp < $vp_map[0]) {
-            // "empty"
-            $val = 0;
+            $val = self::$BATTERY_EMPTY;
         } elseif ($battery_vp < $vp_map[1]) {
-            // "low"
-            $val = 1;
+            $val = self::$BATTERY_LOW;
         } elseif ($battery_vp < $vp_map[2]) {
-            // "medium"
-            $val = 2;
+            $val = self::$BATTERY_MEDIUM;
         } elseif ($battery_vp < $vp_map[3]) {
-            // "high"
-            $val = 3;
+            $val = self::$BATTERY_HIGH;
         } elseif ($battery_vp < $vp_map[4]) {
-            // "full"
-            $val = 4;
+            $val = self::$BATTERY_FULL;
         } else {
-            // "max"
-            $val = 5;
+            $val = self::$BATTERY_MAX;
         }
 
         return $val;
@@ -2246,21 +2221,7 @@ class NetatmoWeatherDevice extends IPSModule
 
     private function battery_status2text($status)
     {
-        $status2txt = [
-            'empty',
-            'low',
-            'medium',
-            'high',
-            'full',
-            'max'
-        ];
-
-        if ($status >= 0 && $status < count($status2txt)) {
-            $txt = $this->Translate($status2txt[$status]);
-        } else {
-            $txt = '';
-        }
-        return $txt;
+        return $this->CheckVarProfile4Value('Netatmo.Battery', $status);
     }
 
     private function battery_status2img($status)
@@ -2280,6 +2241,27 @@ class NetatmoWeatherDevice extends IPSModule
             $img = '';
         }
         return $img;
+    }
+
+    private function map_trend($trend)
+    {
+        switch ($trend) {
+            case 'down':
+                $t = self::$TREND_DOWN;
+                break;
+            case 'stable':
+                $t = self::$TREND_STABLE;
+                break;
+            case 'up':
+                $t = self::$TREND_UP;
+                break;
+            default:
+                $t = '';
+                $this->SendDebug(__FUNCTION__, 'unknown trend "' . $trend . '"', 0);
+                break;
+        }
+
+        return $t;
     }
 
     private function km2mile($i)
@@ -2321,48 +2303,6 @@ class NetatmoWeatherDevice extends IPSModule
         }
         return number_format($o, 4, '.', '');
     }
-
-    private function map_trend($trend)
-    {
-        switch ($trend) {
-            case 'down':
-                $t = -1;
-                break;
-            case 'stable':
-                $t = 0;
-                break;
-            case 'up':
-                $t = 1;
-                break;
-            default:
-                $t = '';
-                $this->SendDebug(__FUNCTION__, 'unknown trend "' . $trend . '"', 0);
-                break;
-        }
-
-        return $t;
-    }
-
-    // Sekunden in Menschen-lesbares Format umwandeln
-    private function seconds2duration(int $sec)
-    {
-        $duration = '';
-        if ($sec > 3600) {
-            $duration .= sprintf('%dh', floor($sec / 3600));
-            $sec = $sec % 3600;
-        }
-        if ($sec > 60) {
-            $duration .= sprintf('%dm', floor($sec / 60));
-            $sec = $sec % 60;
-        }
-        if ($sec > 0) {
-            $duration .= sprintf('%ds', $sec);
-            $sec = floor($sec);
-        }
-
-        return $duration;
-    }
-
     // Taupunkt berechnen
     //   Quelle: https://www.wetterochs.de/wetter/feuchte.html
     public function CalcDewpoint(float $temp, float $humidity)

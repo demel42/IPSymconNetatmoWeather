@@ -3,10 +3,16 @@
 	"name": "NetatmoWeatherIO",
 	"type": 1,
 	"vendor": "Netatmo",
-	"aliases": ["NetatmoWeather I/O"],
+	"aliases": [
+		"NetatmoWeather I/O"
+	],
 	"parentRequirements": [],
-	"childRequirements": ["{2D42552F-2545-9145-D3C8-A299E3FDC6EA}"],
-	"implemented": ["{DC5A0AD3-88A5-CAED-3CA9-44C20CC20610}"],
+	"childRequirements": [
+		"{2D42552F-2545-9145-D3C8-A299E3FDC6EA}"
+	],
+	"implemented": [
+		"{DC5A0AD3-88A5-CAED-3CA9-44C20CC20610}"
+	],
 	"prefix": "NetatmoWeather",
 	"url": "https://github.com/demel42/IPSymconNetatmoWeather/blob/master/README.md"
 }

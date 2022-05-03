@@ -2,15 +2,24 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
-require_once __DIR__ . '/../libs/local.php';   // lokale Funktionen
+require_once __DIR__ . '/../libs/common.php';
+require_once __DIR__ . '/../libs/local.php';
 
 class NetatmoWeatherIO extends IPSModule
 {
-    use NetatmoWeatherCommonLib;
+    use NetatmoWeather\StubsCommonLib;
     use NetatmoWeatherLocalLib;
 
     private $oauthIdentifer = 'netatmo';
+
+    private $ModuleDir;
+
+    public function __construct(string $InstanceID)
+    {
+        parent::__construct($InstanceID);
+
+        $this->ModuleDir = __DIR__;
+    }
 
     public function Create()
     {
@@ -30,20 +39,55 @@ class NetatmoWeatherIO extends IPSModule
 
         $this->RegisterAttributeString('ApiRefreshToken', '');
 
-        $this->RegisterTimer('UpdateData', 0, 'NetatmoWeather_UpdateData(' . $this->InstanceID . ');');
+        $this->RegisterAttributeString('UpdateInfo', '');
+
+        $this->InstallVarProfiles(false);
+
+        $this->RegisterTimer('UpdateData', 0, $this->GetModulePrefix() . '_UpdateData(' . $this->InstanceID . ');');
+
         $this->RegisterMessage(0, IPS_KERNELMESSAGE);
     }
 
-    public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+    private function CheckModuleConfiguration()
     {
-        parent::MessageSink($TimeStamp, $SenderID, $Message, $Data);
+        $r = [];
 
-        if ($Message == IPS_KERNELMESSAGE && $Data[0] == KR_READY) {
+        $oauth_type = $this->ReadPropertyInteger('OAuth_Type');
+        if ($oauth_type == self::$CONNECTION_DEVELOPER) {
+            $user = $this->ReadPropertyString('Netatmo_User');
+            if ($user == '') {
+                $this->SendDebug(__FUNCTION__, '"Netatmo_User" is needed', 0);
+                $r[] = $this->Translate('Username must be specified');
+            }
+            $password = $this->ReadPropertyString('Netatmo_Password');
+            if ($password == '') {
+                $this->SendDebug(__FUNCTION__, '"Netatmo_Password" is needed', 0);
+                $r[] = $this->Translate('Password must be specified');
+            }
+            $client = $this->ReadPropertyString('Netatmo_Client');
+            if ($client == '') {
+                $this->SendDebug(__FUNCTION__, '"Netatmo_Client" is needed', 0);
+                $r[] = $this->Translate('Client-ID must be specified');
+            }
+            $secret = $this->ReadPropertyString('Netatmo_Secret');
+            if ($secret == '') {
+                $this->SendDebug(__FUNCTION__, '"Netatmo_Secret" is needed', 0);
+                $r[] = $this->Translate('Client-Secret must be specified');
+            }
+        }
+
+        return $r;
+    }
+
+    public function MessageSink($tstamp, $senderID, $message, $data)
+    {
+        parent::MessageSink($tstamp, $senderID, $message, $data);
+
+        if ($message == IPS_KERNELMESSAGE && $data[0] == KR_READY) {
             $oauth_type = $this->ReadPropertyInteger('OAuth_Type');
             if ($oauth_type == self::$CONNECTION_OAUTH) {
                 $this->RegisterOAuth($this->oauthIdentifer);
             }
-            $this->UpdateData();
         }
     }
 
@@ -51,9 +95,29 @@ class NetatmoWeatherIO extends IPSModule
     {
         parent::ApplyChanges();
 
+        $this->MaintainReferences();
+
+        if ($this->CheckPrerequisites() != false) {
+            $this->MaintainTimer('UpdateData', 0);
+            $this->SetStatus(self::$IS_INVALIDPREREQUISITES);
+            return;
+        }
+
+        if ($this->CheckUpdate() != false) {
+            $this->MaintainTimer('UpdateData', 0);
+            $this->SetStatus(self::$IS_UPDATEUNCOMPLETED);
+            return;
+        }
+
+        if ($this->CheckConfiguration() != false) {
+            $this->MaintainTimer('UpdateData', 0);
+            $this->SetStatus(self::$IS_INVALIDCONFIG);
+            return;
+        }
+
         $module_disable = $this->ReadPropertyBoolean('module_disable');
         if ($module_disable) {
-            $this->SetTimerInterval('UpdateData', 0);
+            $this->MaintainTimer('UpdateData', 0);
             $this->SetStatus(IS_INACTIVE);
             return;
         }
@@ -61,14 +125,6 @@ class NetatmoWeatherIO extends IPSModule
         $oauth_type = $this->ReadPropertyInteger('OAuth_Type');
         switch ($oauth_type) {
             case self::$CONNECTION_DEVELOPER:
-                $netatmo_user = $this->ReadPropertyString('Netatmo_User');
-                $netatmo_password = $this->ReadPropertyString('Netatmo_Password');
-                $netatmo_client = $this->ReadPropertyString('Netatmo_Client');
-                $netatmo_secret = $this->ReadPropertyString('Netatmo_Secret');
-                if ($netatmo_user == '' || $netatmo_password == '' || $netatmo_client == '' || $netatmo_secret == '') {
-                    $this->SetStatus(IS_INACTIVE);
-                    return;
-                }
                 $this->SetStatus(IS_ACTIVE);
                 break;
             case self::$CONNECTION_OAUTH:
@@ -77,7 +133,6 @@ class NetatmoWeatherIO extends IPSModule
                     return;
                 }
                 $refresh_token = $this->ReadAttributeString('ApiRefreshToken');
-                $this->SendDebug(__FUNCTION__, 'refresh_token=' . $refresh_token, 0);
                 if ($refresh_token == '') {
                     $this->SetStatus(self::$IS_NOLOGIN);
                 } else {
@@ -92,31 +147,7 @@ class NetatmoWeatherIO extends IPSModule
             if ($oauth_type == self::$CONNECTION_OAUTH) {
                 $this->RegisterOAuth($this->oauthIdentifer);
             }
-            $this->SetUpdateInterval();
-            $this->UpdateData();
-        }
-    }
-
-    private function RegisterOAuth($WebOAuth)
-    {
-        $ids = IPS_GetInstanceListByModuleID('{F99BF07D-CECA-438B-A497-E4B55F139D37}');
-        if (count($ids) > 0) {
-            $clientIDs = json_decode(IPS_GetProperty($ids[0], 'ClientIDs'), true);
-            $found = false;
-            foreach ($clientIDs as $index => $clientID) {
-                if ($clientID['ClientID'] == $WebOAuth) {
-                    if ($clientID['TargetID'] == $this->InstanceID) {
-                        return;
-                    }
-                    $clientIDs[$index]['TargetID'] = $this->InstanceID;
-                    $found = true;
-                }
-            }
-            if (!$found) {
-                $clientIDs[] = ['ClientID' => $WebOAuth, 'TargetID' => $this->InstanceID];
-            }
-            IPS_SetProperty($ids[0], 'ClientIDs', json_encode($clientIDs));
-            IPS_ApplyChanges($ids[0]);
+			$this->MaintainTimer('UpdateData', 1000);
         }
     }
 
@@ -247,7 +278,7 @@ class NetatmoWeatherIO extends IPSModule
                 $this->SendDebug(__FUNCTION__, 'has no refresh_token', 0);
                 $this->WriteAttributeString('ApiRefreshToken', '');
                 $this->SetBuffer('ApiAccessToken', '');
-                $this->SetTimerInterval('UpdateData', 0);
+                $this->MaintainTimer('UpdateData', 0);
                 $this->SetStatus(self::$IS_NOLOGIN);
                 return false;
             }
@@ -281,7 +312,7 @@ class NetatmoWeatherIO extends IPSModule
             $this->SendDebug(__FUNCTION__, 'code missing, _GET=' . print_r($_GET, true), 0);
             $this->WriteAttributeString('ApiRefreshToken', '');
             $this->SetBuffer('ApiAccessToken', '');
-            $this->SetTimerInterval('UpdateData', 0);
+            $this->MaintainTimer('UpdateData', 0);
             $this->SetStatus(self::$IS_NOLOGIN);
             return;
         }
@@ -289,34 +320,32 @@ class NetatmoWeatherIO extends IPSModule
         $this->SendDebug(__FUNCTION__, 'refresh_token=' . $refresh_token, 0);
         $this->WriteAttributeString('ApiRefreshToken', $refresh_token);
         if ($this->GetStatus() == self::$IS_NOLOGIN) {
-            $this->SetTimerInterval('UpdateData', 1000);
+            $this->MaintainTimer('UpdateData', 1000);
             $this->SetStatus(IS_ACTIVE);
         }
     }
 
     private function GetFormElements()
     {
-        $oauth_type = $this->ReadPropertyInteger('OAuth_Type');
+        $formElements = $this->GetCommonFormElements('Netatmo Weather I/O');
 
-        $formElements = [];
+        if ($this->GetStatus() == self::$IS_UPDATEUNCOMPLETED) {
+            return $formElements;
+        }
+
+        $oauth_type = $this->ReadPropertyInteger('OAuth_Type');
+        if ($oauth_type == self::$CONNECTION_OAUTH) {
+            $formElements[] = [
+                'type'    => 'Label',
+                'caption' => $this->GetConnectStatusText(),
+            ];
+        }
+
         $formElements[] = [
             'type'    => 'CheckBox',
             'name'    => 'module_disable',
             'caption' => 'Disable instance'
         ];
-
-        if ($oauth_type == self::$CONNECTION_OAUTH) {
-            $instID = IPS_GetInstanceListByModuleID('{9486D575-BE8C-4ED8-B5B5-20930E26DE6F}')[0];
-            if (IPS_GetInstance($instID)['InstanceStatus'] != IS_ACTIVE) {
-                $msg = 'Error: Symcon Connect is not active!';
-            } else {
-                $msg = 'Status: Symcon Connect is OK!';
-            }
-            $formElements[] = [
-                'type'    => 'Label',
-                'caption' => $msg
-            ];
-        }
 
         $formElements[] = [
             'type'    => 'Select',
@@ -340,62 +369,63 @@ class NetatmoWeatherIO extends IPSModule
 
         switch ($oauth_type) {
             case self::$CONNECTION_OAUTH:
-                $items = [];
-                $items[] = [
-                    'type'    => 'Label',
-                    'caption' => 'Push "Login at Netatmo" in the action part of this configuration form.'
-                ];
-                $items[] = [
-                    'type'    => 'Label',
-                    'caption' => 'At the webpage from Netatmo log in with your Netatmo username and password.'
-                ];
-                $items[] = [
-                    'type'    => 'Label',
-                    'caption' => 'If the connection to IP-Symcon was successfull you get the message: "Netatmo successfully connected!". Close the browser window.'
-                ];
-                $items[] = [
-                    'type'    => 'Label',
-                    'caption' => 'Return to this configuration form.'
-                ];
                 $formElements[] = [
                     'type'    => 'ExpansionPanel',
-                    'items'   => $items,
+                    'items'   => [
+                        [
+                            'type'    => 'Label',
+                            'caption' => 'Push "Login at Netatmo" in the action part of this configuration form.'
+                        ],
+                        [
+                            'type'    => 'Label',
+                            'caption' => 'At the webpage from Netatmo log in with your Netatmo username and password.'
+                        ],
+                        [
+                            'type'    => 'Label',
+                            'caption' => 'If the connection to IP-Symcon was successfull you get the message: "Netatmo successfully connected!". Close the browser window.'
+                        ],
+                        [
+                            'type'    => 'Label',
+                            'caption' => 'Return to this configuration form.'
+                        ],
+                    ],
                     'caption' => 'Netatmo Login'
                 ];
                 break;
             case self::$CONNECTION_DEVELOPER:
-                $items = [];
-                $items[] = [
-                    'type'    => 'Label',
-                    'caption' => 'Netatmo-Account from https://my.netatmo.com'
-                ];
-                $items[] = [
-                    'type'    => 'ValidationTextBox',
-                    'name'    => 'Netatmo_User',
-                    'caption' => 'Username'
-                ];
-                $items[] = [
-                    'type'    => 'ValidationTextBox',
-                    'name'    => 'Netatmo_Password',
-                    'caption' => 'Password'
-                ];
-                $items[] = [
-                    'type'    => 'Label',
-                    'caption' => 'Netatmo-Connect from https://dev.netatmo.com'
-                ];
-                $items[] = [
-                    'type'    => 'ValidationTextBox',
-                    'name'    => 'Netatmo_Client',
-                    'caption' => 'Client ID'
-                ];
-                $items[] = [
-                    'type'    => 'ValidationTextBox',
-                    'name'    => 'Netatmo_Secret',
-                    'caption' => 'Client Secret'
-                ];
                 $formElements[] = [
                     'type'    => 'ExpansionPanel',
-                    'items'   => $items,
+                    'items'   => [
+                        [
+                            'type'    => 'Label',
+                            'caption' => 'Netatmo-Account from https://my.netatmo.com'
+                        ],
+                        [
+                            'type'    => 'ValidationTextBox',
+                            'name'    => 'Netatmo_User',
+                            'caption' => 'Username'
+                        ],
+                        [
+                            'type'    => 'ValidationTextBox',
+                            'name'    => 'Netatmo_Password',
+                            'caption' => 'Password'
+                        ],
+                        [
+                            'type'    => 'Label',
+                            'caption' => 'Netatmo-Connect from https://dev.netatmo.com'
+                        ],
+                        [
+                            'type'    => 'ValidationTextBox',
+                            'name'    => 'Netatmo_Client',
+                            'caption' => 'Client ID'
+                        ],
+                        [
+                            'type'    => 'ValidationTextBox',
+                            'width'   => '400px',
+                            'name'    => 'Netatmo_Secret',
+                            'caption' => 'Client Secret'
+                        ],
+                    ],
                     'caption' => 'Netatmo Access-Details'
                 ];
                 break;
@@ -404,31 +434,27 @@ class NetatmoWeatherIO extends IPSModule
         }
 
         $items = [];
-        $items[] = [
-            'type'    => 'Label',
-            'caption' => 'Ignore HTTP-Error X times'
-        ];
-        $items[] = [
-            'type'    => 'NumberSpinner',
-            'name'    => 'ignore_http_error',
-            'caption' => 'Count'
-        ];
-        $items[] = [
-            'type'    => 'Label',
-            'caption' => ''
-        ];
-        $items[] = [
-            'type'    => 'Label',
-            'caption' => 'Update weatherdata every X minutes'
-        ];
-        $items[] = [
-            'type'    => 'NumberSpinner',
-            'name'    => 'UpdateDataInterval',
-            'caption' => 'Minutes'
-        ];
         $formElements[] = [
             'type'    => 'ExpansionPanel',
-            'items'   => $items,
+            'items'   => [
+                [
+                    'type'    => 'Label',
+                    'caption' => 'Ignore HTTP-Error X times'
+                ],
+                [
+                    'type'    => 'NumberSpinner',
+                    'minimum' => 0,
+                    'name'    => 'ignore_http_error',
+                    'caption' => 'Count'
+                ],
+                [
+                    'type'    => 'NumberSpinner',
+                    'minimum' => 0,
+                    'suffix'  => 'Minutes',
+                    'name'    => 'UpdateDataInterval',
+                    'caption' => 'Update interval'
+                ],
+            ],
             'caption' => 'Call settings'
         ];
 
@@ -437,37 +463,61 @@ class NetatmoWeatherIO extends IPSModule
 
     private function GetFormActions()
     {
-        $oauth_type = $this->ReadPropertyInteger('OAuth_Type');
-
         $formActions = [];
 
+        if ($this->GetStatus() == self::$IS_UPDATEUNCOMPLETED) {
+            $formActions[] = $this->GetCompleteUpdateFormAction();
+
+            $formActions[] = $this->GetInformationFormAction();
+            $formActions[] = $this->GetReferencesFormAction();
+
+            return $formActions;
+        }
+
+        $oauth_type = $this->ReadPropertyInteger('OAuth_Type');
         if ($oauth_type == self::$CONNECTION_OAUTH) {
             $formActions[] = [
                 'type'    => 'Button',
                 'caption' => 'Login at Netatmo',
-                'onClick' => 'echo NetatmoWeather_Login($id);'
+                'onClick' => 'echo ' . $this->GetModulePrefix() . '_Login($id);'
             ];
         }
-        $formActions[] = [
-            'type'    => 'Button',
-            'caption' => 'Clear Token',
-            'onClick' => 'NetatmoWeather_ClearToken($id);'
-        ];
 
         $formActions[] = [
             'type'    => 'Button',
             'caption' => 'Update weatherdata',
-            'onClick' => 'NetatmoWeather_UpdateData($id);'
+            'onClick' => $this->GetModulePrefix() . '_UpdateData($id);'
         ];
 
+        $formActions[] = [
+            'type'    => 'Button',
+            'caption' => 'Clear Token',
+            'onClick' => $this->GetModulePrefix() . '_ClearToken($id);'
+        ];
+
+        $formActions[] = $this->GetInformationFormAction();
+        $formActions[] = $this->GetReferencesFormAction();
+
         return $formActions;
+    }
+
+    public function RequestAction($ident, $value)
+    {
+        if ($this->CommonRequestAction($ident, $value)) {
+            return;
+        }
+        switch ($ident) {
+            default:
+                $this->SendDebug(__FUNCTION__, 'invalid ident ' . $ident, 0);
+                break;
+        }
     }
 
     protected function SetUpdateInterval()
     {
         $min = $this->ReadPropertyInteger('UpdateDataInterval');
         $msec = $min > 0 ? $min * 1000 * 60 : 0;
-        $this->SetTimerInterval('UpdateData', $msec);
+        $this->MaintainTimer('UpdateData', $msec);
     }
 
     protected function SendData($data)
@@ -603,7 +653,7 @@ class NetatmoWeatherIO extends IPSModule
         if ($this->CheckStatus() == self::$STATUS_INVALID) {
             if ($this->GetStatus() == self::$IS_NOLOGIN) {
                 $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => pause', 0);
-                $this->SetTimerInterval('UpdateData', 0);
+                $this->MaintainTimer('UpdateData', 0);
             } else {
                 $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => skip', 0);
             }
@@ -615,7 +665,7 @@ class NetatmoWeatherIO extends IPSModule
         if ($access_token == false) {
             if ($this->GetStatus() == self::$IS_NOLOGIN) {
                 $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => pause', 0);
-                $this->SetTimerInterval('UpdateData', 0);
+                $this->MaintainTimer('UpdateData', 0);
             } else {
                 $this->SetUpdateInterval();
             }
@@ -654,7 +704,7 @@ class NetatmoWeatherIO extends IPSModule
         if ($statuscode) {
             if ($statuscode == self::$IS_FORBIDDEN) {
                 $err .= ' => 15min pause';
-                $this->SetTimerInterval('UpdateData', 15 * 60 * 1000);
+                $this->MaintainTimer('UpdateData', 15 * 60 * 1000);
                 $this->SetBuffer('ApiAccessToken', '');
             }
             $this->LogMessage('url=' . $url . ', statuscode=' . $statuscode . ', err=' . $err, KL_WARNING);

@@ -2,19 +2,32 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
-require_once __DIR__ . '/../libs/local.php';   // lokale Funktionen
+require_once __DIR__ . '/../libs/common.php';
+require_once __DIR__ . '/../libs/local.php';
 
 class NetatmoWeatherConfig extends IPSModule
 {
-    use NetatmoWeatherCommonLib;
+    use NetatmoWeather\StubsCommonLib;
     use NetatmoWeatherLocalLib;
+
+    private $ModuleDir;
+
+    public function __construct(string $InstanceID)
+    {
+        parent::__construct($InstanceID);
+
+        $this->ModuleDir = __DIR__;
+    }
 
     public function Create()
     {
         parent::Create();
 
         $this->RegisterPropertyInteger('ImportCategoryID', 0);
+
+        $this->RegisterAttributeString('UpdateInfo', '');
+
+        $this->InstallVarProfiles(false);
 
         $this->ConnectParent('{26A55798-5CBC-88F6-5C7B-370B043B24F9}');
     }
@@ -23,16 +36,22 @@ class NetatmoWeatherConfig extends IPSModule
     {
         parent::ApplyChanges();
 
-        $refs = $this->GetReferenceList();
-        foreach ($refs as $ref) {
-            $this->UnregisterReference($ref);
-        }
         $propertyNames = ['ImportCategoryID'];
-        foreach ($propertyNames as $name) {
-            $oid = $this->ReadPropertyInteger($name);
-            if ($oid > 0) {
-                $this->RegisterReference($oid);
-            }
+        $this->MaintainReferences($propertyNames);
+
+        if ($this->CheckPrerequisites() != false) {
+            $this->SetStatus(self::$IS_INVALIDPREREQUISITES);
+            return;
+        }
+
+        if ($this->CheckUpdate() != false) {
+            $this->SetStatus(self::$IS_UPDATEUNCOMPLETED);
+            return;
+        }
+
+        if ($this->CheckConfiguration() != false) {
+            $this->SetStatus(self::$IS_INVALIDCONFIG);
+            return;
         }
 
         $this->SetStatus(IS_ACTIVE);
@@ -40,19 +59,20 @@ class NetatmoWeatherConfig extends IPSModule
 
     private function SetLocation()
     {
-        $category = $this->ReadPropertyInteger('ImportCategoryID');
+        $catID = $this->ReadPropertyInteger('ImportCategoryID');
         $tree_position = [];
-        if ($category > 0 && IPS_ObjectExists($category)) {
-            $tree_position[] = IPS_GetName($category);
-            $parent = IPS_GetObject($category)['ParentID'];
-            while ($parent > 0) {
-                if ($parent > 0) {
-                    $tree_position[] = IPS_GetName($parent);
+        if ($catID >= 10000 && IPS_ObjectExists($catID)) {
+            $tree_position[] = IPS_GetName($catID);
+            $parID = IPS_GetObject($catID)['ParentID'];
+            while ($parID > 0) {
+                if ($parID > 0) {
+                    $tree_position[] = IPS_GetName($parID);
                 }
-                $parent = IPS_GetObject($parent)['ParentID'];
+                $parID = IPS_GetObject($parID)['ParentID'];
             }
             $tree_position = array_reverse($tree_position);
         }
+        $this->SendDebug(__FUNCTION__, 'tree_position=' . print_r($tree_position, true), 0);
         return $tree_position;
     }
 
@@ -60,27 +80,28 @@ class NetatmoWeatherConfig extends IPSModule
     {
         $entries = [];
 
+        if ($this->CheckStatus() == self::$STATUS_INVALID) {
+            $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => skip', 0);
+            return $entries;
+        }
+
         if ($this->HasActiveParent() == false) {
             $this->SendDebug(__FUNCTION__, 'has no active parent', 0);
-            $this->LogMessage('has no active parent instance', KL_WARNING);
             return $entries;
         }
 
         $SendData = ['DataID' => '{DC5A0AD3-88A5-CAED-3CA9-44C20CC20610}', 'Function' => 'LastData'];
         $data = $this->SendDataToParent(json_encode($SendData));
+        $jdata = json_decode($data, true);
+        $this->SendDebug(__FUNCTION__, 'jdata=' . print_r($jdata, true), 0);
 
-        $this->SendDebug(__FUNCTION__, 'data=' . $data, 0);
+        $guid = '{1023DB4A-D491-A0D5-17CD-380D3578D0FA}';
+        $instIDs = IPS_GetInstanceListByModuleID($guid);
 
-        if ($data != '') {
-            $netatmo = json_decode($data, true);
-            $this->SendDebug(__FUNCTION__, 'netatmo=' . print_r($netatmo, true), 0);
-
-            $devices = $netatmo['body']['devices'];
+        if (is_array($jdata)) {
+            $devices = $jdata['body']['devices'];
             $this->SendDebug(__FUNCTION__, 'devices=' . print_r($devices, true), 0);
-            if ($devices != '') {
-                $guid = '{1023DB4A-D491-A0D5-17CD-380D3578D0FA}';
-                $instIDs = IPS_GetInstanceListByModuleID($guid);
-
+            if (is_array($devices)) {
                 foreach ($devices as $device) {
                     $module_type = 'Station';
                     $station_name = $this->GetArrayElem($device, 'station_name', '');
@@ -134,28 +155,53 @@ class NetatmoWeatherConfig extends IPSModule
                 }
             }
         }
+
+        foreach ($instIDs as $instID) {
+            $fnd = false;
+            foreach ($entries as $entry) {
+                if ($entry['instanceID'] == $instID) {
+                    $fnd = true;
+                    break;
+                }
+            }
+            if ($fnd) {
+                continue;
+            }
+
+            $module_type = IPS_GetProperty($instID, 'module_type');
+            if ($module_type != 'Station') {
+                continue;
+            }
+
+            $name = IPS_GetName($instID);
+            $city = '';
+            $station_id = IPS_GetProperty($instID, 'station_id');
+
+            $entry = [
+                'instanceID' => $instID,
+                'name'       => $name,
+                'city'       => $city,
+                'station_id' => $station_id,
+            ];
+            $entries[] = $entry;
+            $this->SendDebug(__FUNCTION__, 'missing entry=' . print_r($entry, true), 0);
+        }
+
         return $entries;
     }
 
     private function GetFormElements()
     {
-        $formElements = [];
+        $formElements = $this->GetCommonFormElements('Netatmo Weather Configurator');
 
-        if ($this->HasActiveParent() == false) {
-            $formElements[] = [
-                'type'    => 'Label',
-                'caption' => 'Instance has no active parent instance',
-            ];
+        if ($this->GetStatus() == self::$IS_UPDATEUNCOMPLETED) {
+            return $formElements;
         }
 
         $formElements[] = [
-            'type'    => 'Label',
-            'caption' => 'category for weatherstations to be created:',
-        ];
-        $formElements[] = [
             'type'    => 'SelectCategory',
             'name'    => 'ImportCategoryID',
-            'caption' => 'category'
+            'caption' => 'category for weatherstations to be created'
         ];
 
         $entries = $this->getConfiguratorValues();
@@ -199,6 +245,30 @@ class NetatmoWeatherConfig extends IPSModule
     {
         $formActions = [];
 
+        if ($this->GetStatus() == self::$IS_UPDATEUNCOMPLETED) {
+            $formActions[] = $this->GetCompleteUpdateFormAction();
+
+            $formActions[] = $this->GetInformationFormAction();
+            $formActions[] = $this->GetReferencesFormAction();
+
+            return $formActions;
+        }
+
+        $formActions[] = $this->GetInformationFormAction();
+        $formActions[] = $this->GetReferencesFormAction();
+
         return $formActions;
+    }
+
+    public function RequestAction($ident, $value)
+    {
+        if ($this->CommonRequestAction($ident, $value)) {
+            return;
+        }
+        switch ($ident) {
+            default:
+                $this->SendDebug(__FUNCTION__, 'invalid ident ' . $ident, 0);
+                break;
+        }
     }
 }

@@ -2,18 +2,21 @@
 	"translations": {
 		"de": {
 			"Netatmo Weatherstation": "Netatmo Wetterstation",
-			"Netatmo Weatherstation - Module: base module":
-				"Netatmo Wetterstation - Basismodul",
-			"Netatmo Weatherstation - Module: outdoor module":
-				"Netatmo Wetterstation - Außenmodul",
-			"Netatmo Weatherstation - Module: wind gauge":
-				"Netatmo Wetterstation - Windmesser",
-			"Netatmo Weatherstation - Module: rain gauge":
-				"Netatmo Wetterstation - Regenmesser",
-			"Netatmo Weatherstation - Module: indoor module":
-				"Netatmo Wetterstation - Innenmodul",
+			"Netatmo Weatherstation - base module": "Netatmo Wetterstation - Basismodul",
+			"Netatmo Weatherstation - outdoor module": "Netatmo Wetterstation - Außenmodul",
+			"Netatmo Weatherstation - wind gauge": "Netatmo Wetterstation - Windmesser",
+			"Netatmo Weatherstation - rain gauge": "Netatmo Wetterstation - Regenmesser",
+			"Netatmo Weatherstation - indoor module": "Netatmo Wetterstation - Innenmodul",
 
-			"Instance has no active parent instance": "Instanz hat keine aktive übergeordnete Instanz",
+			"__function__": "CheckConfiguration",
+			"Station-ID must be specified": "Stations-ID muss angegeben sein",
+			"Module-ID must be specified": "Modul-ID muss angegeben sein",
+			"unknown Module-Type": "unbakannter Modul-Typ",
+			"if given Wunderground Station ID, the Station Key is also needed":
+				"bei Angabe der Wunderground der Station-ID wird der Station-Key ebenfalls benötigt",
+
+			"__elements__": "",
+			"Disable instance": "Instanz deaktivieren",
 
 			"Basic configuration (don't change)": "Basis-Konfiguration (nicht ändern)",
 			"Module-Type": "Modul-Typ",
@@ -76,12 +79,12 @@
 			"Station Key": "Station Key",
 
 			"Modules": "Module",
-			"category for modules to be created:": "Kategorie für anzulegende Module:",
-			"category": "Kategorie",
+			"category for modules to be created": "Kategorie für anzulegende Module",
 			"available modules": "verfügbare Module",
 			"Name": "Name",
 			"Id": "Id",
 
+			"__variables__": "",
 			"absolute humidity": "absolute Luftfeuchtigkeit",
 			"absolute pressure": "absoluter Luftdruck",
 			"Air pressure": "Luftdruck",
@@ -123,6 +126,7 @@
 			"Windspeed": "Windgeschwindigkeit",
 			"Windstrength": "Windstärke",
 
+			"__function__": "module_type2text",
 			"station": "Station",
 			"base module": "Basismodul",
 			"outdoor module": "Außenmodul",
@@ -130,25 +134,7 @@
 			"rain gauge": "Regenmesser",
 			"wind gauge": "Windmesser",
 
-			"bad": "schwach",
-			"average": "mittel",
-			"good": "gut",
-			"high": "hoch",
-
-			"full": "voll",
-			"high": "hoch",
-			"low": "schwach",
-			"max": "max",
-			"medium": "mittel",
-			"empty": "leer",
-
-			"No": "Nein",
-			"Yes": "Ja",
-
-			"up": "steigend",
-			"stable": "stabil",
-			"down": "fallend",
-
+			"__function__": "ConvertWindDirection2Text",
 			"N": "N",
 			"NNE": "NNO",
 			"NE": "NO",
@@ -166,6 +152,7 @@
 			"NW": "NW",
 			"NNW": "NNW",
 
+			"__function__": "ConvertWindStrength2Text",
 			"Calm": "Windstille",
 			"Light air": "leiser Zug",
 			"Light breeze": "leichte Brise",
@@ -180,23 +167,7 @@
 			"Hurricane force": "orkanartiger Sturm",
 			"Violent storm": "Orkan",
 
-			"Instance getting created": "Instanz wird erstellt",
-			"Instance is active": "Instanz ist aktiv",
-			"Instance is deleted": "Instanz wird gelöscht",
-			"Instance is inactive": "Instanz ist inaktiv",
-			"Instance is not created": "Instanz wurde nicht erzeugt",
-
-			"Instance is inactive (no data)": "Instanz ist inaktiv (keine Daten)",
-			"Instance is inactive (unauthorized)": "Instanz ist inaktiv (Authorisierung fehlerhaft)",
-			"Instance is inactive (forbidden)": "Instanz ist inaktiv (fehlende Berechtigung)",
-			"Instance is inactive (server error)": "Instanz ist inaktiv (Serverfehler)",
-			"Instance is inactive (http error)": "Instanz ist inaktiv (HTTP-Fehler)",
-			"Instance is inactive (invalid data)": "Instanz ist inaktiv (ungültige Daten)",
-			"Instance is inactive (no station)": "Instanz ist inaktiv (keine Station)",
-			"Instance is inactive (station missing)": "Instanz ist inaktiv (Station ist unbekannt)",
-			"Instance is inactive (invalid config)": "Instanz ist inaktiv (ungültige Konfiguration)",
-			"Instance is inactive (no Symcon-Connect)": "Instanz ist inaktiv (kein Symcon-Connect)",
-			"Instance is inactive (not logged in)": "Instanz ist inaktiv (nicht angemeldet)"
+			"__end__": ""
 		}
 	}
 }

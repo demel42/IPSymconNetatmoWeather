@@ -1,0 +1,18 @@
+{
+	"translations": {
+		"de": {
+			"Netatmo Weather Configurator": "Netatmo Weather Konfigurator",
+
+			"__elements__": "",
+			"category for weatherstations to be created": "Kategorie für anzulegende Wetterstationen",
+
+			"Weatherstations": "Wetterstationen",
+			"available weatherstations": "verfügbare Wetterstationen",
+			"City": "Stadt",
+			"Name": "Name",
+			"Id": "Id",
+
+			"__end__": ""
+		}
+	}
+}

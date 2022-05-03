@@ -1,0 +1,56 @@
+{
+	"translations": {
+		"de": {
+			"Netatmo Weather I/O": "Netatmo Weather I/O",
+
+			"__function__": "CheckConfiguration",
+			"Username must be specified": "Benutzername muss angegeben sein",
+			"Password must be specified": "Passwort muss angegeben sein",
+			"Client-ID must be specified": "Client-ID muss angegeben sein",
+			"Client-Secret must be specified": "Client-Secret  muss angegeben sein",
+
+			"__elements__": "",
+			"Disable instance": "Instanz deaktivieren",
+
+			"Connection Type": "Verbindungstyp",
+			"Please select a connection type": "Bitte einen Verbindungstyp auswählen",
+			"Netatmo via IP-Symcon Connect": "Netatmo über IP-Symcon Connect",
+			"Netatmo Developer Key": "Netatmo Entwickler-Schlüssel",
+			"Push \"Login at Netatmo\" in the action part of this configuration form.":
+				"\"Anmelden bei Netatmo\" in dem Aktionsbereich dieses Konfigurationsformulares drücken.",
+			"At the webpage from Netatmo log in with your Netatmo username and password.":
+				"Auf der Webseite von Netatmo mit dem Netatmo Benutzernamen und Passwort anmelden.",
+			"If the connection to IP-Symcon was successfull you get the message: \"Netatmo successfully connected!\". Close the browser window.":
+				"Wenn die Verbindung zu IP-Symcon erfolgreich war erscheint die Meldung: \"Netatmo successfully connected!\". Das Browserfenster kann nun geschlossen werden.",
+			"Return to this configuration form.":
+				"Danach zu diesem Konfigurationsformular zurückkehren und fortfahren.",
+
+			"Netatmo Login": "Netatmo Anmeldung",
+
+			"Netatmo Access-Details": "Netatmo Zugangsdaten",
+
+			"Netatmo-Account from https://my.netatmo.com": "Netatmo Konto-Daten von https://my.netatmo.com",
+			"Username": "Benutzername",
+			"Password": "Passwort",
+
+			"Netatmo-Connect from https://dev.netatmo.com": "Netatmo-Connect-Daten von https://dev.netatmo.com",
+			"Client ID": "Client ID",
+			"Client Secret": "Client Secret",
+
+			"Call settings": "Abrufeinstellungen",
+
+			"Ignore HTTP-Error X times": "HTTP-Fehler X-fach ignorieren",
+			"Count": "Anzahl",
+
+			"Update interval": "Aktualisierungsintervall",
+			"Minutes": "Minuten",
+
+			"__actions__": "",
+			"Login at Netatmo": "Bei Netatmo anmelden",
+			"Update weatherdata": "Aktualisiere Wetterdaten",
+			"Clear Token": "Token löschen",
+
+			"__end__": ""
+		}
+	}
+}

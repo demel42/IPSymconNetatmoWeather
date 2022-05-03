@@ -388,10 +388,24 @@ Es werden folgende Variablenprofile angelegt:
 Netatmo.Alarm
 
 * Integer<br>
-Netatmo.Battery, Netatmo.CO2, Netatmo.Noise, Netatmo.RfSignal, Netatmo.Trend, Netatmo.Wifi, Netatmo.WindAngle, Netatmo.WindStrength
+Netatmo.Battery,
+Netatmo.CO2,
+Netatmo.Noise,
+Netatmo.RfSignal,
+Netatmo.Trend,
+Netatmo.Wifi,
+Netatmo.WindAngle,
+Netatmo.WindStrength
 
 * Float<br>
-Netatmo.absHumidity, Netatmo.Dewpoint, Netatmo.Heatindex, Netatmo.Humidity, Netatmo.Pressure, Netatmo.Rainfall, Netatmo.Temperatur, Netatmo.WindSpeed
+Netatmo.absHumidity,
+Netatmo.Dewpoint,
+Netatmo.Heatindex,
+Netatmo.Humidity,
+Netatmo.Pressure,
+Netatmo.Rainfall,
+Netatmo.Temperatur,
+Netatmo.WindSpeed
 
 * String<br>
 Netatmo.WindDirection
@@ -409,6 +423,13 @@ GUIDs
   - `{2D42552F-2545-9145-D3C8-A299E3FDC6EA}`: an NetatmoWeatherConfig, NetatmoWeatherDevice
 
 ## 7. Versions-Historie
+
+- 1.34 @ 03.05.2022 15:27
+  - Anpassungen an IPS 6.2 (Prüfung auf ungültige ID's)
+  - IPS-Version ist nun minimal 6.0
+  - Anzeige der Referenzen der Instanz incl. Statusvariablen und Instanz-Timer
+  - Implememtierung einer Update-Logik
+  - diverse interne Änderungen
 
 - 1.33 @ 21.08.2021 15:13
   - bei fehlendem 'module_module' Name der Instanz verwenden

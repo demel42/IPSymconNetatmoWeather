@@ -1,0 +1,48 @@
+{
+	"translations": {
+		"de": {
+			"__variableprofile__": "Netatmo.Wifi",
+			"bad": "schwach",
+			"average": "mittel",
+			"good": "gut",
+			"high": "hoch",
+
+			"__variableprofile__": "Netatmo.RfSignal",
+			"very low": "sehr niedrig",
+			"low": "schwach",
+			"medium": "mittel",
+			"high": "hoch",
+			"full": "voll",
+
+			"__variableprofile__": "Netatmo.Battery",
+			"empty": "leer",
+			"low": "schwach",
+			"medium": "mittel",
+			"high": "hoch",
+			"full": "voll",
+			"max": "max",
+
+			"__variableprofile__": "Netatmo.Trend",
+			"up": "steigend",
+			"stable": "stabil",
+			"down": "fallend",
+
+			"__variableprofile__": "Netatmo.Alarm",
+			"No": "Nein",
+			"Yes": "Ja",
+
+			"__status__": "",
+			"Instance is inactive (no data)": "Instanz ist inaktiv (keine Daten)",
+			"Instance is inactive (unauthorized)": "Instanz ist inaktiv (Authorisierung fehlerhaft)",
+			"Instance is inactive (forbidden)": "Instanz ist inaktiv (fehlende Berechtigung)",
+			"Instance is inactive (server error)": "Instanz ist inaktiv (Serverfehler)",
+			"Instance is inactive (http error)": "Instanz ist inaktiv (HTTP-Fehler)",
+			"Instance is inactive (invalid data)": "Instanz ist inaktiv (ungültige Daten)",
+			"Instance is inactive (no station)": "Instanz ist inaktiv (keine Station)",
+			"Instance is inactive (station missing)": "Instanz ist inaktiv (Station ist unbekannt)",
+			"Instance is inactive (not logged in)": "Instanz ist inaktiv (nicht angemeldet)",
+
+			"__end__": ""
+		}
+	}
+}
