@@ -88,7 +88,7 @@ class NetatmoWeatherIO extends IPSModule
             if ($oauth_type == self::$CONNECTION_OAUTH) {
                 $this->RegisterOAuth($this->oauthIdentifer);
             }
-			$this->MaintainTimer('UpdateData', 1000);
+            $this->MaintainTimer('UpdateData', 1000);
         }
     }
 
@@ -148,7 +148,7 @@ class NetatmoWeatherIO extends IPSModule
             if ($oauth_type == self::$CONNECTION_OAUTH) {
                 $this->RegisterOAuth($this->oauthIdentifer);
             }
-			$this->MaintainTimer('UpdateData', 1000);
+            $this->MaintainTimer('UpdateData', 1000);
         }
     }
 

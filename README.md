@@ -424,6 +424,11 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.34.1 @ 10.05.2022 15:06
+  - update submodule CommonStubs
+  - SetLocation() -> GetConfiguratorLocation()
+  - weitere Absicherung ungültiger ID's
+
 - 1.34 @ 03.05.2022 15:27
   - Anpassungen an IPS 6.2 (Prüfung auf ungültige ID's)
   - IPS-Version ist nun minimal 6.0

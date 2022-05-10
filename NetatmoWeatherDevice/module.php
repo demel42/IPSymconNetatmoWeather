@@ -79,7 +79,7 @@ class NetatmoWeatherDevice extends IPSModule
         parent::MessageSink($tstamp, $senderID, $message, $data);
 
         if ($message == IPS_KERNELMESSAGE && $data[0] == KR_READY) {
-			$module_type = $this->ReadPropertyString('module_type');
+            $module_type = $this->ReadPropertyString('module_type');
             if ($module_type == 'Station') {
                 $hook = $this->ReadPropertyString('hook');
                 if ($hook != '') {
@@ -313,25 +313,6 @@ class NetatmoWeatherDevice extends IPSModule
         $this->SetStatus(IS_ACTIVE);
     }
 
-    private function SetLocation()
-    {
-        $catID = $this->ReadPropertyInteger('ImportCategoryID');
-        $tree_position = [];
-        if ($catID >= 10000 && IPS_ObjectExists($catID)) {
-            $tree_position[] = IPS_GetName($catID);
-            $parID = IPS_GetObject($catID)['ParentID'];
-            while ($parID > 0) {
-                if ($parID > 0) {
-                    $tree_position[] = IPS_GetName($parID);
-                }
-                $parID = IPS_GetObject($parID)['ParentID'];
-            }
-            $tree_position = array_reverse($tree_position);
-        }
-        $this->SendDebug(__FUNCTION__, 'tree_position=' . print_r($tree_position, true), 0);
-        return $tree_position;
-    }
-
     private function getConfiguratorValues4Station()
     {
         $entries = [];
@@ -345,6 +326,8 @@ class NetatmoWeatherDevice extends IPSModule
             $this->SendDebug(__FUNCTION__, 'has no active parent', 0);
             return $entries;
         }
+
+        $catID = $this->ReadPropertyInteger('ImportCategoryID');
 
         $SendData = ['DataID' => '{DC5A0AD3-88A5-CAED-3CA9-44C20CC20610}', 'Function' => 'LastData'];
         $data = $this->SendDataToParent(json_encode($SendData));
@@ -406,7 +389,7 @@ class NetatmoWeatherDevice extends IPSModule
                         'instanceID'   => $instID,
                         'create'       => [
                             'moduleID'       => $guid,
-                            'location'       => $this->SetLocation(),
+                            'location'       => $this->GetConfiguratorLocation($catID),
                             'info'           => $module_info,
                             'configuration'  => [
                                 'module_id'   => $module_id,
@@ -477,7 +460,7 @@ class NetatmoWeatherDevice extends IPSModule
                                     'instanceID'   => $instID,
                                     'create'       => [
                                         'moduleID'       => $guid,
-                                        'location'       => $this->SetLocation(),
+                                        'location'       => $this->GetConfiguratorLocation($catID),
                                         'info'           => $module_info,
                                         'configuration'  => [
                                             'module_id'   => $module_id,
@@ -1282,7 +1265,7 @@ class NetatmoWeatherDevice extends IPSModule
 
         if ($with_status_box) {
             $statusbox_script = $this->ReadPropertyInteger('statusbox_script');
-            if ($statusbox_script >= 10000) {
+            if (IPS_ScriptExists($statusbox_script)) {
                 $html = IPS_RunScriptWaitEx($statusbox_script, ['InstanceID' => $this->InstanceID]);
             } else {
                 $html = $this->Build_StatusBox($station_data);
@@ -2044,7 +2027,7 @@ class NetatmoWeatherDevice extends IPSModule
         $basename = substr($uri, strlen($hook . '/'));
         if ($basename == 'status') {
             $webhook_script = $this->ReadPropertyInteger('webhook_script');
-            if ($webhook_script >= 10000) {
+            if (IPS_ScriptExists($webhook_script)) {
                 $html = IPS_RunScriptWaitEx($webhook_script, ['InstanceID' => $this->InstanceID]);
                 echo $html;
             } else {
