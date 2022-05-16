@@ -424,6 +424,9 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.34.2 @ 16.05.2022 11:45
+  - verbessertes Verhalten bei einem HTTP-Fehler
+
 - 1.34.1 @ 10.05.2022 15:06
   - update submodule CommonStubs
   - SetLocation() -> GetConfiguratorLocation()

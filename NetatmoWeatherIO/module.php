@@ -707,19 +707,22 @@ class NetatmoWeatherIO extends IPSModule
                 $err .= ' => 15min pause';
                 $this->MaintainTimer('UpdateData', 15 * 60 * 1000);
                 $this->SetBuffer('ApiAccessToken', '');
+            } else {
+                $this->SetUpdateInterval();
             }
             $this->LogMessage('url=' . $url . ', statuscode=' . $statuscode . ', err=' . $err, KL_WARNING);
             $this->SendDebug(__FUNCTION__, $err, 0);
-            $this->SetStatus($statuscode);
             $this->SetBuffer('LastData', '');
+            $this->SetStatus($statuscode);
             return;
         }
 
         $this->SendData($data);
         $this->SetBuffer('LastData', $data);
 
-        $this->SetUpdateInterval();
         $this->SetStatus(IS_ACTIVE);
+
+        $this->SetUpdateInterval();
     }
 
     private function do_HttpRequest($url, $header, $postdata, $mode, &$data, &$err)
