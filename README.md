@@ -424,6 +424,10 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.34.3 @ 17.05.2022 15:38
+  - update submodule CommonStubs
+    Fix: Absicherung gegen fehlende Objekte
+
 - 1.34.2 @ 16.05.2022 11:45
   - verbessertes Verhalten bei einem HTTP-Fehler
 
