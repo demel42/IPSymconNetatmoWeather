@@ -138,17 +138,17 @@ class NetatmoWeatherDevice extends IPSModule
         $this->MaintainReferences($propertyNames);
 
         if ($this->CheckPrerequisites() != false) {
-            $this->SetStatus(self::$IS_INVALIDPREREQUISITES);
+            $this->MaintainStatus(self::$IS_INVALIDPREREQUISITES);
             return;
         }
 
         if ($this->CheckUpdate() != false) {
-            $this->SetStatus(self::$IS_UPDATEUNCOMPLETED);
+            $this->MaintainStatus(self::$IS_UPDATEUNCOMPLETED);
             return;
         }
 
         if ($this->CheckConfiguration() != false) {
-            $this->SetStatus(self::$IS_INVALIDCONFIG);
+            $this->MaintainStatus(self::$IS_INVALIDCONFIG);
             return;
         }
 
@@ -297,7 +297,7 @@ class NetatmoWeatherDevice extends IPSModule
 
         $module_disable = $this->ReadPropertyBoolean('module_disable');
         if ($module_disable) {
-            $this->SetStatus(IS_INACTIVE);
+            $this->MaintainStatus(IS_INACTIVE);
             return;
         }
 
@@ -310,7 +310,7 @@ class NetatmoWeatherDevice extends IPSModule
             }
         }
 
-        $this->SetStatus(IS_ACTIVE);
+        $this->MaintainStatus(IS_ACTIVE);
     }
 
     private function getConfiguratorValues4Station()
@@ -918,11 +918,7 @@ class NetatmoWeatherDevice extends IPSModule
             'caption'   => 'Expert area',
             'expanded ' => false,
             'items'     => [
-                [
-                    'type'    => 'Button',
-                    'caption' => 'Re-install variable-profiles',
-                    'onClick' => $this->GetModulePrefix() . '_InstallVarProfiles($id, true);'
-                ],
+                $this->GetInstallVarProfilesFormItem(),
             ],
         ];
 
@@ -1699,7 +1695,7 @@ class NetatmoWeatherDevice extends IPSModule
         if ($do_abort) {
             echo "statuscode=$statuscode, err=$err";
             $this->SendDebug(__FUNCTION__, $err, 0);
-            $this->SetStatus($statuscode);
+            $this->MaintainStatus($statuscode);
 
             if ($module_type == 'NAMain') {
                 $this->SetValue('Status', false);
@@ -1733,7 +1729,7 @@ class NetatmoWeatherDevice extends IPSModule
                 break;
         }
 
-        $this->SetStatus($statuscode);
+        $this->MaintainStatus($statuscode);
 
         if ($module_type == 'Station') {
             $this->update_Wunderground($netatmo, $device);

@@ -83,7 +83,7 @@ trait NetatmoWeatherLocalLib
     public static $TREND_STABLE = 0;
     public static $TREND_UP = 1;
 
-    public function InstallVarProfiles(bool $reInstall = false)
+    private function InstallVarProfiles(bool $reInstall = false)
     {
         if ($reInstall) {
             $this->SendDebug(__FUNCTION__, 'reInstall=' . $this->bool2str($reInstall), 0);
