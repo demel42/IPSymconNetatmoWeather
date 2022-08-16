@@ -424,6 +424,10 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.35.1 @ 16.08.2022 10:10
+  - update submodule CommonStubs
+    Fix: in den Konfiguratoren war es nicht möglich, eine Instanz direkt unter dem Wurzelverzeichnis "IP-Symcon" zu erzeugen
+
 - 1.35 @ 09.07.2022 17:25
   - einige Funktionen (GetFormElements, GetFormActions) waren fehlerhafterweise "protected" und nicht "private"
   - interne Funktionen sind nun private und ggfs nur noch via IPS_RequestAction() erreichbar
