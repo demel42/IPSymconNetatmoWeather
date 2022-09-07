@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 trait NetatmoWeatherLocalLib
 {
-    public static $IS_NODATA = IS_EBASE + 1;
-    public static $IS_UNAUTHORIZED = IS_EBASE + 2;
-    public static $IS_FORBIDDEN = IS_EBASE + 3;
-    public static $IS_SERVERERROR = IS_EBASE + 4;
-    public static $IS_HTTPERROR = IS_EBASE + 5;
-    public static $IS_INVALIDDATA = IS_EBASE + 6;
-    public static $IS_NOSTATION = IS_EBASE + 7;
-    public static $IS_STATIONMISSІNG = IS_EBASE + 8;
-    public static $IS_NOLOGIN = IS_EBASE + 11;
+    public static $IS_NODATA = IS_EBASE + 10;
+    public static $IS_UNAUTHORIZED = IS_EBASE + 11;
+    public static $IS_FORBIDDEN = IS_EBASE + 12;
+    public static $IS_SERVERERROR = IS_EBASE + 13;
+    public static $IS_HTTPERROR = IS_EBASE + 14;
+    public static $IS_INVALIDDATA = IS_EBASE + 15;
+    public static $IS_NOSTATION = IS_EBASE + 16;
+    public static $IS_STATIONMISSІNG = IS_EBASE + 17;
+    public static $IS_NOLOGIN = IS_EBASE + 18;
 
     private function GetFormStatus()
     {
@@ -91,7 +91,7 @@ trait NetatmoWeatherLocalLib
 
         $this->CreateVarProfile('Netatmo.Temperatur', VARIABLETYPE_FLOAT, ' °C', -10, 30, 0, 1, 'Temperature', [], $reInstall);
         $this->CreateVarProfile('Netatmo.Humidity', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, 'Drops', [], $reInstall);
-        $this->CreateVarProfile('Netatmo.absHumidity', VARIABLETYPE_FLOAT, ' g/m³', 10, 100, 0, 0, 'Drops', [], $reInstall);
+        $this->CreateVarProfile('Netatmo.absHumidity', VARIABLETYPE_FLOAT, ' g/m³', 0, 0, 0, 0, 'Drops', [], $reInstall);
         $this->CreateVarProfile('Netatmo.Dewpoint', VARIABLETYPE_FLOAT, ' °C', 0, 30, 0, 0, 'Drops', [], $reInstall);
         $this->CreateVarProfile('Netatmo.Heatindex', VARIABLETYPE_FLOAT, ' °C', 0, 100, 0, 0, 'Temperature', [], $reInstall);
         $this->CreateVarProfile('Netatmo.Pressure', VARIABLETYPE_FLOAT, ' mbar', 500, 1200, 0, 0, 'Gauge', [], $reInstall);

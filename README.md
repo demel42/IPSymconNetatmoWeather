@@ -424,6 +424,11 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.36 @ 07.09.2022 15:27
+  - Fix: Variablenprofil 'Netatmo.absHumidity'
+  - Fix: Statuscodes falsch nummeriert
+  - update submodule CommonStubs
+
 - 1.35.1 @ 16.08.2022 10:10
   - update submodule CommonStubs
     Fix: in den Konfiguratoren war es nicht möglich, eine Instanz direkt unter dem Wurzelverzeichnis "IP-Symcon" zu erzeugen

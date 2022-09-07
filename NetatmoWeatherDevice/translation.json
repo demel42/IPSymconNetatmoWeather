@@ -8,6 +8,9 @@
 			"Netatmo Weatherstation - rain gauge": "Netatmo Wetterstation - Regenmesser",
 			"Netatmo Weatherstation - indoor module": "Netatmo Wetterstation - Innenmodul",
 
+			"__function__": "CheckModuleUpdate",
+			"Error in variableprofile 'Netatmo.absHumidity'": "Fehler im Variablenprofil 'Netatmo.absHumidity'",
+
 			"__function__": "CheckConfiguration",
 			"Station-ID must be specified": "Stations-ID muss angegeben sein",
 			"Module-ID must be specified": "Modul-ID muss angegeben sein",

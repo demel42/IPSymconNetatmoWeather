@@ -130,6 +130,29 @@ class NetatmoWeatherDevice extends IPSModule
         return $r;
     }
 
+    private function CheckModuleUpdate(array $oldInfo, array $newInfo)
+    {
+        $r = [];
+
+        if ($this->version2num($oldInfo) < $this->version2num('1.36')) {
+            $r[] = $this->Translate('Error in variableprofile \'Netatmo.absHumidity\'');
+        }
+
+        return $r;
+    }
+
+    private function CompleteModuleUpdate(array $oldInfo, array $newInfo)
+    {
+        if ($this->version2num($oldInfo) < $this->version2num('1.36')) {
+            if (IPS_VariableProfileExists('Netatmo.absHumidity')) {
+                IPS_DeleteVariableProfile('Netatmo.absHumidity');
+            }
+            $this->InstallVarProfiles(false);
+        }
+
+        return '';
+    }
+
     public function ApplyChanges()
     {
         parent::ApplyChanges();
@@ -1656,6 +1679,11 @@ class NetatmoWeatherDevice extends IPSModule
 
     public function ReceiveData($data)
     {
+        if ($this->CheckStatus() == self::$STATUS_INVALID) {
+            $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => skip', 0);
+            return;
+        }
+
         $jdata = json_decode($data);
         $this->SendDebug(__FUNCTION__, 'data=' . print_r($jdata, true), 0);
         $buf = $jdata->Buffer;
