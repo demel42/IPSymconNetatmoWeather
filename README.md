@@ -424,6 +424,10 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.36.1 @ 07.10.2022 13:59
+  - update submodule CommonStubs
+    Fix: Update-Prüfung wieder funktionsfähig
+
 - 1.36 @ 07.09.2022 15:27
   - Fix: Variablenprofil 'Netatmo.absHumidity'
   - Fix: Statuscodes falsch nummeriert
