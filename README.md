@@ -424,6 +424,9 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.36.2 @ 11.10.2022 14:05
+  - Fix: Login per OAuth funktionierte nicht mehr
+
 - 1.36.1 @ 07.10.2022 13:59
   - update submodule CommonStubs
     Fix: Update-Prüfung wieder funktionsfähig

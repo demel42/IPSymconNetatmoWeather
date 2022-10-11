@@ -480,7 +480,7 @@ class NetatmoWeatherIO extends IPSModule
             $formActions[] = [
                 'type'    => 'Button',
                 'caption' => 'Login at Netatmo',
-                'onClick' => 'echo ' . $this->Login(),
+                'onClick' => 'echo "' . $this->Login() . '";',
             ];
         }
 
