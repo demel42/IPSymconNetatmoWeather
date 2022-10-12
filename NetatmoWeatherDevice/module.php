@@ -387,29 +387,33 @@ class NetatmoWeatherDevice extends IPSModule
                     $module_id = $device['_id'];
                     $module_desc = $this->Translate('Base module');
 
-                    $instID = 0;
-                    foreach ($instIDs as $id) {
-                        if (IPS_GetProperty($id, 'station_id') != $station_id) {
+                    $instanceID = 0;
+                    foreach ($instIDs as $instID) {
+                        if (IPS_GetProperty($instID, 'station_id') != $station_id) {
                             continue;
                         }
-                        if (IPS_GetProperty($id, 'module_id') != $module_id) {
+                        if (IPS_GetProperty($instID, 'module_id') != $module_id) {
                             continue;
                         }
-                        $instID = $id;
+                        $instanceID = $instID;
                         break;
+                    }
+
+                    if ($instanceID && IPS_GetInstance($instanceID)['ConnectionID'] != IPS_GetInstance($this->InstanceID)['ConnectionID']) {
+                        continue;
                     }
 
                     $module_name = $this->GetArrayElem($device, 'module_name', '');
                     if ($module_name == '') {
-                        $module_name = IPS_GetName($instID);
+                        $module_name = IPS_GetName($instanceID);
                     }
                     $module_info = $module_desc . ' (' . $station_name . '\\' . $module_name . ')';
 
                     $entry = [
+                        'instanceID'   => $instanceID,
                         'name'         => $module_name,
                         'module_desc'  => $module_desc,
                         'module_id'    => $module_id,
-                        'instanceID'   => $instID,
                         'create'       => [
                             'moduleID'       => $guid,
                             'location'       => $this->GetConfiguratorLocation($catID),
@@ -422,6 +426,7 @@ class NetatmoWeatherDevice extends IPSModule
                         ]
                     ];
                     $entries[] = $entry;
+                    $this->SendDebug(__FUNCTION__, 'entry=' . print_r($entry, true), 0);
 
                     $modules = $this->GetArrayElem($device, 'modules', '');
                     if ($modules != '') {
@@ -458,29 +463,32 @@ class NetatmoWeatherDevice extends IPSModule
                                     continue;
                                 }
 
-                                $instID = 0;
-                                foreach ($instIDs as $id) {
-                                    if (IPS_GetProperty($id, 'station_id') != $station_id) {
+                                $instanceID = 0;
+                                foreach ($instIDs as $instID) {
+                                    if (IPS_GetProperty($instID, 'station_id') != $station_id) {
                                         continue;
                                     }
-                                    if (IPS_GetProperty($id, 'module_id') != $module_id) {
+                                    if (IPS_GetProperty($instID, 'module_id') != $module_id) {
                                         continue;
                                     }
-                                    $instID = $id;
+                                    $instanceID = $instID;
                                     break;
                                 }
 
+                                if ($instanceID && IPS_GetInstance($instanceID)['ConnectionID'] != IPS_GetInstance($this->InstanceID)['ConnectionID']) {
+                                    continue;
+                                }
                                 $module_name = $this->GetArrayElem($module, 'module_name', '');
                                 if ($module_name == '') {
-                                    $module_name = IPS_GetName($instID);
+                                    $module_name = IPS_GetName($instanceID);
                                 }
                                 $module_info = $module_desc . ' (' . $station_name . '\\' . $module_name . ')';
 
                                 $entry = [
+                                    'instanceID'   => $instanceID,
                                     'name'         => $module_name,
                                     'module_desc'  => $module_desc,
                                     'module_id'    => $module_id,
-                                    'instanceID'   => $instID,
                                     'create'       => [
                                         'moduleID'       => $guid,
                                         'location'       => $this->GetConfiguratorLocation($catID),
@@ -493,6 +501,7 @@ class NetatmoWeatherDevice extends IPSModule
                                     ]
                                 ];
                                 $entries[] = $entry;
+                                $this->SendDebug(__FUNCTION__, 'entry=' . print_r($entry, true), 0);
                             }
                         }
                     }

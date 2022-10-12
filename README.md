@@ -424,6 +424,10 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.36.3 @ 12.10.2022 14:44
+  - Konfigurator betrachtet nun nur noch Geräte, die entweder noch nicht angelegt wurden oder mit dem gleichen I/O verbunden sind
+  - update submodule CommonStubs
+
 - 1.36.2 @ 11.10.2022 14:05
   - Fix: Login per OAuth funktionierte nicht mehr
 

@@ -95,30 +95,34 @@ class NetatmoWeatherConfig extends IPSModule
                     $station_id = $device['_id'];
                     $module_id = '';
                     $place = $device['place'];
-                    $city = $place['city'];
+                    $city = isset($place['city']) ? $place['city'] : '';
                     $altitude = $place['altitude'];
                     $longitude = $place['location'][0];
                     $latitude = $place['location'][1];
 
                     $info = 'Station (' . $station_name . ')';
 
-                    $instID = 0;
-                    foreach ($instIDs as $id) {
-                        if (IPS_GetProperty($id, 'station_id') != $station_id) {
+                    $instanceID = 0;
+                    foreach ($instIDs as $instID) {
+                        if (IPS_GetProperty($instID, 'station_id') != $station_id) {
                             continue;
                         }
-                        if (IPS_GetProperty($id, 'module_id') != $module_id) {
+                        if (IPS_GetProperty($instID, 'module_id') != $module_id) {
                             continue;
                         }
-                        $instID = $id;
+                        $instanceID = $instID;
                         break;
                     }
 
+                    if ($instanceID && IPS_GetInstance($instanceID)['ConnectionID'] != IPS_GetInstance($this->InstanceID)['ConnectionID']) {
+                        continue;
+                    }
+
                     $entry = [
+                        'instanceID' => $instanceID,
                         'name'       => $station_name,
                         'city'       => $city,
                         'station_id' => $station_id,
-                        'instanceID' => $instID,
                         'create'     => [
                             'moduleID'       => $guid,
                             'location'       => $this->GetConfiguratorLocation($catID),
@@ -135,6 +139,7 @@ class NetatmoWeatherConfig extends IPSModule
                     ];
 
                     $entries[] = $entry;
+                    $this->SendDebug(__FUNCTION__, 'entry=' . print_r($entry, true), 0);
                 }
             }
         }
@@ -148,6 +153,10 @@ class NetatmoWeatherConfig extends IPSModule
                 }
             }
             if ($fnd) {
+                continue;
+            }
+
+            if (IPS_GetInstance($instID)['ConnectionID'] != IPS_GetInstance($this->InstanceID)['ConnectionID']) {
                 continue;
             }
 
