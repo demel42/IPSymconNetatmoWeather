@@ -424,6 +424,12 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.37 @ 04.07.2023 14:44
+  - Fix: Schreibfehler korrigiert
+  - Vorbereitung auf IPS 7 / PHP 8.2
+  - update submodule CommonStubs
+    - Absicherung bei Zugriff auf Objekte und Inhalte
+
 - 1.36.3 @ 12.10.2022 14:44
   - Konfigurator betrachtet nun nur noch Geräte, die entweder noch nicht angelegt wurden oder mit dem gleichen I/O verbunden sind
   - update submodule CommonStubs

@@ -497,7 +497,7 @@ class NetatmoWeatherIO extends IPSModule
             'items'     => [
                 [
                     'type'    => 'Button',
-                    'caption' => 'Clear Token',
+                    'caption' => 'Clear token',
                     'onClick' => 'IPS_RequestAction(' . $this->InstanceID . ', "ClearToken", "");',
                 ],
             ],

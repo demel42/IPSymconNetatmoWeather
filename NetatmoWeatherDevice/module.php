@@ -1077,7 +1077,7 @@ class NetatmoWeatherDevice extends IPSModule
         $msg .= ', gust=' . $windgust . ' km/h';
         $msg .= ' (' . $windgustdir . '°)';
         $msg .= ', pressure=' . $pressure . ' mb';
-        $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
+        $this->SendDebug(__FUNCTION__, $msg, 0);
 
         $url = $wunderground_url . '?ID=' . $wunderground_id . '&PASSWORD=' . $wunderground_key . '&action=updateraw' . $param;
 
@@ -1204,7 +1204,7 @@ class NetatmoWeatherDevice extends IPSModule
         ];
 
         $msg = "station \"$module_name\": station_name=$station_name, wifi_status=$wifi_status, last_contact=$last_contact";
-        $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
+        $this->SendDebug(__FUNCTION__, $msg, 0);
 
         if ($with_last_contact) {
             $this->SetValue('LastContact', $last_contact);
@@ -1352,10 +1352,10 @@ class NetatmoWeatherDevice extends IPSModule
         $last_measure = $dashboard['time_utc'];
 
         $msg = "base-module \"$module_name\": Temperature=$Temperature, CO2=$CO2, Humidity=$Humidity, Noise=$Noise, Pressure=$Pressure, AbsolutePressure=$AbsolutePressure";
-        $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
+        $this->SendDebug(__FUNCTION__, $msg, 0);
         $module_type_text = $this->module_type2text($module_type);
         $msg = "module_type=$module_type($module_type_text), module_name=$module_name, last_measure=$last_measure";
-        $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
+        $this->SendDebug(__FUNCTION__, $msg, 0);
 
         $this->SetValue('Temperature', $Temperature);
         $this->SetValue('CO2', $CO2);
@@ -1466,7 +1466,7 @@ class NetatmoWeatherDevice extends IPSModule
                 if (isset($dashboard['time_utc']) == false) {
                     $msg = "instance $this->InstanceID: defect dasboard=" . print_r($dashboard, true);
                     $this->LogMessage($msg, KL_NOTIFY);
-                    $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
+                    $this->SendDebug(__FUNCTION__, $msg, 0);
                 }
 
                 $last_measure = $dashboard['time_utc'];
@@ -1518,7 +1518,7 @@ class NetatmoWeatherDevice extends IPSModule
                         }
 
                         $msg = "outdoor module \"$module_name\": Temperature=$Temperature, Humidity=$Humidity";
-                        $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
+                        $this->SendDebug(__FUNCTION__, $msg, 0);
                         break;
                     case 'NAModule2':
                         // Windmesser
@@ -1566,7 +1566,7 @@ class NetatmoWeatherDevice extends IPSModule
                         }
 
                         $msg = "wind gauge \"$module_name\": WindSpeed=$WindSpeed, WindAngle=$WindAngle, GustSpeed=$GustSpeed, GustAngle=$GustAngle";
-                        $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
+                        $this->SendDebug(__FUNCTION__, $msg, 0);
                         break;
                     case 'NAModule3':
                         // Regenmesser
@@ -1579,7 +1579,7 @@ class NetatmoWeatherDevice extends IPSModule
                         $this->SetValue('Rain_24h', $sum_rain_24);
 
                         $msg = "rain gauge \"$module_name\": Rain=$Rain, sum_rain_1=$sum_rain_1, sum_rain_24=$sum_rain_24";
-                        $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
+                        $this->SendDebug(__FUNCTION__, $msg, 0);
                         break;
                     case 'NAModule4':
                         // Innenmodul
@@ -1622,13 +1622,13 @@ class NetatmoWeatherDevice extends IPSModule
                         }
 
                         $msg = "indoor module \"$module_name\": Temperature=$Temperature, Humidity=$Humidity, CO2=$CO2";
-                        $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
+                        $this->SendDebug(__FUNCTION__, $msg, 0);
                         break;
                 }
 
                 $module_type_text = $this->module_type2text($module_type);
                 $msg = "  module_type=$module_type($module_type_text), module_name=$module_name, last_measure=$last_measure, rf_status=$rf_status, battery_status=$battery_status";
-                $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
+                $this->SendDebug(__FUNCTION__, $msg, 0);
             }
         }
 
@@ -1637,7 +1637,7 @@ class NetatmoWeatherDevice extends IPSModule
             $module_type_text = $this->module_type2text($module_type);
             $msg = "instance $this->InstanceID \"$instName\" ($module_type_text) module with id $module_id not found";
             $this->LogMessage($msg, KL_WARNING);
-            $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
+            $this->SendDebug(__FUNCTION__, $msg, 0);
             return $statuscode;
         }
 
@@ -1646,7 +1646,7 @@ class NetatmoWeatherDevice extends IPSModule
             $module_type_text = $this->module_type2text($module_type);
             $msg = "instance $this->InstanceID \"$instName\" ($module_type_text) module with id $module_id has no data";
             $this->LogMessage($msg, KL_NOTIFY);
-            $this->SendDebug(__FUNCTION__, utf8_decode($msg), 0);
+            $this->SendDebug(__FUNCTION__, $msg, 0);
             return $statuscode;
         }
 
