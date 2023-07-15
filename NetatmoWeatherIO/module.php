@@ -263,8 +263,12 @@ class NetatmoWeatherIO extends IPSModule
                 $expiration = isset($jtoken['expiration']) ? $jtoken['expiration'] : 0;
                 $type = isset($jtoken['type']) ? $jtoken['type'] : self::$CONNECTION_UNDEFINED;
                 if ($type != self::$CONNECTION_OAUTH) {
-                    $this->WriteAttributeString('ApiRefreshToken', '');
-                    $this->SendDebug(__FUNCTION__, 'connection-type changed', 0);
+                    if ($type != self::$CONNECTION_UNDEFINED) {
+                        $this->WriteAttributeString('ApiRefreshToken', '');
+                        $this->SendDebug(__FUNCTION__, 'connection-type changed', 0);
+                    } else {
+                        $this->SendDebug(__FUNCTION__, 'connection-type not set', 0);
+                    }
                     $access_token = '';
                 } elseif ($expiration < time()) {
                     $this->SendDebug(__FUNCTION__, 'access_token expired', 0);
@@ -654,8 +658,12 @@ class NetatmoWeatherIO extends IPSModule
                 $expiration = isset($jtoken['expiration']) ? $jtoken['expiration'] : 0;
                 $type = isset($jtoken['type']) ? $jtoken['type'] : self::$CONNECTION_UNDEFINED;
                 if ($type != self::$CONNECTION_DEVELOPER) {
-                    $this->WriteAttributeString('ApiRefreshToken', '');
-                    $this->SendDebug(__FUNCTION__, 'connection-type changed', 0);
+                    if ($type != self::$CONNECTION_UNDEFINED) {
+                        $this->WriteAttributeString('ApiRefreshToken', '');
+                        $this->SendDebug(__FUNCTION__, 'connection-type changed', 0);
+                    } else {
+                        $this->SendDebug(__FUNCTION__, 'connection-type not set', 0);
+                    }
                     $access_token = '';
                 } elseif ($expiration < time()) {
                     $this->SendDebug(__FUNCTION__, 'access_token expired', 0);
