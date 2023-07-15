@@ -431,6 +431,10 @@ class NetatmoWeatherIO extends IPSModule
                             'caption' => 'Client Secret'
                         ],
                         [
+                            'type'    => 'Label',
+                            'caption' => 'Due to the API changes, login using developer key is no longer possible. The refresh token must be entered manually; see expert panel.',
+                        ],
+                        [
                             'type'    => 'ValidationTextBox',
                             'width'   => '600px',
                             'caption' => 'Refresh token',
@@ -511,32 +515,30 @@ class NetatmoWeatherIO extends IPSModule
         $oauth_type = $this->ReadPropertyInteger('OAuth_Type');
         if ($oauth_type == self::$CONNECTION_DEVELOPER) {
             $items[] = [
-                'type'     => 'ExpansionPanel',
-                'expanede' => true,
+                'type'     => 'PopupButton',
                 'caption'  => 'Set refresh token',
-                'items'    => [
-                    [
-                        'type'    => 'Label',
-                        'caption' => 'Generate on from https://dev.netatmo.com for the used app'
+                'popup'    => [
+                    'caption'  => 'Set refresh token',
+                    'items'    => [
+                        [
+                            'type'    => 'Label',
+                            'caption' => 'Generate the refresh token at https://dev.netatmo.com/apps/ for the app you are using. The scopes must be selected according to the default',
+                        ],
+                        [
+                            'type'    => 'Label',
+                            'caption' => $this->Translate('Needed scopes') . ': ' . implode(' ', self::$scopes),
+                        ],
+                        [
+                            'type'    => 'ValidationTextBox',
+                            'width'   => '600px',
+                            'name'    => 'refresh_token',
+                            'caption' => 'Refresh token'
+                        ],
                     ],
-                    [
-                        'type'    => 'Label',
-                        'caption' => $this->Translate('Needed scopes') . ': ' . implode(' ', self::$scopes),
-                    ],
-                    [
-                        'type'    => 'RowLayout',
-                        'items'   => [
-                            [
-                                'type'    => 'ValidationTextBox',
-                                'width'   => '600px',
-                                'name'    => 'refresh_token',
-                                'caption' => 'Refresh token'
-                            ],
-                            [
-                                'type'    => 'Button',
-                                'caption' => 'Set',
-                                'onClick' => 'IPS_RequestAction(' . $this->InstanceID . ', "SetRefreshToken", $refresh_token);',
-                            ],
+                    'buttons' => [
+                        [
+                            'caption' => 'Set',
+                            'onClick' => 'IPS_RequestAction(' . $this->InstanceID . ', "SetRefreshToken", $refresh_token);',
                         ],
                     ],
                 ],

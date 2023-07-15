@@ -424,7 +424,7 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.38 @ 15.07.2023 11:58
+- 1.38 @ 15.07.2023 15:13
   - Hotfix: Umgehung des Problems, das ein Login mit Entwicklerschlüssel nicht mehr möglich ist
 
 - 1.37 @ 04.07.2023 14:44
