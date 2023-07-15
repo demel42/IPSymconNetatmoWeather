@@ -524,15 +524,20 @@ class NetatmoWeatherIO extends IPSModule
                         'caption' => $this->Translate('Needed scopes') . ': ' . implode(' ', self::$scopes),
                     ],
                     [
-                        'type'    => 'ValidationTextBox',
-                        'width'   => '600px',
-                        'name'    => 'refresh_token',
-                        'caption' => 'Refresh token'
-                    ],
-                    [
-                        'type'    => 'Button',
-                        'caption' => 'Set',
-                        'onClick' => 'IPS_RequestAction(' . $this->InstanceID . ', "SetRefreshToken", $refresh_token);',
+                        'type'    => 'RowLayout',
+                        'items'   => [
+                            [
+                                'type'    => 'ValidationTextBox',
+                                'width'   => '600px',
+                                'name'    => 'refresh_token',
+                                'caption' => 'Refresh token'
+                            ],
+                            [
+                                'type'    => 'Button',
+                                'caption' => 'Set',
+                                'onClick' => 'IPS_RequestAction(' . $this->InstanceID . ', "SetRefreshToken", $refresh_token);',
+                            ],
+                        ],
                     ],
                 ],
             ];
