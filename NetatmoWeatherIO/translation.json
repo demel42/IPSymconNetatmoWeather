@@ -50,6 +50,12 @@
 			"Update weatherdata": "Aktualisiere Wetterdaten",
 			"Clear token": "Token löschen",
 
+			"Set refresh token": "Refresh-Token setzen",
+			"Needed scopes": "Erforderliche Scopes",
+			"Generate on from https://dev.netatmo.com for the used app": "Generieren Sie auf von https://dev.netatmo.com für die verwendete App",
+			"Refresh token": "Refresh-Token",
+			"Set": "einstellen",
+
 			"__end__": ""
 		}
 	}

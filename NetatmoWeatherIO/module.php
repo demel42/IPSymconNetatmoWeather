@@ -12,6 +12,10 @@ class NetatmoWeatherIO extends IPSModule
 
     private $oauthIdentifer = 'netatmo';
 
+    private static $scopes = [
+        'read_station', // Wetterstation
+    ];
+
     private $ModuleDir;
 
     public function __construct(string $InstanceID)
@@ -426,6 +430,13 @@ class NetatmoWeatherIO extends IPSModule
                             'name'    => 'Netatmo_Secret',
                             'caption' => 'Client Secret'
                         ],
+                        [
+                            'type'    => 'ValidationTextBox',
+                            'width'   => '600px',
+                            'caption' => 'Refresh token',
+                            'value'   => $this->ReadAttributeString('ApiRefreshToken'),
+                            'enabled' => false,
+                        ],
                     ],
                     'caption' => 'Netatmo Access-Details'
                 ];
@@ -490,17 +501,48 @@ class NetatmoWeatherIO extends IPSModule
             'onClick' => 'IPS_RequestAction(' . $this->InstanceID . ', "UpdateData", "");',
         ];
 
+        $items = [];
+        $items[] = [
+            'type'    => 'Button',
+            'caption' => 'Clear token',
+            'onClick' => 'IPS_RequestAction(' . $this->InstanceID . ', "ClearToken", "");',
+        ];
+
+        $oauth_type = $this->ReadPropertyInteger('OAuth_Type');
+        if ($oauth_type == self::$CONNECTION_DEVELOPER) {
+            $items[] = [
+                'type'     => 'ExpansionPanel',
+                'expanede' => true,
+                'caption'  => 'Set refresh token',
+                'items'    => [
+                    [
+                        'type'    => 'Label',
+                        'caption' => 'Generate on from https://dev.netatmo.com for the used app'
+                    ],
+                    [
+                        'type'    => 'Label',
+                        'caption' => $this->Translate('Needed scopes') . ': ' . implode(' ', self::$scopes),
+                    ],
+                    [
+                        'type'    => 'ValidationTextBox',
+                        'width'   => '600px',
+                        'name'    => 'refresh_token',
+                        'caption' => 'Refresh token'
+                    ],
+                    [
+                        'type'    => 'Button',
+                        'caption' => 'Set',
+                        'onClick' => 'IPS_RequestAction(' . $this->InstanceID . ', "SetRefreshToken", $refresh_token);',
+                    ],
+                ],
+            ];
+        }
+
         $formActions[] = [
             'type'      => 'ExpansionPanel',
             'caption'   => 'Expert area',
             'expanded'  => false,
-            'items'     => [
-                [
-                    'type'    => 'Button',
-                    'caption' => 'Clear token',
-                    'onClick' => 'IPS_RequestAction(' . $this->InstanceID . ', "ClearToken", "");',
-                ],
-            ],
+            'items'     => $items,
         ];
 
         $formActions[] = $this->GetInformationFormAction();
@@ -518,6 +560,9 @@ class NetatmoWeatherIO extends IPSModule
                 break;
             case 'ClearToken':
                 $this->ClearToken();
+                break;
+            case 'SetRefreshToken':
+                $this->SetRefreshToken($value);
                 break;
             default:
                 $r = false;
@@ -618,7 +663,7 @@ class NetatmoWeatherIO extends IPSModule
                             'client_secret' => $secret,
                             'username'      => $user,
                             'password'      => $password,
-                            'scope'         => 'read_station'
+                            'scope'         => implode(' ', self::$scopes),
                         ];
                     } else {
                         $postdata = [
@@ -849,5 +894,19 @@ class NetatmoWeatherIO extends IPSModule
         $access_token = $this->GetApiAccessToken();
         $this->SendDebug(__FUNCTION__, 'clear access_token=' . $access_token, 0);
         $this->SetBuffer('ApiAccessToken', '');
+    }
+
+    private function SetRefreshToken($refresh_token)
+    {
+        $this->SendDebug(__FUNCTION__, 'set refresh_token=' . $refresh_token, 0);
+        $this->WriteAttributeString('ApiRefreshToken', $refresh_token);
+        $jtoken = [
+            'access_token' => '',
+            'expiration'   => 0,
+            'type'         => self::$CONNECTION_DEVELOPER
+        ];
+        $this->SetBuffer('ApiAccessToken', json_encode($jtoken));
+        $this->GetApiAccessToken();
+        $this->ReloadForm();
     }
 }
