@@ -424,6 +424,16 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.39 @ 15.08.2023 10:03
+  - Fix: Wertebereich diverser Variablenprofile angepasst
+    - Netatmo.Temperatur: -10..30 -> -25..45 °C
+    - Netatmo.Humidity: n/a -> 0..100 %
+    - Netatmo.absHumidity: n/a -> 0..80 g/m³
+    - Netatmo.Dewpoint: 0..30 -> -10..40 °C
+    - Netatmo.Heatindex: 0..100 -> 0..60 °C
+    - Netatmo.WindSpeed: 0..100 -> 0..150 km/h
+  - update submodule CommonStubs
+
 - 1.38 @ 15.07.2023 15:49
   - Hotfix: Umgehung des Problems, das ein Login mit Entwicklerschlüssel nicht mehr möglich ist
 

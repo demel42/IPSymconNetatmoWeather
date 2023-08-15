@@ -89,13 +89,13 @@ trait NetatmoWeatherLocalLib
             $this->SendDebug(__FUNCTION__, 'reInstall=' . $this->bool2str($reInstall), 0);
         }
 
-        $this->CreateVarProfile('Netatmo.Temperatur', VARIABLETYPE_FLOAT, ' °C', -10, 30, 0, 1, 'Temperature', [], $reInstall);
-        $this->CreateVarProfile('Netatmo.Humidity', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, 'Drops', [], $reInstall);
-        $this->CreateVarProfile('Netatmo.absHumidity', VARIABLETYPE_FLOAT, ' g/m³', 0, 0, 0, 0, 'Drops', [], $reInstall);
-        $this->CreateVarProfile('Netatmo.Dewpoint', VARIABLETYPE_FLOAT, ' °C', 0, 30, 0, 0, 'Drops', [], $reInstall);
-        $this->CreateVarProfile('Netatmo.Heatindex', VARIABLETYPE_FLOAT, ' °C', 0, 100, 0, 0, 'Temperature', [], $reInstall);
+        $this->CreateVarProfile('Netatmo.Temperatur', VARIABLETYPE_FLOAT, ' °C', -25, 45, 0, 1, 'Temperature', [], $reInstall);
+        $this->CreateVarProfile('Netatmo.Humidity', VARIABLETYPE_FLOAT, ' %', 0, 100, 0, 0, 'Drops', [], $reInstall);
+        $this->CreateVarProfile('Netatmo.absHumidity', VARIABLETYPE_FLOAT, ' g/m³', 0, 80, 0, 0, 'Drops', [], $reInstall);
+        $this->CreateVarProfile('Netatmo.Dewpoint', VARIABLETYPE_FLOAT, ' °C', -10, 40, 0, 0, 'Drops', [], $reInstall);
+        $this->CreateVarProfile('Netatmo.Heatindex', VARIABLETYPE_FLOAT, ' °C', 0, 60, 0, 0, 'Temperature', [], $reInstall);
         $this->CreateVarProfile('Netatmo.Pressure', VARIABLETYPE_FLOAT, ' mbar', 500, 1200, 0, 0, 'Gauge', [], $reInstall);
-        $this->CreateVarProfile('Netatmo.WindSpeed', VARIABLETYPE_FLOAT, ' km/h', 0, 100, 0, 0, 'WindSpeed', [], $reInstall);
+        $this->CreateVarProfile('Netatmo.WindSpeed', VARIABLETYPE_FLOAT, ' km/h', 0, 150, 0, 0, 'WindSpeed', [], $reInstall);
         $this->CreateVarProfile('Netatmo.WindStrength', VARIABLETYPE_INTEGER, ' bft', 0, 13, 0, 0, 'WindSpeed', [], $reInstall);
         $this->CreateVarProfile('Netatmo.WindAngle', VARIABLETYPE_INTEGER, ' °', 0, 360, 0, 0, 'WindDirection', [], $reInstall);
         $this->CreateVarProfile('Netatmo.WindDirection', VARIABLETYPE_STRING, '', 0, 0, 0, 0, 'WindDirection', [], $reInstall);

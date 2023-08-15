@@ -10,6 +10,7 @@
 
 			"__function__": "CheckModuleUpdate",
 			"Error in variableprofile 'Netatmo.absHumidity'": "Fehler im Variablenprofil 'Netatmo.absHumidity'",
+			"Adjusting the value range of various variable profiles": "Wertebereich diverser Variablenprofile anpassen",
 
 			"__function__": "CheckConfiguration",
 			"Station-ID must be specified": "Stations-ID muss angegeben sein",

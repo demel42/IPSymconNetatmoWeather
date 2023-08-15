@@ -138,6 +138,10 @@ class NetatmoWeatherDevice extends IPSModule
             $r[] = $this->Translate('Error in variableprofile \'Netatmo.absHumidity\'');
         }
 
+        if ($this->version2num($oldInfo) < $this->version2num('1.39')) {
+            $r[] = $this->Translate('Adjusting the value range of various variable profiles');
+        }
+
         return $r;
     }
 
@@ -146,6 +150,23 @@ class NetatmoWeatherDevice extends IPSModule
         if ($this->version2num($oldInfo) < $this->version2num('1.36')) {
             if (IPS_VariableProfileExists('Netatmo.absHumidity')) {
                 IPS_DeleteVariableProfile('Netatmo.absHumidity');
+            }
+            $this->InstallVarProfiles(false);
+        }
+
+        if ($this->version2num($oldInfo) < $this->version2num('1.39')) {
+            $vps = [
+                'Netatmo.Temperatur',
+                'Netatmo.Humidity',
+                'Netatmo.absHumidity',
+                'Netatmo.Dewpoint',
+                'Netatmo.Heatindex',
+                'Netatmo.WindSpeed',
+            ];
+            foreach ($vps as $vp) {
+                if (IPS_VariableProfileExists($vp)) {
+                    IPS_DeleteVariableProfile($vp);
+                }
             }
             $this->InstallVarProfiles(false);
         }
