@@ -424,6 +424,11 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.40 @ 15.10.2023 13:51
+  - Neu: Ermittlung von Speicherbedarf und Laufzeit (aktuell und für 31 Tage) und Anzeige im Panel "Information"
+  - Fix: die Statistik der ApiCalls wird nicht mehr nach uri sondern nur noch host+cmd differenziert
+  - update submodule CommonStubs
+
 - 1.39 @ 15.08.2023 10:03
   - Fix: Wertebereich diverser Variablenprofile angepasst
     - Netatmo.Temperatur: -10..30 -> -25..45 °C

@@ -16,13 +16,21 @@ class NetatmoWeatherIO extends IPSModule
         'read_station', // Wetterstation
     ];
 
-    private $ModuleDir;
+    private static $semaphoreTM = 5 * 1000;
+
+    private $SemaphoreID;
 
     public function __construct(string $InstanceID)
     {
         parent::__construct($InstanceID);
 
-        $this->ModuleDir = __DIR__;
+        $this->CommonContruct(__DIR__);
+        $this->SemaphoreID = __CLASS__ . '_' . $InstanceID;
+    }
+
+    public function __destruct()
+    {
+        $this->CommonDestruct();
     }
 
     public function Create()
@@ -43,7 +51,9 @@ class NetatmoWeatherIO extends IPSModule
 
         $this->RegisterAttributeString('ApiRefreshToken', '');
 
-        $this->RegisterAttributeString('UpdateInfo', '');
+        $this->RegisterAttributeString('UpdateInfo', json_encode([]));
+        $this->RegisterAttributeString('ApiCallStats', json_encode([]));
+        $this->RegisterAttributeString('ModuleStats', json_encode([]));
 
         $this->InstallVarProfiles(false);
 
@@ -549,6 +559,8 @@ class NetatmoWeatherIO extends IPSModule
             ];
         }
 
+        $items[] = $this->GetApiCallStatsFormItem();
+
         $formActions[] = [
             'type'      => 'ExpansionPanel',
             'caption'   => 'Expert area',
@@ -897,6 +909,9 @@ class NetatmoWeatherIO extends IPSModule
 
         $this->SendDebug(__FUNCTION__, '    statuscode=' . $statuscode . ', err=' . $err, 0);
         $this->SendDebug(__FUNCTION__, '    data=' . $data, 0);
+
+        $this->ApiCallsCollect($url, $err, $statuscode);
+
         return $statuscode;
     }
 
