@@ -1008,8 +1008,8 @@ class NetatmoWeatherDevice extends IPSModule
         }
 
         // Messwerte für Wunderground bereitstellen
+        $last_measure = 0;
         $pressure = '';
-        $time_utc = '';
         $temp = '';
         $humidity = '';
         $rain = '';
@@ -1027,8 +1027,14 @@ class NetatmoWeatherDevice extends IPSModule
             return;
         }
 
+        if (isset($dashboard['time_utc'])) {
+            $last_measure = $dashboard['time_utc'];
+        } else {
+            $last_measure = time();
+            $this->SendDebug(__FUNCTION__, 'missing "time_utc", use current timestamp', 0);
+        }
+
         $pressure = $this->GetArrayElem($dashboard, 'AbsolutePressure', 0);
-        $time_utc = $dashboard['time_utc'];
 
         $modules = $this->GetArrayElem($device, 'modules', '');
         if ($modules == '') {
@@ -1066,7 +1072,7 @@ class NetatmoWeatherDevice extends IPSModule
             }
         }
 
-        $param = '&dateutc=' . rawurlencode(date('Y-m-d G:i:s', $time_utc));
+        $param = '&dateutc=' . rawurlencode(date('Y-m-d G:i:s', $last_measure));
         if ($temp > 0) {
             $param .= '&tempf=' . rawurlencode($this->celsius2farenheit($temp));
         }
@@ -1205,7 +1211,12 @@ class NetatmoWeatherDevice extends IPSModule
             return $statuscode;
         }
 
-        $last_measure = $dashboard['time_utc'];
+        if (isset($dashboard['time_utc'])) {
+            $last_measure = $dashboard['time_utc'];
+        } else {
+            $last_measure = time();
+            $this->SendDebug(__FUNCTION__, 'missing "time_utc", use current timestamp', 0);
+        }
 
         // letzte Kommunikation der Station mit Netatmo
         $last_contact = $device['last_status_store'];
@@ -1269,7 +1280,12 @@ class NetatmoWeatherDevice extends IPSModule
 
                     if (isset($module['dashboard_data'])) {
                         $dashboard = $module['dashboard_data'];
-                        $last_measure = $dashboard['time_utc'];
+                        if (isset($dashboard['time_utc'])) {
+                            $last_measure = $dashboard['time_utc'];
+                        } else {
+                            $last_measure = time();
+                            $this->SendDebug(__FUNCTION__, 'missing "time_utc", use current timestamp', 0);
+                        }
                     } else {
                         $last_measure = 0;
                     }
@@ -1374,7 +1390,12 @@ class NetatmoWeatherDevice extends IPSModule
         $temp_trend = $this->GetArrayElem($dashboard, 'temp_trend', '');
         $pressure_trend = $this->GetArrayElem($dashboard, 'pressure_trend', '');
 
-        $last_measure = $dashboard['time_utc'];
+        if (isset($dashboard['time_utc'])) {
+            $last_measure = $dashboard['time_utc'];
+        } else {
+            $last_measure = time();
+            $this->SendDebug(__FUNCTION__, 'missing "time_utc", use current timestamp', 0);
+        }
 
         $msg = "base-module \"$module_name\": Temperature=$Temperature, CO2=$CO2, Humidity=$Humidity, Noise=$Noise, Pressure=$Pressure, AbsolutePressure=$AbsolutePressure";
         $this->SendDebug(__FUNCTION__, $msg, 0);
@@ -1488,13 +1509,12 @@ class NetatmoWeatherDevice extends IPSModule
                     break;
                 }
 
-                if (isset($dashboard['time_utc']) == false) {
-                    $msg = "instance $this->InstanceID: defect dasboard=" . print_r($dashboard, true);
-                    $this->LogMessage($msg, KL_NOTIFY);
-                    $this->SendDebug(__FUNCTION__, $msg, 0);
+                if (isset($dashboard['time_utc'])) {
+                    $last_measure = $dashboard['time_utc'];
+                } else {
+                    $last_measure = time();
+                    $this->SendDebug(__FUNCTION__, 'missing "time_utc", use current timestamp', 0);
                 }
-
-                $last_measure = $dashboard['time_utc'];
                 if ($with_last_measure) {
                     $this->SetValue('LastMeasure', $last_measure);
                 }
