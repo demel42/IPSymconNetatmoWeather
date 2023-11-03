@@ -424,8 +424,9 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.40 @ 15.10.2023 13:51
+- 1.40 @ 03.11.2023 18:22
   - Neu: Ermittlung von Speicherbedarf und Laufzeit (aktuell und für 31 Tage) und Anzeige im Panel "Information"
+  - Verbesserung: das Panel für die Module der STation ist nun direkt unter der "Basis-Konfiguration"
   - Fix: die Statistik der ApiCalls wird nicht mehr nach uri sondern nur noch host+cmd differenziert
   - Fix: Fehler abgefangen, das unter unklaren Umständen "time_utc" manchmal nicht übermittelt wird
   - update submodule CommonStubs

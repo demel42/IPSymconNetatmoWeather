@@ -767,6 +767,49 @@ class NetatmoWeatherDevice extends IPSModule
 
         switch ($module_type) {
             case 'Station':
+                $entries = $this->getConfiguratorValues4Station();
+                if (count($entries) > 0) {
+                    $formElements[] = [
+                        'type'    => 'ExpansionPanel',
+                        'items'   => [
+                            [
+                                'name'    => 'ImportCategoryID',
+                                'type'    => 'SelectCategory',
+                                'caption' => 'category for modules to be created'
+                            ],
+                            [
+                                'type'    => 'Configurator',
+                                'name'    => 'Modules',
+                                'caption' => 'available modules',
+
+                                'rowCount' => count($entries),
+
+                                'add'     => false,
+                                'delete'  => false,
+                                'columns' => [
+                                    [
+                                        'caption' => 'Name',
+                                        'name'    => 'name',
+                                        'width'   => 'auto'
+                                    ],
+                                    [
+                                        'caption' => 'Type',
+                                        'name'    => 'module_desc',
+                                        'width'   => '200px'
+                                    ],
+                                    [
+                                        'caption' => 'Id',
+                                        'name'    => 'module_id',
+                                        'width'   => '200px'
+                                    ]
+                                ],
+                                'values' => $entries,
+                            ],
+                        ],
+                        'caption' => 'Modules'
+                    ];
+                }
+
                 $formElements[] = [
                     'type'    => 'ExpansionPanel',
                     'items'   => [
@@ -869,49 +912,6 @@ class NetatmoWeatherDevice extends IPSModule
                     ],
                     'caption' => 'Wunderground'
                 ];
-
-                $entries = $this->getConfiguratorValues4Station();
-                if (count($entries) > 0) {
-                    $formElements[] = [
-                        'type'    => 'ExpansionPanel',
-                        'items'   => [
-                            [
-                                'name'    => 'ImportCategoryID',
-                                'type'    => 'SelectCategory',
-                                'caption' => 'category for modules to be created'
-                            ],
-                            [
-                                'type'    => 'Configurator',
-                                'name'    => 'Modules',
-                                'caption' => 'available modules',
-
-                                'rowCount' => count($entries),
-
-                                'add'     => false,
-                                'delete'  => false,
-                                'columns' => [
-                                    [
-                                        'caption' => 'Name',
-                                        'name'    => 'name',
-                                        'width'   => 'auto'
-                                    ],
-                                    [
-                                        'caption' => 'Type',
-                                        'name'    => 'module_desc',
-                                        'width'   => '200px'
-                                    ],
-                                    [
-                                        'caption' => 'Id',
-                                        'name'    => 'module_id',
-                                        'width'   => '200px'
-                                    ]
-                                ],
-                                'values' => $entries,
-                            ],
-                        ],
-                        'caption' => 'Modules'
-                    ];
-                }
                 break;
             case 'NAMain':
                 $items = [];
