@@ -66,7 +66,9 @@ class NetatmoWeatherDevice extends IPSModule
 
         $this->RegisterPropertyString('hook', '/hook/NetatmoWeather');
 
-        $this->RegisterPropertyInteger('ImportCategoryID', 0);
+        if (IPS_GetKernelVersion() < 7.0) {
+            $this->RegisterPropertyInteger('ImportCategoryID', 0);
+        }
 
         $this->RegisterAttributeString('UpdateInfo', json_encode([]));
         $this->RegisterAttributeString('ModuleStats', json_encode([]));
@@ -182,7 +184,10 @@ class NetatmoWeatherDevice extends IPSModule
     {
         parent::ApplyChanges();
 
-        $propertyNames = ['statusbox_script', 'webhook_script', 'ImportCategoryID'];
+        $propertyNames = ['statusbox_script', 'webhook_script'];
+        if (IPS_GetKernelVersion() < 7.0) {
+            $propertyNames[] = 'ImportCategoryID';
+        }
         $this->MaintainReferences($propertyNames);
 
         if ($this->CheckPrerequisites() != false) {
@@ -375,7 +380,12 @@ class NetatmoWeatherDevice extends IPSModule
             return $entries;
         }
 
-        $catID = $this->ReadPropertyInteger('ImportCategoryID');
+        if (IPS_GetKernelVersion() < 7.0) {
+            $catID = $this->ReadPropertyInteger('ImportCategoryID');
+            $location = $this->GetConfiguratorLocation($catID);
+        } else {
+            $location = '';
+        }
 
         $SendData = ['DataID' => '{DC5A0AD3-88A5-CAED-3CA9-44C20CC20610}', 'Function' => 'LastData'];
         $data = $this->SendDataToParent(json_encode($SendData));
@@ -441,7 +451,7 @@ class NetatmoWeatherDevice extends IPSModule
                         'module_id'    => $module_id,
                         'create'       => [
                             'moduleID'       => $guid,
-                            'location'       => $this->GetConfiguratorLocation($catID),
+                            'location'       => $location,
                             'info'           => $module_info,
                             'configuration'  => [
                                 'module_id'   => $module_id,
@@ -516,7 +526,7 @@ class NetatmoWeatherDevice extends IPSModule
                                     'module_id'    => $module_id,
                                     'create'       => [
                                         'moduleID'       => $guid,
-                                        'location'       => $this->GetConfiguratorLocation($catID),
+                                        'location'       => $location,
                                         'info'           => $module_info,
                                         'configuration'  => [
                                             'module_id'   => $module_id,
@@ -768,44 +778,46 @@ class NetatmoWeatherDevice extends IPSModule
         switch ($module_type) {
             case 'Station':
                 $entries = $this->getConfiguratorValues4Station();
+                $items = [];
+                if (IPS_GetKernelVersion() < 7.0) {
+                    $items[] = [
+                        'name'    => 'ImportCategoryID',
+                        'type'    => 'SelectCategory',
+                        'caption' => 'category for modules to be created'
+                    ];
+                }
+                $items[] = [
+                    'type'    => 'Configurator',
+                    'name'    => 'Modules',
+                    'caption' => 'available modules',
+
+                    'rowCount' => count($entries),
+
+                    'add'     => false,
+                    'delete'  => false,
+                    'columns' => [
+                        [
+                            'caption' => 'Name',
+                            'name'    => 'name',
+                            'width'   => 'auto'
+                        ],
+                        [
+                            'caption' => 'Type',
+                            'name'    => 'module_desc',
+                            'width'   => '200px'
+                        ],
+                        [
+                            'caption' => 'Id',
+                            'name'    => 'module_id',
+                            'width'   => '200px'
+                        ]
+                    ],
+                    'values' => $entries,
+                ];
                 if (count($entries) > 0) {
                     $formElements[] = [
                         'type'    => 'ExpansionPanel',
-                        'items'   => [
-                            [
-                                'name'    => 'ImportCategoryID',
-                                'type'    => 'SelectCategory',
-                                'caption' => 'category for modules to be created'
-                            ],
-                            [
-                                'type'    => 'Configurator',
-                                'name'    => 'Modules',
-                                'caption' => 'available modules',
-
-                                'rowCount' => count($entries),
-
-                                'add'     => false,
-                                'delete'  => false,
-                                'columns' => [
-                                    [
-                                        'caption' => 'Name',
-                                        'name'    => 'name',
-                                        'width'   => 'auto'
-                                    ],
-                                    [
-                                        'caption' => 'Type',
-                                        'name'    => 'module_desc',
-                                        'width'   => '200px'
-                                    ],
-                                    [
-                                        'caption' => 'Id',
-                                        'name'    => 'module_id',
-                                        'width'   => '200px'
-                                    ]
-                                ],
-                                'values' => $entries,
-                            ],
-                        ],
+                        'items'   => $items,
                         'caption' => 'Modules'
                     ];
                 }

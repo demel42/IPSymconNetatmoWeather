@@ -252,10 +252,12 @@ Bei einer Angabe von 5m sind die Werte nicht älter als 15m.
 
 #### Properties
 
-| Eigenschaft               | Typ      | Standardwert | Beschreibung |
-| :------------------------ | :------  | :----------- | :----------- |
-| Kategorie                 | integer  | 0            | Kategorie im Objektbaum, unter dem die Instanzen angelegt werden |
-| Stationen                 | list     |              | Liste der verfügbaren Stationen |
+| Eigenschaft               | Typ     | Standardwert | Beschreibung |
+| :------------------------ | :------ | :----------- | :----------- |
+| Kategorie                 | integer | 0            | Kategorie im Objektbaum, unter dem die Instanzen angelegt werden _[1]_ |
+| Stationen                 | list    |              | Liste der verfügbaren Stationen |
+
+_[1]_: nur bis IPS-Version 7 vorhanden, danach ist eine Einstellmöglichkeit Bestandteil des Standard-Konfigurators
 
 ### NetatmoWeatherDevice
 
@@ -295,24 +297,18 @@ Weiterhin stehen je nach Typ des Moduls zur Verfügung
 | with_winddirection        | boolean | false        | Windrichtung mit Text |
 | with_windstrength         | boolean | false        | Windstärke |
 |                           |         |              | |
-| statusbox_script          | integer | 0            | Script zum Füllen der Variable _StatusBox_ |
-| webhook_script            | integer | 0            | Script zur Verwendung im WebHook |
+| statusbox_script          | integer | 0            | Script zum Füllen der Variable _StatusBox_ _[1]_|
+| webhook_script            | integer | 0            | Script zur Verwendung im WebHook _[1]_|
 |                           |         |              | |
-| minutes2fail              | integer | 30           | Dauer, bis die Kommunikation als gestört gilt |
+| minutes2fail              | integer | 30           | Dauer, bis die Kommunikation als gestört gilt _[2]_ |
 |                           |         |              | |
 | Wunderground-Zugangsdaten | string  |              | Station-ID und -Key von https://www.wunderground.com/personal-weather-station/mypws |
 |                           |         |              | |
 | Module                    |         |              | **nur im übergeordneten Modul** |
-| Kategorie                 | integer | 0            | Kategorie im Objektbaum, unter dem die Instanzen angelegt werden |
+| Kategorie                 | integer | 0            | Kategorie im Objektbaum, unter dem die Instanzen angelegt werden _[2]_ |
 | Module                    | list    |              | Liste der verfügbaren Module zu dieser Station |
 
-Das hier angebbare Minuten-Intervall dient zu Überprüfung der Kommunikation zwischen
- - den Modulen und dem Basismodul
- - dem Basismodul und dem Netatmo-Server
-ist die Zeit überschritten, wird die Variable _Status_ des Basismoduls auf Fehler gesetzt.
-Anmerkung: die Variable _Status_ wird auch auf Fehler gesetzt wenn das IO-Modul einen Fehler feststellt.
-
-Erläuterung zu _statusbox_script_, _webhook_script_:
+_[1]_: Erläuterung zu _statusbox_script_, _webhook_script_:
 mit diesen Scripten kann man eine alternative Darstellung realisieren.
 
 Ein passendes Code-Fragment für ein Script:
@@ -328,6 +324,14 @@ if ($data) {
 Die Beschreibung der Struktur siehe _NetatmoWeather_GetRawData()_.
 
 Beispiel in module.php sind _Build_StatusBox()_ und _ProcessHook_Status()_.
+
+_[2]_: das hier angebbare Minuten-Intervall dient zu Überprüfung der Kommunikation zwischen
+ - den Modulen und dem Basismodul
+ - dem Basismodul und dem Netatmo-Server
+ist die Zeit überschritten, wird die Variable _Status_ des Basismoduls auf Fehler gesetzt.
+Anmerkung: die Variable _Status_ wird auch auf Fehler gesetzt wenn das IO-Modul einen Fehler feststellt.
+
+_[3]_: nur bis IPS-Version 7 vorhanden, danach ist eine Einstellmöglichkeit Bestandteil des Standard-Konfigurators
 
 ### Statusvariablen
 
@@ -423,6 +427,9 @@ GUIDs
   - `{2D42552F-2545-9145-D3C8-A299E3FDC6EA}`: an NetatmoWeatherConfig, NetatmoWeatherDevice
 
 ## 7. Versions-Historie
+
+- 1.41 @ 10.12.2023 11:01
+  - Neu: ab IPS-Version 7 ist im Konfigurator die Angabe einer Import-Kategorie integriert, daher entfällt die bisher vorhandene separate Einstellmöglichkeit
 
 - 1.40 @ 03.11.2023 18:22
   - Neu: Ermittlung von Speicherbedarf und Laufzeit (aktuell und für 31 Tage) und Anzeige im Panel "Information"
