@@ -48,6 +48,8 @@
 			"Update interval": "Aktualisierungsintervall",
 			"Minutes": "Minuten",
 
+			"Collect data of API calls": "Daten von API-Aufrufen sammeln",
+
 			"__actions__": "",
 			"Login at Netatmo": "Bei Netatmo anmelden",
 			"Update weatherdata": "Aktualisiere Wetterdaten",

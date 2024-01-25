@@ -49,10 +49,11 @@ class NetatmoWeatherIO extends IPSModule
 
         $this->RegisterPropertyInteger('OAuth_Type', self::$CONNECTION_UNDEFINED);
 
+        $this->RegisterPropertyBoolean('collectApiCallStats', true);
+
         $this->RegisterAttributeString('ApiRefreshToken', '');
 
         $this->RegisterAttributeString('UpdateInfo', json_encode([]));
-        $this->RegisterAttributeString('ApiCallStats', json_encode([]));
         $this->RegisterAttributeString('ModuleStats', json_encode([]));
 
         $this->InstallVarProfiles(false);
@@ -488,6 +489,12 @@ class NetatmoWeatherIO extends IPSModule
             'caption' => 'Call settings'
         ];
 
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'collectApiCallStats',
+            'caption' => 'Collect data of API calls'
+        ];
+
         return $formElements;
     }
 
@@ -559,7 +566,10 @@ class NetatmoWeatherIO extends IPSModule
             ];
         }
 
-        $items[] = $this->GetApiCallStatsFormItem();
+        $collectApiCallStats = $this->ReadPropertyBoolean('collectApiCallStats');
+        if ($collectApiCallStats) {
+            $items[] = $this->GetApiCallStatsFormItem();
+        }
 
         $formActions[] = [
             'type'      => 'ExpansionPanel',
@@ -910,7 +920,10 @@ class NetatmoWeatherIO extends IPSModule
         $this->SendDebug(__FUNCTION__, '    statuscode=' . $statuscode . ', err=' . $err, 0);
         $this->SendDebug(__FUNCTION__, '    data=' . $data, 0);
 
-        $this->ApiCallsCollect($url, $err, $statuscode);
+        $collectApiCallStats = $this->ReadPropertyBoolean('collectApiCallStats');
+        if ($collectApiCallStats) {
+            $this->ApiCallCollect($url, $err, $statuscode);
+        }
 
         return $statuscode;
     }
