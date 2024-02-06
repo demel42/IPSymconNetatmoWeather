@@ -428,7 +428,8 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.42 @ 25.01.2024 15:17
+- 1.42 @ 29.01.2024 11:02
+  - Änderung: Medien-Objekte haben zur eindeutigen Identifizierung jetzt ebenfalls ein Ident
   - Neu: Schalter, um Daten zu API-Aufrufen zu sammeln
     Die API-Aufruf-Daten stehen nun in einem Medienobjekt zur Verfügung
   - update submodule CommonStubs
