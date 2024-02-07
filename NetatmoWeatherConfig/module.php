@@ -108,14 +108,11 @@ class NetatmoWeatherConfig extends IPSModule
 
                     $instanceID = 0;
                     foreach ($instIDs as $instID) {
-                        if (IPS_GetProperty($instID, 'station_id') != $station_id) {
-                            continue;
+                        if (@IPS_GetProperty($instID, 'station_id') == $station_id && @IPS_GetProperty($instID, 'module_id') == $module_id) {
+                            $this->SendDebug(__FUNCTION__, 'instance found: ' . IPS_GetName($instID) . ' (' . $instID . ')', 0);
+                            $instanceID = $instID;
+                            break;
                         }
-                        if (IPS_GetProperty($instID, 'module_id') != $module_id) {
-                            continue;
-                        }
-                        $instanceID = $instID;
-                        break;
                     }
 
                     if ($instanceID && IPS_GetInstance($instanceID)['ConnectionID'] != IPS_GetInstance($this->InstanceID)['ConnectionID']) {
@@ -141,9 +138,8 @@ class NetatmoWeatherConfig extends IPSModule
                             ]
                         ]
                     ];
-
                     $entries[] = $entry;
-                    $this->SendDebug(__FUNCTION__, 'entry=' . print_r($entry, true), 0);
+                    $this->SendDebug(__FUNCTION__, 'instanceID=' . $instanceID . ', entry=' . print_r($entry, true), 0);
                 }
             }
         }
@@ -164,14 +160,14 @@ class NetatmoWeatherConfig extends IPSModule
                 continue;
             }
 
-            $module_type = IPS_GetProperty($instID, 'module_type');
+            @$module_type = IPS_GetProperty($instID, 'module_type');
             if ($module_type != 'Station') {
                 continue;
             }
 
             $name = IPS_GetName($instID);
             $city = '';
-            $station_id = IPS_GetProperty($instID, 'station_id');
+            @$station_id = IPS_GetProperty($instID, 'station_id');
 
             $entry = [
                 'instanceID' => $instID,
@@ -180,7 +176,7 @@ class NetatmoWeatherConfig extends IPSModule
                 'station_id' => $station_id,
             ];
             $entries[] = $entry;
-            $this->SendDebug(__FUNCTION__, 'missing entry=' . print_r($entry, true), 0);
+            $this->SendDebug(__FUNCTION__, 'lost: instanceID=' . $instID . ', entry=' . print_r($entry, true), 0);
         }
 
         return $entries;
