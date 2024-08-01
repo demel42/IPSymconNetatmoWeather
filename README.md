@@ -428,6 +428,10 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.44 @ 01.08.2024 14:22
+  - Änderung: nach Wegfall des Passwort-basierten Logins (siehe v1.38) nun die Konfiguration von Benutzerkennung und Passwort bereinigt
+  - update submodule CommonStubs
+
 - 1.43 @ 07.02.2024 17:56
   - Fix: Absicherung von Zugriffen auf andere Instanzen in Konfiguratoren
 

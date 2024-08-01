@@ -37,8 +37,8 @@
 			"Client ID": "Client ID",
 			"Client Secret": "Client Secret",
 
-			"Due to the API changes, login using developer key is no longer possible. The refresh token must be entered manually; see expert panel.":
-				"Aufgrund von Änderungen der API kann ein Login mittels Entwícklerschlüssel nicht mehr erfolgen. Der Refresh-Token muss manuell eingetragen werden; siehe Experten-Bereich.",
+			"Due to the API changes, password-based login with the developer key is no longer possible. The refresh token must be entered manually; see expert panel.":
+				"Aufgrund der API-Änderungen ist die Passwort-basierte Anmeldung mit dem Entwicklerschlüssel nicht mehr möglich. Das Refresh-Token muss manuell eingegeben werden; siehe Expertenpanel.",
 
 			"Call settings": "Abrufeinstellungen",
 
