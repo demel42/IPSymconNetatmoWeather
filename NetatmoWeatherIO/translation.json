@@ -17,7 +17,7 @@
 			"Netatmo via IP-Symcon Connect": "Netatmo über IP-Symcon Connect",
 			"Netatmo Developer Key": "Netatmo Entwickler-Schlüssel",
 			"Push \"Login at Netatmo\" in the action part of this configuration form.":
-				"\"Anmelden bei Netatmo\" in dem Aktionsbereich dieses Konfigurationsformulares drücken.",
+				"\"Bei Netatmo anmelden\" in dem Aktionsbereich dieses Konfigurationsformulares drücken.",
 			"At the webpage from Netatmo log in with your Netatmo username and password.":
 				"Auf der Webseite von Netatmo mit dem Netatmo Benutzernamen und Passwort anmelden.",
 			"If the connection to IP-Symcon was successfull you get the message: \"Netatmo successfully connected!\". Close the browser window.":
@@ -37,8 +37,12 @@
 			"Client ID": "Client ID",
 			"Client Secret": "Client Secret",
 
-			"Due to the API changes, password-based login with the developer key is no longer possible. The refresh token must be entered manually; see expert panel.":
-				"Aufgrund der API-Änderungen ist die Passwort-basierte Anmeldung mit dem Entwicklerschlüssel nicht mehr möglich. Das Refresh-Token muss manuell eingegeben werden; siehe Expertenpanel.",
+			"Due to the API changes, password-based login with the developer key is no longer possible. Instead, the login must be triggered manually. Alternatively, the refresh token can be entered manually; see expert panel.":
+				"Aufgrund der API-Änderungen ist eine passwortbasierte Anmeldung mit dem Entwicklerschlüssel nicht mehr möglich. Anstelle dessen muss die Anmeldung manuell ausgelöst werden. Alternativ kann das Aktualisierungstoken manuell eingegeben werden; siehe Expertenpanel.",
+			"Due to the API changes, password-based login with the developer key is no longer possible. Instead, the login must be triggered manually.":
+				"Aufgrund der API-Änderungen ist eine passwortbasierte Anmeldung mit dem Entwicklerschlüssel nicht mehr möglich. Anstelle dessen muss die Anmeldung manuell ausgelöst werden.",
+			"If the connection was successfull you get the message: \"Login was successful\". Close the browser window.":
+				"Wenn die Verbindung erfolgreich war erscheint die Meldung: \"Login war erfolgreich\". Das Browserfenster kann nun geschlossen werden.",
 
 			"Call settings": "Abrufeinstellungen",
 
@@ -64,6 +68,9 @@
 				"Generieren Sie den Refresh-Token auf https://dev.netatmo.com/apps/ für die verwendete App. Die Scopes müssen entsprechend der Vorgabe ausgewählt werden",
 			"Refresh token": "Refresh-Token",
 			"Set": "einstellen",
+
+			"Login was successful": "Login war erfolgreich",
+			"Login was not successful": "Login war nicht erfolgreich",
 
 			"__end__": ""
 		}
