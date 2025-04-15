@@ -16,9 +16,8 @@ class NetatmoWeatherIO extends IPSModule
         'read_station', // Wetterstation
     ];
 
-    private static $semaphoreTM = 5 * 1000;
-
     private $SemaphoreID;
+    private $SemaphoreTM;
 
     public function __construct(string $InstanceID)
     {
@@ -49,7 +48,10 @@ class NetatmoWeatherIO extends IPSModule
         $this->RegisterPropertyString('hook', '/hook/' . __CLASS__);
 
         $this->RegisterPropertyInteger('UpdateDataInterval', '5');
-        $this->RegisterPropertyInteger('ignore_http_error', '0');
+
+        $this->RegisterPropertyInteger('curl_exec_timeout', 15);
+        $this->RegisterPropertyInteger('curl_exec_attempts', 3);
+        $this->RegisterPropertyFloat('curl_exec_delay', 1);
 
         $this->RegisterPropertyInteger('OAuth_Type', self::$CONNECTION_UNDEFINED);
 
@@ -158,6 +160,11 @@ class NetatmoWeatherIO extends IPSModule
             $this->MaintainStatus(IS_INACTIVE);
             return;
         }
+
+        $curl_exec_timeout = $this->ReadPropertyInteger('curl_exec_timeout');
+        $curl_exec_attempts = $this->ReadPropertyInteger('curl_exec_attempts');
+        $curl_exec_delay = $this->ReadPropertyFloat('curl_exec_delay');
+        $this->SemaphoreTM = ((($curl_exec_timeout + ceil($curl_exec_delay)) * $curl_exec_attempts) + 1) * 1000;
 
         $oauth_type = $this->ReadPropertyInteger('OAuth_Type');
         if ($oauth_type == self::$CONNECTION_DEVELOPER) {
@@ -285,70 +292,103 @@ class NetatmoWeatherIO extends IPSModule
 
     protected function Call4AccessToken($content)
     {
+        $curl_exec_timeout = $this->ReadPropertyInteger('curl_exec_timeout');
+        $curl_exec_attempts = $this->ReadPropertyInteger('curl_exec_attempts');
+        $curl_exec_delay = $this->ReadPropertyFloat('curl_exec_delay');
+
         $url = 'https://oauth.ipmagic.de/access_token/' . $this->oauthIdentifer;
         $this->SendDebug(__FUNCTION__, 'url=' . $url, 0);
         $this->SendDebug(__FUNCTION__, '    content=' . print_r($content, true), 0);
 
-        $statuscode = 0;
-        $err = '';
-        $jdata = false;
+        $headerfields = [
+            'Content-Type' => 'application/x-www-form-urlencoded',
+        ];
 
         $time_start = microtime(true);
-        $options = [
-            'http' => [
-                'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
-                'method'  => 'POST',
-                'content' => http_build_query($content)
-            ]
+        $curl_opts = [
+            CURLOPT_URL            => $url,
+            CURLOPT_HTTPHEADER     => $this->build_header($headerfields),
+            CURLOPT_CUSTOMREQUEST  => 'POST',
+            CURLOPT_POSTFIELDS     => http_build_query($content),
+            CURLOPT_HEADER         => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => $curl_exec_timeout,
         ];
-        $context = stream_context_create($options);
-        $cdata = @file_get_contents($url, false, $context);
-        $duration = round(microtime(true) - $time_start, 2);
-        $httpcode = 0;
-        if ($cdata == false) {
-            $this->LogMessage('file_get_contents() failed: url=' . $url . ', context=' . print_r($context, true), KL_WARNING);
-            $this->SendDebug(__FUNCTION__, 'file_get_contents() failed: url=' . $url . ', context=' . print_r($context, true), 0);
-        } elseif (isset($http_response_header[0]) && preg_match('/HTTP\/[0-9\.]+\s+([0-9]*)/', $http_response_header[0], $r)) {
-            $httpcode = $r[1];
-        } else {
-            $this->LogMessage('missing http_response_header, cdata=' . $cdata, KL_WARNING);
-            $this->SendDebug(__FUNCTION__, 'missing http_response_header, cdata=' . $cdata, 0);
-        }
-        $this->SendDebug(__FUNCTION__, ' => httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
-        $this->SendDebug(__FUNCTION__, '    cdata=' . $cdata, 0);
 
-        if ($httpcode != 200) {
+        $ch = curl_init();
+        curl_setopt_array($ch, $curl_opts);
+
+        $statuscode = 0;
+        $err = '';
+        $jbody = false;
+
+        $attempt = 1;
+        do {
+            $response = curl_exec($ch);
+            $cerrno = curl_errno($ch);
+            $cerror = $cerrno ? curl_error($ch) : '';
+            if ($cerrno) {
+                $this->SendDebug(__FUNCTION__, ' => attempt=' . $attempt . ', got curl-errno ' . $cerrno . ' (' . $cerror . ')', 0);
+                IPS_Sleep((int) floor($curl_exec_delay * 1000));
+            }
+        } while ($cerrno && $attempt++ <= $curl_exec_attempts);
+
+        $curl_info = curl_getinfo($ch);
+        curl_close($ch);
+
+        $httpcode = $curl_info['http_code'];
+
+        $duration = round(microtime(true) - $time_start, 2);
+        $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's, attempts=' . $attempt, 0);
+
+        if ($cerrno) {
+            $statuscode = self::$IS_SERVERERROR;
+            $err = 'got curl-errno ' . $cerrno . ' (' . $cerror . ')';
+        } else {
+            $header_size = $curl_info['header_size'];
+            $head = substr($response, 0, $header_size);
+            $body = substr($response, $header_size);
+
+            $this->SendDebug(__FUNCTION__, ' => head=' . $head, 0);
+            if ($body == '' || ctype_print($body)) {
+                $this->SendDebug(__FUNCTION__, ' => body=' . $body, 0);
+            } else {
+                $this->SendDebug(__FUNCTION__, ' => body potentially contains binary data, size=' . strlen($body), 0);
+            }
+        }
+        if ($statuscode == 0) {
             if ($httpcode == 401) {
                 $statuscode = self::$IS_UNAUTHORIZED;
                 $err = 'got http-code ' . $httpcode . ' (unauthorized)';
             } elseif ($httpcode == 403) {
                 $statuscode = self::$IS_FORBIDDEN;
                 $err = 'got http-code ' . $httpcode . ' (forbidden)';
-            } elseif ($httpcode == 409) {
-                $data = $cdata;
             } elseif ($httpcode >= 500 && $httpcode <= 599) {
                 $statuscode = self::$IS_SERVERERROR;
                 $err = 'got http-code ' . $httpcode . ' (server error)';
-            } else {
+            } elseif ($httpcode != 200) {
                 $statuscode = self::$IS_HTTPERROR;
                 $err = 'got http-code ' . $httpcode;
             }
-        } elseif ($cdata == '') {
-            $statuscode = self::$IS_NODATA;
-            $err = 'no data';
-        } else {
-            $jdata = json_decode($cdata, true);
-            if ($jdata == '') {
+        }
+        if ($statuscode == 0) {
+            if ($body == '') {
                 $statuscode = self::$IS_INVALIDDATA;
-                $err = 'malformed response';
+                $err = 'no data';
             } else {
-                if (!isset($jdata['refresh_token'])) {
+                $jbody = json_decode($body, true);
+                if ($jbody == '') {
+                    $statuscode = self::$IS_NODATA;
+                    $err = 'malformed response';
+                } elseif (isset($jdata['refresh_token']) == false) {
                     $statuscode = self::$IS_INVALIDDATA;
                     $err = 'malformed response';
                 }
             }
         }
+
         if ($statuscode) {
+            $this->LogMessage('url=' . $url . ' => statuscode=' . $statuscode . ', err=' . $err, KL_WARNING);
             $this->SendDebug(__FUNCTION__, '    statuscode=' . $statuscode . ', err=' . $err, 0);
             $this->MaintainStatus($statuscode);
             return false;
@@ -591,16 +631,6 @@ class NetatmoWeatherIO extends IPSModule
             'type'    => 'ExpansionPanel',
             'items'   => [
                 [
-                    'type'    => 'Label',
-                    'caption' => 'Ignore HTTP-Error X times'
-                ],
-                [
-                    'type'    => 'NumberSpinner',
-                    'minimum' => 0,
-                    'name'    => 'ignore_http_error',
-                    'caption' => 'Count'
-                ],
-                [
                     'type'    => 'NumberSpinner',
                     'minimum' => 0,
                     'suffix'  => 'Minutes',
@@ -609,6 +639,39 @@ class NetatmoWeatherIO extends IPSModule
                 ],
             ],
             'caption' => 'Call settings'
+        ];
+
+        $formElements[] = [
+            'type'    => 'ExpansionPanel',
+            'items'   => [
+                [
+                    'type'    => 'Label',
+                    'caption' => 'Behavior of HTTP requests at the technical level'
+                ],
+                [
+                    'type'    => 'NumberSpinner',
+                    'minimum' => 0,
+                    'suffix'  => 'Seconds',
+                    'name'    => 'curl_exec_timeout',
+                    'caption' => 'Timeout of an HTTP call'
+                ],
+                [
+                    'type'    => 'NumberSpinner',
+                    'minimum' => 0,
+                    'name'    => 'curl_exec_attempts',
+                    'caption' => 'Number of attempts after communication failure'
+                ],
+                [
+                    'type'     => 'NumberSpinner',
+                    'minimum'  => 0.1,
+                    'maximum'  => 60,
+                    'digits'   => 1,
+                    'suffix'   => 'Seconds',
+                    'name'     => 'curl_exec_delay',
+                    'caption'  => 'Delay between attempts'
+                ],
+            ],
+            'caption' => 'Communication'
         ];
 
         $formElements[] = [
@@ -1045,8 +1108,11 @@ class NetatmoWeatherIO extends IPSModule
 
     private function do_HttpRequest($url, $header, $postdata, $mode, &$data, &$err)
     {
+        $curl_exec_timeout = $this->ReadPropertyInteger('curl_exec_timeout');
+        $curl_exec_attempts = $this->ReadPropertyInteger('curl_exec_attempts');
+        $curl_exec_delay = $this->ReadPropertyFloat('curl_exec_delay');
+
         $this->SendDebug(__FUNCTION__, 'http-' . $mode . ': url=' . $url, 0);
-        $time_start = microtime(true);
 
         if ($header != '') {
             $this->SendDebug(__FUNCTION__, '    header=' . print_r($header, true), 0);
@@ -1054,6 +1120,8 @@ class NetatmoWeatherIO extends IPSModule
         if ($postdata != '') {
             $this->SendDebug(__FUNCTION__, '    postdata=' . print_r($postdata, true), 0);
         }
+
+        $time_start = microtime(true);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -1080,14 +1148,23 @@ class NetatmoWeatherIO extends IPSModule
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        $cdata = curl_exec($ch);
-        $cerrno = curl_errno($ch);
-        $cerror = $cerrno ? curl_error($ch) : '';
+
+        $attempt = 1;
+        do {
+            $cdata = curl_exec($ch);
+            $cerrno = curl_errno($ch);
+            $cerror = $cerrno ? curl_error($ch) : '';
+            if ($cerrno) {
+                $this->SendDebug(__FUNCTION__, ' => attempt=' . $attempt . ', got curl-errno ' . $cerrno . ' (' . $cerror . ')', 0);
+                IPS_Sleep((int) floor($curl_exec_delay * 1000));
+            }
+        } while ($cerrno && $attempt++ <= $curl_exec_attempts);
+
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         $duration = round(microtime(true) - $time_start, 2);
-        $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
+        $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's, attempts=' . $attempt, 0);
         $this->SendDebug(__FUNCTION__, '    cdata=' . $cdata, 0);
 
         $statuscode = 0;

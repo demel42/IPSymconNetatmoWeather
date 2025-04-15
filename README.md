@@ -228,18 +228,24 @@ Die gelieferte Struktur ist _station_; kein Array, weil es immer nur um eine bes
 
 #### Variablen
 
-| Eigenschaft            | Typ     | Standardwert | Beschreibung |
-| :--------------------- | :-----  | :----------- | :----------- |
-| Verbindungstyp         | integer | 0            | _Netatmo über IP-Symcon Connect_ oder _Netatmo Entwickler-Schlüssel_ |
-|                        |         |              | |
-| Netatmo-Zugangsdaten   | string  |              | Benutzername und Passwort von https://my.netatmo.com sowie Client-ID und -Secret von https://dev.netatmo.com |
-|                        |         |              | |
-| Ignoriere HTTP-Fehler  | integer | 0            | Da Netatmo häufiger HTTP-Fehler meldet, wird erst ab dem X. Fehler in Folge reagiert |
-|                        |         |              | |
-| Aktualisiere Daten ... | integer | 5            | Aktualisierungsintervall, Angabe in Minuten |
+| Eigenschaft                    | Typ     | Standardwert | Beschreibung |
+| :----------------------------- | :-----  | :----------- | :----------- |
+| Verbindungstyp                 | integer | 0            | _Netatmo über IP-Symcon Connect_ oder _Netatmo Entwickler-Schlüssel_ |
+|                                |         |              | |
+| Netatmo-Zugangsdaten           | string  |              | Benutzername und Passwort von https://my.netatmo.com sowie Client-ID und -Secret von https://dev.netatmo.com |
+|                                |         |              | |
+| Aktualisiere Daten ...         | integer | 5            | Aktualisierungsintervall, Angabe in Minuten _[1]_ |
+|                                |         |              | |
+|                                |         |              | Behandlung von Kommunikationsfehlern _[2]_ |
+| Timeout eines Abrufs           | integer | 15           | - Timeout eines HTTP-Aufrufs in Sekunden |
+| Anzahl der Versuche            | integer | 3            | - Anzahl der Versuche nach Kommunikationsfehler |
+| Verzögerung zwischen Versuchen | float   | 1            | - Verzögerung zwischen den Versuchen in Sekunden |
 
-Hinweis zum Intervall: die Daten werden nur ca. alle 10m von der Wetterstation an Netatmo übertragen, ein minütliches Intervall ist zulässig, macht aber nur begrenzt Sinn.
+_[1]_: Hinweis zum Intervall: die Daten werden nur ca. alle 10m von der Wetterstation an Netatmo übertragen, ein minütliches Intervall ist zulässig, macht aber nur begrenzt Sinn.
 Bei einer Angabe von 5m sind die Werte nicht älter als 15m.
+
+_[2]_: als Kommunikationsfehler werden die Abrufe definiert, bei der es keine qualifizierte Reaktion der Gegenseite gibt (also einen HTTP-Code).<br>
+Achtung: die maximale Wartezeit in Sekunden berechnet sich wie folgt: ((*Timeout* + *Verzögerung*) * *Anzahl*) + 1 => solange ist der Thread der Instanz maximal blockiert!
 
 #### Schaltflächen
 
@@ -427,6 +433,11 @@ GUIDs
   - `{2D42552F-2545-9145-D3C8-A299E3FDC6EA}`: an NetatmoWeatherConfig, NetatmoWeatherDevice
 
 ## 7. Versions-Historie
+
+- 1.47 @ 12.04.2025 11:42
+  - Verbesserung: ein aufgrund Nichterreichbarkeit des Servers fehlgeschlagener HTTP-Aufruf wird mehrfach wiederholt.
+    Der Timeout des Abrufs und die Anzahl der Versuche und die Verzögerung zwischen den Versuchen kann nun eingestellt werden.
+    Achtung: Hinweis zu diesen Einstellungen im README.md beachten
 
 - 1.46 @ 03.01.2025 14:17
  - update submodule CommonStubs
