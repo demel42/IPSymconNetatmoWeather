@@ -284,7 +284,7 @@ class NetatmoWeatherIO extends IPSModule
                 'scope'        => implode(' ', self::$scopes),
                 'state'        => $this->random_string(16),
             ];
-            $url = $this->build_url('https://api.netatmo.net/oauth2/authorize', $params);
+            $url = $this->build_url('https://api.netatmo.com/oauth2/authorize', $params);
         }
         $this->SendDebug(__FUNCTION__, 'url=' . $url, 0);
         return $url;
@@ -861,7 +861,7 @@ class NetatmoWeatherIO extends IPSModule
             return false;
         }
 
-        $url = 'https://api.netatmo.net/oauth2/token';
+        $url = 'https://api.netatmo.com/oauth2/token';
 
         $client_id = $this->ReadPropertyString('Netatmo_Client');
         $client_secret = $this->ReadPropertyString('Netatmo_Secret');
@@ -930,7 +930,7 @@ class NetatmoWeatherIO extends IPSModule
                 $access_token = $this->FetchAccessToken();
                 break;
             case self::$CONNECTION_DEVELOPER:
-                $url = 'https://api.netatmo.net/oauth2/token';
+                $url = 'https://api.netatmo.com/oauth2/token';
 
                 $client_id = $this->ReadPropertyString('Netatmo_Client');
                 $client_secret = $this->ReadPropertyString('Netatmo_Secret');
@@ -1056,7 +1056,7 @@ class NetatmoWeatherIO extends IPSModule
         $params = [
             'access_token' => $access_token,
         ];
-        $url = $this->build_url('https://api.netatmo.net/api/getstationsdata', $params);
+        $url = $this->build_url('https://api.netatmo.com/api/getstationsdata', $params);
 
         $data = '';
         $err = '';
