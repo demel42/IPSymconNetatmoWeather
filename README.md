@@ -434,7 +434,7 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.48 @ 17.07.2025 11:16
+- 1.48 @ 17.07.2025 11:25
   - Änderung: API-Server wurden geändert (api.netatmo.net -> api.netatmo.com)
 
 - 1.47 @ 12.04.2025 11:42
