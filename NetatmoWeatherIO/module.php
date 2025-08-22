@@ -12,6 +12,8 @@ class NetatmoWeatherIO extends IPSModule
 
     private $oauthIdentifer = 'netatmo';
 
+    private static $api_server = 'api.netatmo.com';
+
     private static $scopes = [
         'read_station', // Wetterstation
     ];
@@ -284,7 +286,7 @@ class NetatmoWeatherIO extends IPSModule
                 'scope'        => implode(' ', self::$scopes),
                 'state'        => $this->random_string(16),
             ];
-            $url = $this->build_url('https://api.netatmo.com/oauth2/authorize', $params);
+            $url = $this->build_url('https://' . self::$api_server . '/oauth2/authorize', $params);
         }
         $this->SendDebug(__FUNCTION__, 'url=' . $url, 0);
         return $url;
@@ -838,7 +840,7 @@ class NetatmoWeatherIO extends IPSModule
                 default:
                     $this->SendDebug(__FUNCTION__, 'unknown function "' . $jdata['Function'] . '"', 0);
                     break;
-                }
+            }
         } else {
             $this->SendDebug(__FUNCTION__, 'unknown message-structure', 0);
         }
@@ -861,7 +863,7 @@ class NetatmoWeatherIO extends IPSModule
             return false;
         }
 
-        $url = 'https://api.netatmo.com/oauth2/token';
+        $url = 'https://' . self::$api_server . '/oauth2/token';
 
         $client_id = $this->ReadPropertyString('Netatmo_Client');
         $client_secret = $this->ReadPropertyString('Netatmo_Secret');
@@ -930,7 +932,7 @@ class NetatmoWeatherIO extends IPSModule
                 $access_token = $this->FetchAccessToken();
                 break;
             case self::$CONNECTION_DEVELOPER:
-                $url = 'https://api.netatmo.com/oauth2/token';
+                $url = 'https://' . self::$api_server . '/oauth2/token';
 
                 $client_id = $this->ReadPropertyString('Netatmo_Client');
                 $client_secret = $this->ReadPropertyString('Netatmo_Secret');
@@ -1052,15 +1054,15 @@ class NetatmoWeatherIO extends IPSModule
             return;
         }
 
-        // Anfrage mit Token
-        $params = [
-            'access_token' => $access_token,
+        $header = [
+            'Accept: application/json',
+            'Authorization: Bearer ' . $access_token,
         ];
-        $url = $this->build_url('https://api.netatmo.com/api/getstationsdata', $params);
+        $url = 'https://' . self::$api_server . '/api/getstationsdata';
 
         $data = '';
         $err = '';
-        $statuscode = $this->do_HttpRequest($url, '', '', 'GET', $data, $err);
+        $statuscode = $this->do_HttpRequest($url, $header, '', 'GET', $data, $err);
         if ($statuscode == 0) {
             $jdata = json_decode($data, true);
             $this->SendDebug(__FUNCTION__, 'jdata=' . print_r($jdata, true), 0);
