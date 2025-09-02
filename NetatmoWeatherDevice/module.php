@@ -1802,10 +1802,10 @@ class NetatmoWeatherDevice extends IPSModule
         $this->SendDebug(__FUNCTION__, 'netatmo=' . print_r($netatmo, true), 0);
         $this->SendDebug(__FUNCTION__, 'device=' . print_r($device, true), 0);
         switch ($module_type) {
-             case 'Station':
+            case 'Station':
                 $statuscode = $this->eval_Station($netatmo, $device);
                 break;
-             case 'NAMain':
+            case 'NAMain':
                 $statuscode = $this->eval_NAMain($netatmo, $device);
                 break;
             case 'NAModule1':
