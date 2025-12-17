@@ -434,6 +434,10 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.50 @ 17.12.2025 11:01
+  - Verbesserung: HTTP-Aufrufe mit HTTP-Code 429 (too may requests) mehrfach wiederholen (analog zu fehlgeschlagenen HTTP-Aufrufen in v1.47)
+  - update submodule CommonStubs
+
 - 1.49.1 @ 03.09.2025 17:02
   - Korrektur: Änderung zu 1.49
 
@@ -449,7 +453,7 @@ GUIDs
     Achtung: Hinweis zu diesen Einstellungen im README.md beachten
 
 - 1.46 @ 03.01.2025 14:17
- - update submodule CommonStubs
+  - update submodule CommonStubs
 
 - 1.45 @ 23.10.2024 17:06
   - Änderung: nach Wegfall des Passwort-basierten Logins (siehe v1.38) ist nun ein Login per OAuth-Login möglich; die manuelle Eingabe des "RefreshToken" entfällt bei aktiven Symcon-Connect.
