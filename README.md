@@ -434,6 +434,10 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.51 @ 27.03.2026 14:48
+  - Fix: Anpassung für IPS 9
+  - update submodule CommonStubs
+
 - 1.50 @ 17.12.2025 11:01
   - Verbesserung: HTTP-Aufrufe mit HTTP-Code 429 (too may requests) mehrfach wiederholen (analog zu fehlgeschlagenen HTTP-Aufrufen in v1.47)
   - update submodule CommonStubs
