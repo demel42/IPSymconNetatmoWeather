@@ -83,7 +83,7 @@ class NetatmoWeatherConfig extends IPSModule
         $this->SendDebug(__FUNCTION__, 'jdata=' . print_r($jdata, true), 0);
 
         $guid = '{1023DB4A-D491-A0D5-17CD-380D3578D0FA}';
-        $instIDs = IPS_GetInstanceListByModuleID($guid);
+        $instIDs = (array) IPS_GetInstanceListByModuleID($guid);
 
         if (is_array($jdata)) {
             $devices = $jdata['body']['devices'];

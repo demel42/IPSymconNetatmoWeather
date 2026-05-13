@@ -434,6 +434,12 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.52 @ 10.05.2026 11:48
+  - Fix: Änderung von deprecated php code
+  - Verbesserung: Verbindungstyp "über IP-Symcon" wird als "derzeit nicht funktionsfähig" ausgewiesen
+  - Verbesserung: beim Löschen einer Instanz werden die zugehörigen WebHook- und WebOAuth-Einträge ebenfalls gelöscht
+  - update submodule CommonStubs
+
 - 1.51 @ 27.03.2026 14:48
   - Fix: Anpassung für IPS 9
   - update submodule CommonStubs

@@ -67,39 +67,61 @@ class NetatmoWeatherIO extends IPSModule
         $this->RegisterMessage(0, IPS_KERNELMESSAGE);
     }
 
+    public function Destroy()
+    {
+        if (IPS_InstanceExists($this->InstanceID) == false) {
+            $this->CleanupHook();
+            $this->CleanupOAuth();
+        }
+        parent::Destroy();
+    }
+
     private function CheckModuleConfiguration()
     {
         $r = [];
 
         $oauth_type = $this->ReadPropertyInteger('OAuth_Type');
-        if ($oauth_type == self::$CONNECTION_DEVELOPER) {
-            if (defined('GRANT_PASSWORD')) {
-                $user = $this->ReadPropertyString('Netatmo_User');
-                if ($user == '') {
-                    $this->SendDebug(__FUNCTION__, '"Netatmo_User" is needed', 0);
-                    $r[] = $this->Translate('Username must be specified');
+
+        switch ($oauth_type) {
+            case self::$CONNECTION_UNDEFINED:
+                $this->SendDebug(__FUNCTION__, '"connection_type" must be selected', 0);
+                $r[] = $this->Translate('Connection type must be set');
+                break;
+            case self::$CONNECTION_DEVELOPER:
+                if (defined('GRANT_PASSWORD')) {
+                    $user = $this->ReadPropertyString('Netatmo_User');
+                    if ($user == '') {
+                        $this->SendDebug(__FUNCTION__, '"Netatmo_User" is needed', 0);
+                        $r[] = $this->Translate('Username must be specified');
+                    }
+                    $password = $this->ReadPropertyString('Netatmo_Password');
+                    if ($password == '') {
+                        $this->SendDebug(__FUNCTION__, '"Netatmo_Password" is needed', 0);
+                        $r[] = $this->Translate('Password must be specified');
+                    }
                 }
-                $password = $this->ReadPropertyString('Netatmo_Password');
-                if ($password == '') {
-                    $this->SendDebug(__FUNCTION__, '"Netatmo_Password" is needed', 0);
-                    $r[] = $this->Translate('Password must be specified');
+                $client_id = $this->ReadPropertyString('Netatmo_Client');
+                if ($client_id == '') {
+                    $this->SendDebug(__FUNCTION__, '"Netatmo_Client" is needed', 0);
+                    $r[] = $this->Translate('Client-ID must be specified');
                 }
-            }
-            $client_id = $this->ReadPropertyString('Netatmo_Client');
-            if ($client_id == '') {
-                $this->SendDebug(__FUNCTION__, '"Netatmo_Client" is needed', 0);
-                $r[] = $this->Translate('Client-ID must be specified');
-            }
-            $client_secret = $this->ReadPropertyString('Netatmo_Secret');
-            if ($client_secret == '') {
-                $this->SendDebug(__FUNCTION__, '"Netatmo_Secret" is needed', 0);
-                $r[] = $this->Translate('Client-Secret must be specified');
-            }
-            $hook = $this->ReadPropertyString('hook');
-            if ($hook != '' && $this->HookIsUsed($hook)) {
-                $this->SendDebug(__FUNCTION__, '"hook" is already used', 0);
-                $r[] = $this->Translate('Webhook is already in use');
-            }
+                $client_secret = $this->ReadPropertyString('Netatmo_Secret');
+                if ($client_secret == '') {
+                    $this->SendDebug(__FUNCTION__, '"Netatmo_Secret" is needed', 0);
+                    $r[] = $this->Translate('Client-Secret must be specified');
+                }
+                $hook = $this->ReadPropertyString('hook');
+                if ($hook != '' && $this->HookIsUsed($hook)) {
+                    $this->SendDebug(__FUNCTION__, '"hook" is already used', 0);
+                    $r[] = $this->Translate('Webhook is already in use');
+                }
+                break;
+            case self::$CONNECTION_OAUTH:
+                $this->SendDebug(__FUNCTION__, '"oauth_type" ' . $connection_type . '(OAUTH) is not currently operational', 0);
+                $r[] = $this->Translate('Connection type \'via IP-Symcon Connect\' is currently not operational');
+                break;
+            default:
+                break;
         }
 
         return $r;
@@ -336,7 +358,9 @@ class NetatmoWeatherIO extends IPSModule
         } while ($retry && $attempt++ <= $curl_exec_attempts);
 
         $curl_info = curl_getinfo($ch);
-        curl_close($ch);
+        if (IPS_GetKernelVersion() < 8.5) {
+            curl_close($ch);
+        }
 
         $httpcode = $curl_info['http_code'];
 
@@ -531,11 +555,11 @@ class NetatmoWeatherIO extends IPSModule
                     'value'   => self::$CONNECTION_UNDEFINED
                 ],
                 [
-                    'caption' => 'Netatmo via IP-Symcon Connect',
+                    'caption' => 'via IP-Symcon Connect (not operational)',
                     'value'   => self::$CONNECTION_OAUTH
                 ],
                 [
-                    'caption' => 'Netatmo Developer Key',
+                    'caption' => 'with Netatmo developer key',
                     'value'   => self::$CONNECTION_DEVELOPER
                 ]
             ]
@@ -1174,7 +1198,9 @@ class NetatmoWeatherIO extends IPSModule
             }
         } while ($retry && $attempt++ <= $curl_exec_attempts);
 
-        curl_close($ch);
+        if (IPS_GetKernelVersion() < 8.5) {
+            curl_close($ch);
+        }
 
         $duration = round(microtime(true) - $time_start, 2);
         $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's, attempts=' . $attempt, 0);

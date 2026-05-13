@@ -80,6 +80,14 @@ class NetatmoWeatherDevice extends IPSModule
         $this->RegisterMessage(0, IPS_KERNELMESSAGE);
     }
 
+    public function Destroy()
+    {
+        if (IPS_InstanceExists($this->InstanceID) == false) {
+            $this->CleanupHook();
+        }
+        parent::Destroy();
+    }
+
     public function MessageSink($tstamp, $senderID, $message, $data)
     {
         parent::MessageSink($tstamp, $senderID, $message, $data);
@@ -393,7 +401,7 @@ class NetatmoWeatherDevice extends IPSModule
         $this->SendDebug(__FUNCTION__, 'jdata=' . print_r($jdata, true), 0);
 
         $guid = '{1023DB4A-D491-A0D5-17CD-380D3578D0FA}';
-        $instIDs = IPS_GetInstanceListByModuleID($guid);
+        $instIDs = (array) IPS_GetInstanceListByModuleID($guid);
 
         $station_id = $this->ReadPropertyString('station_id');
 
@@ -1134,7 +1142,9 @@ class NetatmoWeatherDevice extends IPSModule
             $cerrno = curl_errno($ch);
             $cerror = $cerrno ? curl_error($ch) : '';
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+            if (IPS_GetKernelVersion() < 8.5) {
+                curl_close($ch);
+            }
             if ($cerrno) {
                 $this->SendDebug(__FUNCTION__, ' => retry=' . $retries . ', got curl-errno ' . $cerrno . ' (' . $cerror . ')', 0);
             }
@@ -1262,7 +1272,7 @@ class NetatmoWeatherDevice extends IPSModule
         $modules = $this->GetArrayElem($device, 'modules', '');
         if ($modules != '') {
             $guid = '{1023DB4A-D491-A0D5-17CD-380D3578D0FA}';
-            $instIDs = IPS_GetInstanceListByModuleID($guid);
+            $instIDs = (array) IPS_GetInstanceListByModuleID($guid);
             $station_id = $this->ReadPropertyString('station_id');
             foreach (['NAModule4', 'NAModule1', 'NAModule3', 'NAModule2'] as $types) {
                 foreach ($modules as $module) {
@@ -2429,10 +2439,10 @@ class NetatmoWeatherDevice extends IPSModule
 
     // gemessenen Luftdruck in absoluen Luftdruck (Meereshöhe) umrechnen
     //   Quelle: https://rechneronline.de/barometer/hoehe.php
-    public function CalcAbsolutePressure(float $pressure, float $temp, int $altitude = null)
+    public function CalcAbsolutePressure(float $pressure, float $temp, ?int $altitude = null)
     {
         if (!isset($altitude) || $altitude === null) {
-            $instIDs = IPS_GetInstanceListByModuleID('{1023DB4A-D491-A0D5-17CD-380D3578D0FA}');
+            $instIDs = (array) IPS_GetInstanceListByModuleID('{1023DB4A-D491-A0D5-17CD-380D3578D0FA}');
             foreach ($instIDs as $id) {
                 $cfg = IPS_GetConfiguration($id);
                 $jcfg = json_decode($cfg, true);

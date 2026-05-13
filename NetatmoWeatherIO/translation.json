@@ -8,14 +8,16 @@
 			"Password must be specified": "Passwort muss angegeben sein",
 			"Client-ID must be specified": "Client-ID muss angegeben sein",
 			"Client-Secret must be specified": "Client-Secret  muss angegeben sein",
+			"Connection type 'via IP-Symcon Connect' is currently not operational": "Verbindungstyp 'über IP-Symcon Connect' ist derzeit nicht funktionsfähig",
 
 			"__elements__": "",
 			"Disable instance": "Instanz deaktivieren",
 
 			"Connection Type": "Verbindungstyp",
 			"Please select a connection type": "Bitte einen Verbindungstyp auswählen",
-			"Netatmo via IP-Symcon Connect": "Netatmo über IP-Symcon Connect",
-			"Netatmo Developer Key": "Netatmo Entwickler-Schlüssel",
+			"via IP-Symcon Connect (not operational)": "über IP-Symcon Connect (nicht funktionsfähig)",
+			"with Netatmo developer key": "mit Netatmo Entwickler-Schlüssel",
+
 			"Push \"Login at Netatmo\" in the action part of this configuration form.":
 				"\"Bei Netatmo anmelden\" in dem Aktionsbereich dieses Konfigurationsformulares drücken.",
 			"At the webpage from Netatmo log in with your Netatmo username and password.":
